@@ -5,7 +5,7 @@ using ASL;
 
 public class ASLAuto_Logic : MonoBehaviour
 {
-    public float MovementSpeed = 2;
+    /* public float MovementSpeed = 2;
 
     ASLObject m_object;
     ASL_ObjectCollider m_ObjectCollider;
@@ -82,5 +82,5 @@ public class ASLAuto_Logic : MonoBehaviour
     }
 
 
-
+ */
 }

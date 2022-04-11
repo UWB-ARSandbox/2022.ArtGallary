@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
             GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
             {
                 Vector3 newSpot = moveDir + this.transform.position;
-                GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
+                GetComponent<ASL.ASLObject>().SendAndSetLocalPosition(newSpot);
             });
         }
         else if (Input.GetKey(KeyCode.S))
@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
             GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
             {
                 Vector3 newSpot = moveDir + this.transform.position;
-                GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
+                GetComponent<ASL.ASLObject>().SendAndSetLocalPosition(newSpot);
             });
         }
 
@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
             GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
             {
                 Vector3 newSpot = moveDir + this.transform.position;
-                GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
+                GetComponent<ASL.ASLObject>().SendAndSetLocalPosition(newSpot);
             });
         }
         else if (Input.GetKey(KeyCode.D))
@@ -58,7 +58,7 @@ public class PlayerMovement : MonoBehaviour
             GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
             {
                 Vector3 newSpot = moveDir + this.transform.position;
-                GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
+                GetComponent<ASL.ASLObject>().SendAndSetLocalPosition(newSpot);
             });
         }
 
