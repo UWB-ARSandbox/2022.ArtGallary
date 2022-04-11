@@ -6,7 +6,7 @@ using ASL;
 public class Pavel_Player : MonoBehaviour
 {
     [Tooltip("This determines the speed that the PlayerCube will move.")]
-    public float MovementSpeed = 3.0f;
+    public float MovementSpeed = 3f;
 
     ASLObject m_ASLObject;
 
@@ -20,33 +20,43 @@ public class Pavel_Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.UpArrow) ^ Input.GetKey(KeyCode.DownArrow))
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+
+        Vector3 move = transform.right * x + transform.forward * z;
+
+        m_ASLObject.SendAndSetClaim(() =>
         {
-            if (Input.GetKey(KeyCode.UpArrow))
+            Vector3 m_AdditiveMovementAmount = move * MovementSpeed * Time.deltaTime;
+            m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
+        });
+        /* if (Input.GetKey(KeyCode.W) ^ Input.GetKey(KeyCode.S))
+        {
+            if (Input.GetKey(KeyCode.W))
             {
                 m_ASLObject.SendAndSetClaim(() =>
                 {
-                    Vector3 m_AdditiveMovementAmount = Vector3.up * MovementSpeed * Time.deltaTime;
-                    m_ASLObject.SendAndIncrementWorldPosition(m_AdditiveMovementAmount);
+                    Vector3 m_AdditiveMovementAmount = Vector3.forward * MovementSpeed * Time.deltaTime;
+                    m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
                 });
             }
             else
             {
                 m_ASLObject.SendAndSetClaim(() =>
                 {
-                    Vector3 m_AdditiveMovementAmount = Vector3.down * MovementSpeed * Time.deltaTime;
-                    m_ASLObject.SendAndIncrementWorldPosition(m_AdditiveMovementAmount);
+                    Vector3 m_AdditiveMovementAmount = Vector3.back * MovementSpeed * Time.deltaTime;
+                    m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
                 });
             }
         }
-        if (Input.GetKey(KeyCode.RightArrow) ^ Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.D) ^ Input.GetKey(KeyCode.A))
         {
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.D))
             {
                 m_ASLObject.SendAndSetClaim(() =>
                 {
                     Vector3 m_AdditiveMovementAmount = Vector3.right * MovementSpeed * Time.deltaTime;
-                    m_ASLObject.SendAndIncrementWorldPosition(m_AdditiveMovementAmount);
+                    m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
                 });
             }
             else
@@ -54,10 +64,10 @@ public class Pavel_Player : MonoBehaviour
                 m_ASLObject.SendAndSetClaim(() =>
                 {
                     Vector3 m_AdditiveMovementAmount = Vector3.left * MovementSpeed * Time.deltaTime;
-                    m_ASLObject.SendAndIncrementWorldPosition(m_AdditiveMovementAmount);
+                    m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
                 });
             }
-        }
+        } */
     }
 }
 

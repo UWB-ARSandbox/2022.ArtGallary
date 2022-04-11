@@ -1,34 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ASL;
 
 public class StudentEnable : MonoBehaviour
 {
     // Start is called before the first frame update
     public Camera studentCamera;
 
-    public MonoBehaviour[] studentScriptsToEnable;
-
     Transform[] studentSpawn;
 
     GameObject PlayerManagerObject;
     SpawnPlayer spawnComponent;
+    GameLiftManager manager;
+
 
     
     public string playerManager;
     void Start()
     {
+        manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
+
         if (playerManager == null)
         {
-            Debug.Log("playerManager object name not set, set it to the name of the " +
-                "object with the spawn player script");
+            Debug.Log("playerManager object name not set, set it to the name of the object with the spawn player script");
             return;
         } 
-        PlayerManagerObject = GameObject.Find(playerManager);
+        PlayerManagerObject = GameObject.Find("PlayerManager");
         if(PlayerManagerObject == null)
         {
-            Debug.Log("Could not find PlayerManager object, make sure the playerManager field " +
-                "is set to name of the object");
+            Debug.Log("Could not find PlayerManager object, make sure the playerManager field is set to name of the object");
             return;
         }
         spawnComponent = PlayerManagerObject.GetComponent<SpawnPlayer>();
@@ -38,34 +39,35 @@ public class StudentEnable : MonoBehaviour
             return;
         }
         studentSpawn = spawnComponent.studentSpawn;
-        int tempID = ASL.GameLiftManager.GetInstance().m_PeerId;
-        if(tempID == 1)
+        int tempID = manager.m_PeerId;
+
+        if(tempID == manager.GetLowestPeerId())
         {
             return;
         }
         else
         {
 
-            if(tempID - 2 > studentSpawn.Length -1)
+            if(tempID > studentSpawn.Length + 1)
             {
                 Debug.Log("Student attempted to spawn without a valid spawn location");
                 return;
             }
+
             else if(transform.position == studentSpawn[tempID - 2].position)
             {
+                studentCamera = Camera.main;
+                studentCamera.transform.SetParent(this.gameObject.transform);
+        
                 if(studentCamera == null)
                 {
-                    Debug.Log("No camera attatched to student");
+                    Debug.Log("No camera attached to student");
                 }
                 else{
-                    studentCamera.enabled = true;
+                    studentCamera.GetComponent<FirstPersonCamera>().ReinitializeParent(this.gameObject);
                 }
                 
-                for(int i = 0; i < studentScriptsToEnable.Length; i++)
-                {
-                    studentScriptsToEnable[i].enabled = true;
-                }
-                
+                this.gameObject.GetComponent<Pavel_Player>().enabled = true;
             }
         }
     }

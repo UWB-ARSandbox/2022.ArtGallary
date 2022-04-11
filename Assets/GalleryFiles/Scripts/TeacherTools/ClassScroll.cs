@@ -45,10 +45,7 @@ public class ClassScroll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            GameObject student = Instantiate(Resources.Load<GameObject>("MyPrefabs/StudentPanel"), content.transform.position, content.transform.rotation, content.transform);
-        }
+        
     }
     
 }

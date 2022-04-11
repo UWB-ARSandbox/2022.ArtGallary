@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ASL;
 
 public class TeacherEnable : MonoBehaviour
 {
@@ -8,24 +9,26 @@ public class TeacherEnable : MonoBehaviour
     // Start is called before the first frame update
     public Camera teacherCamera;
 
-    public MonoBehaviour[] teacherScriptsToEnable;
-
     Transform teacherSpawn;
 
     GameObject PlayerManagerObject;
     SpawnPlayer spawnComponent;
+    GameLiftManager manager;
 
     
     public string playerManager;
     void Start()
     {
+        
+        manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
+
         if (playerManager == null)
         {
             Debug.Log("playerManager object name not set, set it to the name of the object with the spawn player script");
             return;
         } 
 
-        PlayerManagerObject = GameObject.Find(playerManager);
+        PlayerManagerObject = GameObject.Find("PlayerManager");
         if(PlayerManagerObject == null)
         {
             Debug.Log("Could not find PlayerManager object, make sure the playerManager field is set to name of the object");
@@ -40,23 +43,24 @@ public class TeacherEnable : MonoBehaviour
         }
 
         teacherSpawn = spawnComponent.teacherSpawn;
-        int tempID = ASL.GameLiftManager.GetInstance().m_PeerId;
-        if(tempID == 1)
+        int tempID = manager.m_PeerId;
+
+        // Check if this is host.
+        if(tempID == manager.GetLowestPeerId())
         {
+            teacherCamera = Camera.main;
+            teacherCamera.transform.SetParent(this.gameObject.transform);
             if(teacherCamera == null)
             {
-                Debug.Log("No camera attatched tp teacher");
+                Debug.Log("No camera attached to teacher");
             }
-            else{
-                teacherCamera.enabled = true;
+            else
+            {
+                teacherCamera.GetComponent<FirstPersonCamera>().ReinitializeParent(this.gameObject);
+                this.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);;
             }
-            
-                
-            for(int i = 0; i < teacherScriptsToEnable.Length; i++)
-                {
-                    teacherScriptsToEnable[i].enabled = true;
-                }
-                
+
+            this.gameObject.GetComponent<Pavel_Player>().enabled = true;
         }
         
     }
