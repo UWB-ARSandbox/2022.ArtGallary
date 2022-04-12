@@ -1,4 +1,5 @@
-/* Author: Tyler Miller
+/* PaintOnCanvas.cs
+ * Author: Tyler Miller
  * Date: 4/7/2022
  * Description: PaintOnCanvas allows user to create a blank canvas
  * then paint on it. When the user leaves the same canvas will be loaded.
@@ -57,17 +58,12 @@ public class PaintOnCanvas : MonoBehaviour
 		textOnType = "";
 		brushColor = Color.black;
 		pixelToDraw = new Vector2(0, 0);
+		dirPath = Application.dataPath;
 		alphabet = new Texture2D(252, 14, TextureFormat.RGBA32, false);
-		dirPath = Application.dataPath + "/GalleryFiles/CanvasAssets";
+		//alphabet = Resources.Load("alphabet", typeof(Texture2D)) as Texture2D;
 		alphabet.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/alphabet.png"));
 		GameObject brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
-
-		if (System.IO.Directory.Exists(dirPath) == false)
-		{
-			brushColorUI.GetComponent<Image>().color = Color.cyan;
-		}
-
 		//this covers RGBA format and is good for opacity changing if needed
 		studentCanvas = new Texture2D(256, 512, TextureFormat.RGBA32, false);
 		for(int x = 0; x < 256; x++)
@@ -358,6 +354,7 @@ public class PaintOnCanvas : MonoBehaviour
 			for (int y = 0; y < 14; y++)
 			{
 				Color pixelColor = alphabet.GetPixel(x, y);
+				//Debug.Log(currX + ", " + currY);
 				studentCanvas.SetPixel(currX, currY + y, pixelColor);
 				studentCanvas.Apply();
 			}
