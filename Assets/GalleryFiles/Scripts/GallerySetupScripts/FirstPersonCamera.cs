@@ -45,14 +45,14 @@ public class FirstPersonCamera : MonoBehaviour
 
         }
         
-        /*
+        
         // Toggle Cursor Lock
         if(Input.GetKeyDown(KeyCode.LeftAlt))
         {
             isLocked = !isLocked;
             SetCursorLock(isLocked);
         }
-        */
+       
     }
 
     public void ReinitializeParent(GameObject parent)
