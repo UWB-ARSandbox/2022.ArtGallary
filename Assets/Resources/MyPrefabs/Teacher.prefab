@@ -92,7 +92,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6110100814002022059}
-  - component: {fileID: 2838395947539874914}
+  - component: {fileID: 6071096714531740414}
   m_Layer: 0
   m_Name: Teacher
   m_TagString: Untagged
@@ -116,20 +116,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2838395947539874914
+--- !u!114 &6071096714531740414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6110100814002022061}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f635e2b1579a86246a2c0754bcfbb49f, type: 3}
+  m_Script: {fileID: 11500000, guid: 95a32bd3265f67f4d991567a8f460428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  teacherCamera: {fileID: 0}
-  teacherScriptsToEnable: []
+  teacherCamera: {fileID: 6110100813643855493}
   playerManager: PlayerManager
 --- !u!1 &6110100814625480173
 GameObject:

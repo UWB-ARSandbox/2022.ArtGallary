@@ -62,6 +62,12 @@ public class PaintOnCanvas : MonoBehaviour
 		alphabet.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/alphabet.png"));
 		GameObject brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
+
+		if (System.IO.Directory.Exists(dirPath) == false)
+		{
+			brushColorUI.GetComponent<Image>().color = Color.cyan;
+		}
+
 		//this covers RGBA format and is good for opacity changing if needed
 		studentCanvas = new Texture2D(256, 512, TextureFormat.RGBA32, false);
 		for(int x = 0; x < 256; x++)

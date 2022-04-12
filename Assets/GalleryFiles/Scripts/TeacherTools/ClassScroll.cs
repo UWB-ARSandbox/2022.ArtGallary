@@ -29,8 +29,10 @@ public class ClassScroll : MonoBehaviour
                 int peerId = item.Key;
                 string username = item.Value;
 
-                if (peerId != host){
-                    GameObject student = Instantiate(Resources.Load<GameObject>("MyPrefabs/StudentPanel"), content.transform.position, content.transform.rotation, content.transform);
+                if (peerId != host)
+                {
+                    GameObject student = Instantiate(Resources.Load<GameObject>("MyPrefabs/StudentPanel"), 
+                        content.transform.position, content.transform.rotation, content.transform);
                     StudentPanel panel = student.GetComponent<StudentPanel>();
                     panel.Initialize();
                     panel.ChangeName(username);

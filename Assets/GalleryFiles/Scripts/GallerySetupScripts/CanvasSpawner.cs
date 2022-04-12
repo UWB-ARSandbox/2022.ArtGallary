@@ -177,7 +177,7 @@ public class CanvasSpawner : MonoBehaviour
                 Vector3 newSpot = new Vector3(-point1, point2, point3);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
 
-                Quaternion rot = Quaternion.Euler(0, 0, 0);
+                Quaternion rot = Quaternion.Euler(0, 180, 0);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldRotation(rot);
 
                 Advance(spawnedObject);
