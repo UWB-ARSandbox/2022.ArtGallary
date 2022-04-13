@@ -28,24 +28,8 @@ public class CanvasSpawner : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Keypad0))
 		{
-            StartGallery(0);
+            StartGallery();
 		}
-        if(Input.GetKeyDown(KeyCode.Keypad7))
-		{
-            StartGallery(39);
-        }
-        if (Input.GetKeyDown(KeyCode.Keypad8))
-        {
-            StartGallery(79);
-        }
-        if (Input.GetKeyDown(KeyCode.Keypad9))
-        {
-            StartGallery(119);
-        }
-        if (Input.GetKeyDown(KeyCode.Keypad4))
-        {
-            StartGallery(159);
-        }
 
         if(Input.GetKeyDown(KeyCode.Delete))
 		{
@@ -53,7 +37,8 @@ public class CanvasSpawner : MonoBehaviour
 		}
     }
 
-    void ClearGallery()
+    // Start the deletion of objects
+    public void ClearGallery()
     {
         for (int i = 0; i < totalStu; i++)
         {
@@ -73,14 +58,14 @@ public class CanvasSpawner : MonoBehaviour
         });
     }
 
-    void StartGallery(int amount)
+    // Starts the creation of blank canvases
+    public void StartGallery()
 	{
-        int amountStu = Random.Range(5, 100);
+        ASL.GameLiftManager manager = GameObject.Find("GameLiftManager").
+            GetComponent<ASL.GameLiftManager>();
 
-        if(amount != 0)
-		{
-            amountStu = amount;
-		}
+        int amountStu = manager.m_Players.Count;
+
         totalStu = amountStu;
 
         int wallSize = (int)(amountStu / 40) + 1;
@@ -188,7 +173,7 @@ public class CanvasSpawner : MonoBehaviour
                 Vector3 newSpot = new Vector3(point3, point2, point1);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
 
-                Quaternion rot = Quaternion.Euler(0, 90, 0);
+                Quaternion rot = Quaternion.Euler(0, 270, 0);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldRotation(rot);
 
                 Advance(spawnedObject);
@@ -199,7 +184,7 @@ public class CanvasSpawner : MonoBehaviour
                 Vector3 newSpot = new Vector3(point1, point2, -point3);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
 
-                Quaternion rot = Quaternion.Euler(0, 180, 0);
+                Quaternion rot = Quaternion.Euler(0, 0, 0);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldRotation(rot);
 
                 Advance(spawnedObject);
@@ -210,7 +195,7 @@ public class CanvasSpawner : MonoBehaviour
                 Vector3 newSpot = new Vector3(-point3, point2, -point1);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
 
-                Quaternion rot = Quaternion.Euler(0, 270, 0);
+                Quaternion rot = Quaternion.Euler(0, 90, 0);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldRotation(rot);
 
                 Advance(spawnedObject);

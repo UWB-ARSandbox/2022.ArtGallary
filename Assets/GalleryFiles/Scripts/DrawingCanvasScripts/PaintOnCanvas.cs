@@ -47,6 +47,9 @@ public class PaintOnCanvas : MonoBehaviour
 
 	Vector2 pixelToDraw;
 
+	// Current Canvas has been loaded
+	bool clicked = false;
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -377,6 +380,11 @@ public class PaintOnCanvas : MonoBehaviour
 
 	public void SubmitPaiting()
 	{
+		if(clicked)
+		{
+			return;
+		}
+
 		GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
 		byte[] bytes = studentCanvas.EncodeToPNG();
 		System.IO.File.WriteAllBytes(dirPath + "/" + "StudentCanvas1" + ".png", bytes);
@@ -384,20 +392,48 @@ public class PaintOnCanvas : MonoBehaviour
 		Texture2D tex = new Texture2D(256, 512, TextureFormat.RGBA32, false);
 		tex.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + "StudentCanvas1" + ".png"));
 
-		GameObject stuCanvas = GameObject.Find("StuCanvas0");
+		ASL.GameLiftManager manager = GameObject.Find("GameLiftManager").
+			GetComponent<ASL.GameLiftManager>();
+		int i = 0;
 
-		if(stuCanvas != null)
+		// Go through all player canvases and check
+		foreach (var player in manager.m_Players)
 		{
-			stuCanvas.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
+			string canvasName = "StuCanvas" + i;
+			GameObject stuCanvas = GameObject.Find(canvasName);
+
+			// Check for an empty canvas space
+			if (stuCanvas != null && stuCanvas.GetComponent<Renderer>().
+				material.mainTexture == null)
 			{
-				stuCanvas.GetComponent<ASL.ASLObject>().SendAndSetTexture2D(tex, 
-					changeTexture, true);
-			});
+				stuCanvas.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
+				{
+					stuCanvas.GetComponent<ASL.ASLObject>().SendAndSetTexture2D(tex,
+						changeTexture, true);
+				});
+				clicked = true;
+				break;
+			}
+			/*
+			// Student has already submitted an art piece
+			else if (stuCanvas.GetComponent<Renderer>().
+				material.mainTexture.name.Contains("StudentCanvas"))
+			{
+				break;
+			}
+			*/
+
+			i++;
 		}
 	}
 
 	public static void changeTexture(GameObject gameObject, Texture2D tex)
 	{
 		gameObject.GetComponent<Renderer>().material.mainTexture = tex;
+	}
+
+	public void ResetSubmission(bool reset)
+	{
+		canLoad = reset;
 	}
 }
