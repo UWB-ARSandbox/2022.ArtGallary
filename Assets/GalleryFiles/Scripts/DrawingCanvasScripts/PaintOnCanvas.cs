@@ -24,6 +24,12 @@ public class PaintOnCanvas : MonoBehaviour
 	//how big is the size of the brush
 	int brushSize;
 
+	//how wide the canvas is in pixels
+	int canvasWidth;
+
+	//how long the canvas is in pixels
+	int canvasHeight;
+
 	//Is the player erasing
 	bool eraseMode;
 
@@ -54,6 +60,8 @@ public class PaintOnCanvas : MonoBehaviour
 	void Start()
 	{
 		brushSize = 10;
+		canvasWidth = 768;
+		canvasHeight = 512;
 		eraseMode = false;
 		textMode = false;
 		canSave = false;
@@ -62,16 +70,17 @@ public class PaintOnCanvas : MonoBehaviour
 		brushColor = Color.black;
 		pixelToDraw = new Vector2(0, 0);
 		dirPath = Application.dataPath;
-		alphabet = new Texture2D(252, 14, TextureFormat.RGBA32, false);
-		//alphabet = Resources.Load("alphabet", typeof(Texture2D)) as Texture2D;
-		alphabet.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/alphabet.png"));
+		//another way to load in alphabet.png
+		//alphabet = new Texture2D(456, 14, TextureFormat.RGBA32, false);
+		//alphabet.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/alphabet.png"));
+		alphabet = Resources.Load("alphabet", typeof(Texture2D)) as Texture2D;
 		GameObject brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
 		//this covers RGBA format and is good for opacity changing if needed
-		studentCanvas = new Texture2D(256, 512, TextureFormat.RGBA32, false);
-		for(int x = 0; x < 256; x++)
+		studentCanvas = new Texture2D(768, 512, TextureFormat.RGBA32, false);
+		for(int x = 0; x < canvasWidth; x++)
 		{
-			for(int y = 0; y < 512; y++)
+			for(int y = 0; y < canvasHeight; y++)
 			{
 				studentCanvas.SetPixel(x, y, Color.white);
 			}
@@ -110,9 +119,10 @@ public class PaintOnCanvas : MonoBehaviour
 			if (Physics.Raycast(ray, out raycastHit) == true
 			&& raycastHit.transform.name == "Canvas")
 			{
-				Vector2 uv = new Vector2(raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2)),
-				(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / 2);
-				Vector2 pixelCoord = new Vector2((int)(uv.x * 256), (int)(uv.y * 512));
+				//converts raycastHit point into a UV coordinate
+				Vector2 uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
+				(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+				Vector2 pixelCoord = new Vector2((int)(uv.x * (float)(canvasWidth)), (int)(uv.y * (float)(canvasHeight)));
 				dirPath = Application.dataPath;
 				//draw area of brush size if greater than 1
 				if (brushSize > 1)
@@ -121,13 +131,13 @@ public class PaintOnCanvas : MonoBehaviour
 					{
 						for (int x = (int)(pixelCoord.x - (brushSize / 2)); x < (int)(pixelCoord.x + (brushSize / 2)); x++)
 						{
-							if (x >= 256 || x < 0)
+							if (x >= canvasWidth || x < 0)
 							{
 								continue;
 							}
 							for (int y = (int)(pixelCoord.y - (brushSize / 2)); y < (int)(pixelCoord.y + (brushSize / 2)); y++)
 							{
-								if (y >= 512 || y < 0)
+								if (y >= canvasHeight || y < 0)
 								{
 									continue;
 								}
@@ -335,9 +345,9 @@ public class PaintOnCanvas : MonoBehaviour
 	}
 	public void EraseEntireCanvas()
 	{
-		for (int x = 0; x < 256; x++)
+		for (int x = 0; x < canvasWidth; x++)
 		{
-			for (int y = 0; y < 512; y++)
+			for (int y = 0; y < canvasHeight; y++)
 			{
 				studentCanvas.SetPixel(x, y, Color.white);
 			}
@@ -374,6 +384,15 @@ public class PaintOnCanvas : MonoBehaviour
 		else if(c >= 48 && c < 58)
 		{
 			modifiedVal = c - 48 + 26;
+		}
+		else if(c >= 32 && c < 48)
+		{
+			modifiedVal = c + 30;
+		}
+		else if(c >= 65 && c < 91)
+		{
+			modifiedVal = c - 29;
+			print(modifiedVal);
 		}
 		return modifiedVal;
 	}
