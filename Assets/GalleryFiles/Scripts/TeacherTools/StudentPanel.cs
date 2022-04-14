@@ -8,7 +8,6 @@ public class StudentPanel : MonoBehaviour
     private TMP_Text tmp;
     private bool submitted{get; set;}
 
-
     // Start is called before the first frame update
     void Start()
     {

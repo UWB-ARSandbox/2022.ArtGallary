@@ -5,10 +5,14 @@ using ASL;
 
 public class ClassScroll : MonoBehaviour
 {
-    GameLiftManager manager;
+    static GameLiftManager manager;
     public int host;
-    GameObject content;
+    static GameObject content;
     Canvas myCanvas;
+
+    int totalUsers = 0;
+
+    static int iIndexer = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -18,12 +22,10 @@ public class ClassScroll : MonoBehaviour
         manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
         myCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         host = manager.GetLowestPeerId();
-        Debug.Log(manager.m_PeerId);
+        totalUsers = manager.m_Players.Count;
 
         if(manager.m_PeerId == host){
-            Debug.Log("This instance is the host.");
             this.gameObject.SetActive(true);
-            Debug.Log(manager.m_Players.Count);
             foreach(var item in manager.m_Players)
             {
                 int peerId = item.Key;
@@ -31,23 +33,76 @@ public class ClassScroll : MonoBehaviour
 
                 if (peerId != host)
                 {
-                    GameObject student = Instantiate(Resources.Load<GameObject>("MyPrefabs/StudentPanel"), 
-                        content.transform.position, content.transform.rotation, content.transform);
-                    StudentPanel panel = student.GetComponent<StudentPanel>();
-                    panel.Initialize();
-                    panel.ChangeName(username);
+                    ASL.ASLHelper.InstantiateASLObject("StudentPanel",
+                        new Vector3(0, 0, 0), Quaternion.identity, "", "", RecievedGameObj);
                 }
             }
         }
-        else{
+        else
+        {
             this.gameObject.SetActive(false);
         }
+    }
+
+    static void RecievedGameObj(GameObject gameObj)
+	{
+        gameObj.transform.SetParent(content.transform, false);
+        gameObj.transform.position = content.transform.position;
+        gameObj.transform.rotation = content.transform.rotation;
+
+        StudentPanel panel = gameObj.GetComponent<StudentPanel>();
+
+        int i = 0;
+        foreach (var item in manager.m_Players)
+		{
+            if(iIndexer == i)
+			{
+                int peerId = item.Key;
+                string username = item.Value;
+
+                iIndexer += 1;
+
+                panel.Initialize();
+
+                panel.ChangeName(username);
+                break;
+            }
+            i += 1;
+		}
+
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        int nowPlayers = manager.m_Players.Count;
+        if(nowPlayers < totalUsers)
+		{
+            foreach(var panels in ASLHelper.m_ASLObjects)
+			{
+                // Delete all panels
+                if(panels.Value.gameObject.name.Contains("Panel"))
+				{
+                    panels.Value.SendAndSetClaim(() =>
+					{
+                        panels.Value.DeleteObject();
+                    });
+                }
+			}
+            // Reconstruct
+            Start();
+		}
     }
-    
+
+    /*
+     * Gary's old code:
+     * GameObject student = Instantiate(Resources.Load<GameObject>("MyPrefabs/StudentPanel"),
+                        content.transform.position, content.transform.rotation, content.transform);
+                    StudentPanel panel = student.GetComponent<StudentPanel>();
+                    panel.Initialize();
+
+                    panel.ChangeName(username);
+                    panel.ChangeUserID(peerId);
+     */
 }

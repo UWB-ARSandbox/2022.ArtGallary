@@ -63,7 +63,8 @@ public class StudentEnable : MonoBehaviour
                 {
                     Debug.Log("No camera attached to student");
                 }
-                else{
+                else
+                {
                     studentCamera.GetComponent<FirstPersonCamera>().ReinitializeParent(this.gameObject);
                 }
                 

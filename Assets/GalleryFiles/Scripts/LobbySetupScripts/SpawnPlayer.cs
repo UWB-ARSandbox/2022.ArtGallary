@@ -10,12 +10,10 @@ public class SpawnPlayer : MonoBehaviour
 
     public string teacherPrefab = "Teacher";
 
-    public string studentPrefab = "Student";
+    public string studentPrefab = "Students";
 
     public Transform teacherSpawn;
     public Transform[] studentSpawn;
-    
-
 
     void Start()
     {
@@ -26,10 +24,17 @@ public class SpawnPlayer : MonoBehaviour
         }
         else
         {
-            ASLHelper.InstantiateASLObject(studentPrefab, studentSpawn[playerID - 2].position, studentSpawn[playerID - 2].rotation);
+            ASLHelper.InstantiateASLObject(studentPrefab, 
+                studentSpawn[playerID - 2].position, studentSpawn[playerID - 2].rotation, "", "", 
+                GameObjRecevied);
         }
         
     }
+
+    static void GameObjRecevied(GameObject gameObj)
+	{
+        
+	}
 
     // Update is called once per frame
     void Update()
