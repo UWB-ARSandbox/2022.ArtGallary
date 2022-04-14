@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using ASL;
+using UnityEngine.UI;
 
 public class Pavel_Player : MonoBehaviour
 {
@@ -9,12 +10,18 @@ public class Pavel_Player : MonoBehaviour
     public float MovementSpeed = 3f;
 
     ASLObject m_ASLObject;
+    GameLiftManager manager;
+    Button LeaveButton;
 
     // Start is called before the first frame update
     void Start()
     {
+        LeaveButton = GameObject.Find("LeaveTheClassButton").GetComponent<Button>();
+        LeaveButton.onClick.AddListener(LeaveClass);
+
         m_ASLObject = gameObject.GetComponent<ASLObject>();
         Debug.Assert(m_ASLObject != null);
+        manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
     }
 
     // Update is called once per frame
@@ -68,6 +75,17 @@ public class Pavel_Player : MonoBehaviour
                 });
             }
         } */
+    }
+
+    public void LeaveClass()
+    {
+        // Delete player model in space
+        gameObject.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
+        {
+            GetComponent<ASL.ASLObject>().DeleteObject();
+            manager.DisconnectFromServer();
+            Application.Quit();
+        });
     }
 }
 
