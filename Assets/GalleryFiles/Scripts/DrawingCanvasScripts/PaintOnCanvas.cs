@@ -53,8 +53,14 @@ public class PaintOnCanvas : MonoBehaviour
 
 	Vector2 pixelToDraw;
 
+	public int numberOfInterpolations;
+
 	// Current Canvas has been loaded
 	bool clicked = false;
+
+	Vector2 previousCoord;
+
+	bool previousMouseDown = false;
 
 	// Start is called before the first frame update
 	void Start()
@@ -125,52 +131,114 @@ public class PaintOnCanvas : MonoBehaviour
 				Vector2 pixelCoord = new Vector2((int)(uv.x * (float)(canvasWidth)), (int)(uv.y * (float)(canvasHeight)));
 				dirPath = Application.dataPath;
 				//draw area of brush size if greater than 1
-				if (brushSize > 1)
+				
+					//If the mouse wasn't down, don't interpolate
+				if(!previousMouseDown)
 				{
-					if (textMode == false)
+					if (brushSize > 1)
 					{
-						for (int x = (int)(pixelCoord.x - (brushSize / 2)); x < (int)(pixelCoord.x + (brushSize / 2)); x++)
+
+					
+						if (textMode == false)
 						{
-							if (x >= canvasWidth || x < 0)
+							for (int x = (int)(pixelCoord.x - (brushSize / 2)); x < (int)(pixelCoord.x + (brushSize / 2)); x++)
 							{
-								continue;
-							}
-							for (int y = (int)(pixelCoord.y - (brushSize / 2)); y < (int)(pixelCoord.y + (brushSize / 2)); y++)
-							{
-								if (y >= canvasHeight || y < 0)
+								if (x >= canvasWidth || x < 0)
 								{
 									continue;
 								}
-								if (eraseMode == false)
+								for (int y = (int)(pixelCoord.y - (brushSize / 2)); y < (int)(pixelCoord.y + (brushSize / 2)); y++)
 								{
-									studentCanvas.SetPixel(x, y, brushColor);
+									if (y >= canvasHeight || y < 0)
+									{
+										continue;
+									}
+									if (eraseMode == false)
+									{
+										studentCanvas.SetPixel(x, y, brushColor);
+									}
+									else
+									{
+										studentCanvas.SetPixel(x, y, Color.white);
+									}
 								}
-								else
+							}
+						}
+						else
+						{
+							pixelToDraw = pixelCoord;
+							
+						}
+					}
+					
+				}
+				//If the mouse was down, interpolate
+				else
+				{
+					if (brushSize > 1)
+					{
+						for(int i = 0; i < numberOfInterpolations; i++)
+						{
+							float distanceX = (i * (pixelCoord.x - previousCoord.x)/ numberOfInterpolations);
+							float distanceY = (i * (pixelCoord.y - previousCoord.y)/ numberOfInterpolations);
+							
+							
+							if (textMode == false)
+							{
+								for (int x = (int)(pixelCoord.x - distanceX -(brushSize / 2)); x < (int)(pixelCoord.x - distanceX + (brushSize / 2)); x++)
 								{
-									studentCanvas.SetPixel(x, y, Color.white);
+									if (x >= canvasWidth || x < 0)
+									{
+										continue;
+									}
+									for (int y = (int)(pixelCoord.y - distanceY -(brushSize / 2)); y < (int)(pixelCoord.y - distanceY + (brushSize / 2)); y++)
+									{
+										if (y >= canvasHeight || y < 0)
+										{
+											continue;
+										}
+										if (eraseMode == false)
+										{
+											studentCanvas.SetPixel(x, y, brushColor);
+										}
+										else
+										{
+											studentCanvas.SetPixel(x, y, Color.white);
+										}
+									}
 								}
+							}
+							else
+							{
+								pixelToDraw = pixelCoord;
 							}
 						}
 					}
 					else
 					{
-						pixelToDraw = pixelCoord;
+						for(int i = 0; i < numberOfInterpolations; i++)
+						{
+							float distanceX = (i * (pixelCoord.x - previousCoord.x)/ numberOfInterpolations);
+							float distanceY = (i * (pixelCoord.y - previousCoord.y)/ numberOfInterpolations);
+							if(textMode == false && eraseMode == false && textMode == false)
+							{
+								studentCanvas.SetPixel((int)(pixelCoord.x - distanceX), (int)(pixelCoord.y-distanceY), brushColor);
+							}
+							else if(eraseMode == true)
+							{
+								studentCanvas.SetPixel((int)(pixelCoord.x - distanceX), (int)(pixelCoord.y - distanceY), Color.white);
+							}
+						}
 					}
+					studentCanvas.Apply();
+					
 				}
-				else
-				{
-					if(textMode == false && eraseMode == false && textMode == false)
-					{
-						studentCanvas.SetPixel((int)pixelCoord.x, (int)pixelCoord.y, brushColor);
-					}
-					else if(eraseMode == true)
-					{
-						studentCanvas.SetPixel((int)pixelCoord.x, (int)pixelCoord.y, Color.white);
-					}
-				}
-				studentCanvas.Apply();
+				previousCoord = pixelCoord;
+				previousMouseDown = true;
 			}
+			
 		}
+		
 		else if(Input.GetMouseButtonUp(0) == true)
 		{
 			if (textOnType.Equals("") == false && textMode == true)
@@ -190,6 +258,10 @@ public class PaintOnCanvas : MonoBehaviour
 			{
 				GameObject.Find("TextPlaceholder").GetComponent<Text>().text = "empty response not allowed";
 			}
+		}
+		else
+		{
+			previousMouseDown = false;
 		}
 	}
 
