@@ -13,14 +13,17 @@ public class FirstPersonCamera : MonoBehaviour
     public float xRotation = 0f;
     ASLObject m_ASLObject;
     
+    public GameObject crosshair;
+    
     bool isLocked, isActive;
 
     // Start is called before the first frame update
     void Start()
     {
-        //Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState = CursorLockMode.Locked;
         isLocked = true;
         isActive = false;
+        crosshair = GameObject.Find("Crosshair");
     }
 
     // Update is called once per frame
@@ -51,6 +54,7 @@ public class FirstPersonCamera : MonoBehaviour
         {
             isLocked = !isLocked;
             SetCursorLock(isLocked);
+            crosshair.SetActive(isLocked);
         }
        
     }

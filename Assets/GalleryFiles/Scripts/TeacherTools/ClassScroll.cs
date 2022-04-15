@@ -7,7 +7,7 @@ public class ClassScroll : MonoBehaviour
 {
     static GameLiftManager manager;
     public int host;
-    static GameObject content;
+    static GameObject content, handler;
     Canvas myCanvas;
 
     int totalUsers = 0;
@@ -18,9 +18,36 @@ public class ClassScroll : MonoBehaviour
     void Start()
     {
         content = GameObject.Find("Students");
+        handler = GameObject.Find("RequestHandler");
 
         manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
         myCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+        host = manager.GetLowestPeerId();
+        totalUsers = manager.m_Players.Count;
+
+        if(manager.m_PeerId == host){
+            this.gameObject.SetActive(true);
+            foreach(var item in manager.m_Players)
+            {
+                int peerId = item.Key;
+                string username = item.Value;
+
+                if (peerId != host)
+                {
+                    ASL.ASLHelper.InstantiateASLObject("StudentPanel",
+                        new Vector3(0, 0, 0), Quaternion.identity, "", "", RecievedGameObj);
+                }
+            }
+        }
+        else
+        {
+            this.gameObject.SetActive(false);
+        }
+    }
+
+    void Init()
+    {
+        iIndexer = 1;
         host = manager.GetLowestPeerId();
         totalUsers = manager.m_Players.Count;
 
@@ -59,10 +86,11 @@ public class ClassScroll : MonoBehaviour
 			{
                 int peerId = item.Key;
                 string username = item.Value;
+                Debug.Log(i + ", " + iIndexer);
 
                 iIndexer += 1;
 
-                panel.Initialize();
+                panel.Initialize(peerId);
 
                 panel.ChangeName(username);
                 break;
@@ -70,7 +98,8 @@ public class ClassScroll : MonoBehaviour
             i += 1;
 		}
 
-        
+        // Initializes the RequestHandler object's list of StudentPanels. This allows for RequestHandler to reflect requests on panels.
+        handler.GetComponent<RequestHandler>().Initialize();
     }
 
     // Update is called once per frame
@@ -91,7 +120,7 @@ public class ClassScroll : MonoBehaviour
                 }
 			}
             // Reconstruct
-            Start();
+            Init();
 		}
     }
 
