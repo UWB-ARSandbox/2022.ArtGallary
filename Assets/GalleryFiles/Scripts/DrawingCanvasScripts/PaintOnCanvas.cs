@@ -280,14 +280,12 @@ public class PaintOnCanvas : MonoBehaviour
 				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
 				byte[] bytes = studentCanvas.EncodeToPNG();
 				System.IO.File.WriteAllBytes(dirPath + "/" + png + ".png", bytes);
-				//studentCanvas.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + png + ".png"));
 			}
 			else if (png.Contains("/") == false && png.EndsWith(".png") == true && png.Equals("alphabet.png") == false)
 			{
 				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
 				byte[] bytes = studentCanvas.EncodeToPNG();
 				System.IO.File.WriteAllBytes(dirPath + "/" + png, bytes);
-				//studentCanvas.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + png));
 			}
 			else
 			{
