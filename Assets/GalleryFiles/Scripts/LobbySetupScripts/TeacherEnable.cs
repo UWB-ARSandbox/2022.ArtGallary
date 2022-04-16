@@ -48,19 +48,21 @@ public class TeacherEnable : MonoBehaviour
         // Check if this is host.
         if(tempID == manager.GetLowestPeerId())
         {
+            Transform teacherBody = this.transform.Find("TeacherBody");
             teacherCamera = Camera.main;
-            teacherCamera.transform.SetParent(this.gameObject.transform);
+            teacherCamera.transform.SetParent(teacherBody);
+    
             if(teacherCamera == null)
             {
                 Debug.Log("No camera attached to teacher");
             }
             else
             {
-                teacherCamera.GetComponent<FirstPersonCamera>().ReinitializeParent(this.gameObject);
-                this.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);;
+                teacherCamera.GetComponent<FirstPersonCamera>().ReinitializeParent(teacherBody.gameObject);
             }
-
-            this.gameObject.GetComponent<Pavel_Player>().enabled = true;
+            this.transform.GetComponentInChildren<Pavel_Player>().enabled = true;
+            this.transform.GetComponentInChildren<PaintOnCanvas>().enabled = true;
+            //this.gameObject.GetComponent<Pavel_Player>().enabled = true;
         }
         
     }

@@ -56,8 +56,9 @@ public class StudentEnable : MonoBehaviour
 
             else if(transform.position == studentSpawn[tempID - 2].position)
             {
+                Transform studentBody = this.transform.Find("StudentBody");
                 studentCamera = Camera.main;
-                studentCamera.transform.SetParent(this.gameObject.transform);
+                studentCamera.transform.SetParent(studentBody);
         
                 if(studentCamera == null)
                 {
@@ -65,10 +66,11 @@ public class StudentEnable : MonoBehaviour
                 }
                 else
                 {
-                    studentCamera.GetComponent<FirstPersonCamera>().ReinitializeParent(this.gameObject);
+                    studentCamera.GetComponent<FirstPersonCamera>().ReinitializeParent(studentBody.gameObject);
                 }
-                
-                this.gameObject.GetComponent<Pavel_Player>().enabled = true;
+                this.transform.GetComponentInChildren<Pavel_Player>().enabled = true;
+                this.transform.GetComponentInChildren<PaintOnCanvas>().enabled = true;
+                //this.gameObject.GetComponent<Pavel_Player>().enabled = true;
             }
         }
     }

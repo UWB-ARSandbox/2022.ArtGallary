@@ -21,7 +21,9 @@ public class ClassScroll : MonoBehaviour
         handler = GameObject.Find("RequestHandler");
 
         manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
-        myCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
+
+        //Pavel Note: Find way of finding correct canvas
+        //myCanvas = GameObject.Find("Canvas").GetComponent<Canvas>();
         host = manager.GetLowestPeerId();
         totalUsers = manager.m_Players.Count;
 
