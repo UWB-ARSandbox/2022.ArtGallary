@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ASL;
 
-public class StudentRoomSettings : MonoBehaviour
+public class TeacherSettings : MonoBehaviour
 {
     GameLiftManager manager;
     int host;
@@ -14,14 +14,14 @@ public class StudentRoomSettings : MonoBehaviour
         manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
         host = manager.GetLowestPeerId();
         // Activate student settngs panel for users who are not host
-        if(host != manager.m_PeerId)
-		{
+        if (host == manager.m_PeerId)
+        {
             this.gameObject.SetActive(true);
-		}
+        }
         // Host will have different room settings so disable student settings
         else
-		{
+        {
             this.gameObject.SetActive(false);
-		}
+        }
     }
 }

@@ -30,6 +30,8 @@ public class StudentPanel : MonoBehaviour
         studentName.text = newName;
     }
 
+    public string GetName() { return studentName.text; }
+
     // Initialize is called to initialize the component, as Start is called in a random order, resulting in a nullreferenceexception.
     public void Initialize(int peerId)
     {

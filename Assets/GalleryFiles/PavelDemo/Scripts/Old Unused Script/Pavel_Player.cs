@@ -16,12 +16,15 @@ public class Pavel_Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        LeaveButton = GameObject.Find("LeaveTheClassButton").GetComponent<Button>();
-        LeaveButton.onClick.AddListener(LeaveClass);
+        manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
+        if (manager.AmLowestPeer() == false)
+		{
+            LeaveButton = GameObject.Find("LeaveTheClassButton").GetComponent<Button>();
+            LeaveButton.onClick.AddListener(LeaveClass);
+        }
 
         m_ASLObject = gameObject.GetComponent<ASLObject>();
         Debug.Assert(m_ASLObject != null);
-        manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
     }
 
     // Update is called once per frame

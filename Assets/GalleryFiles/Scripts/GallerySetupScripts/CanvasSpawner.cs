@@ -8,6 +8,8 @@ public class CanvasSpawner : MonoBehaviour
     static List<GameObject> allCans = new List<GameObject>();
     int totalStu = 0;
 
+    bool clicked = false;
+
     static float point1 = 4;
     static float point2 = 4.5f;
     static float point3 = 5;
@@ -23,19 +25,19 @@ public class CanvasSpawner : MonoBehaviour
 		}
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Keypad0))
-		{
-            StartGallery();
-		}
-
-        if(Input.GetKeyDown(KeyCode.Delete))
+    public void GalleryOpitions()
+	{
+        if(clicked)
 		{
             ClearGallery();
+            clicked = false;
 		}
-    }
+        else
+		{
+            StartGallery();
+            clicked = true;
+		}
+	}
 
     // Start the deletion of objects
     public void ClearGallery()

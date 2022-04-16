@@ -471,10 +471,12 @@ public class PaintOnCanvas : MonoBehaviour
 
 	public void SubmitPaiting()
 	{
+		/*
 		if(clicked)
 		{
 			return;
 		}
+		*/
 
 		GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
 		byte[] bytes = studentCanvas.EncodeToPNG();
@@ -491,6 +493,7 @@ public class PaintOnCanvas : MonoBehaviour
 		foreach (var player in manager.m_Players)
 		{
 			string canvasName = "StuCanvas" + i;
+			Debug.Log(canvasName);
 			GameObject stuCanvas = GameObject.Find(canvasName);
 
 			// Check for an empty canvas space
@@ -505,14 +508,7 @@ public class PaintOnCanvas : MonoBehaviour
 				clicked = true;
 				break;
 			}
-			/*
-			// Student has already submitted an art piece
-			else if (stuCanvas.GetComponent<Renderer>().
-				material.mainTexture.name.Contains("StudentCanvas"))
-			{
-				break;
-			}
-			*/
+			Debug.Log("Not Called On " + canvasName);
 
 			i++;
 		}
