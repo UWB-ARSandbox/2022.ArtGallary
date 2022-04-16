@@ -60,6 +60,8 @@ public class TeacherEnable : MonoBehaviour
             {
                 teacherCamera.GetComponent<FirstPersonCamera>().ReinitializeParent(teacherBody.gameObject);
             }
+            
+
             this.transform.GetComponentInChildren<Pavel_Player>().enabled = true;
             this.transform.GetComponentInChildren<PaintOnCanvas>().enabled = true;
             //this.gameObject.GetComponent<Pavel_Player>().enabled = true;
