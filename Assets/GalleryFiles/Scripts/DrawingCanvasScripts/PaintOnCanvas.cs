@@ -127,7 +127,7 @@ public class PaintOnCanvas : MonoBehaviour
 			RaycastHit raycastHit;
 			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 			if (Physics.Raycast(ray, out raycastHit) == true
-			&& raycastHit.transform.name == "Canvas")
+			&& raycastHit.transform.GetComponent<PaintOnCanvas>() != null)
 			{
 				//converts raycastHit point into a UV coordinate
 				Vector2 uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
