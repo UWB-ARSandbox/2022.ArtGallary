@@ -14,6 +14,9 @@ public class StudentEnable : MonoBehaviour
     SpawnPlayer spawnComponent;
     GameLiftManager manager;
 
+    GameObject StudentHolder;
+
+    public int studentID;
 
     
     public string playerManager;
@@ -41,9 +44,19 @@ public class StudentEnable : MonoBehaviour
         studentSpawn = spawnComponent.studentSpawn;
         int tempID = manager.m_PeerId;
 
+
+        for(int i = 0; i < studentSpawn.Length; i++)
+        {
+            if(transform.position == studentSpawn[i].position)
+            {
+                studentID = i + 2;
+                break;
+            }
+        }
         if(tempID == manager.GetLowestPeerId())
         {
-            return;
+            //Don't actually return, there's code that executes at the end of it.
+            //return;
         }
         else
         {
@@ -73,6 +86,12 @@ public class StudentEnable : MonoBehaviour
                 //this.gameObject.GetComponent<Pavel_Player>().enabled = true;
             }
         }
+        StudentHolder = GameObject.Find("StudentHolder");
+        if(StudentHolder == null)
+        {
+            Debug.Log("Couldn't find student holder");
+        }
+        this.transform.SetParent(StudentHolder.transform);
     }
 
     // Update is called once per frame
