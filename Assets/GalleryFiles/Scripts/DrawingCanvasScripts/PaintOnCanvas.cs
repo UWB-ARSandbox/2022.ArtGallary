@@ -564,11 +564,9 @@ public class PaintOnCanvas : MonoBehaviour
 		int i = 0;
 
 		// Go through all player canvases and check
-		foreach (var player in manager.m_Players)
+		foreach (var gameObjs in GameObject.FindGameObjectsWithTag("StuCanvas"))
 		{
-			string canvasName = "StuCanvas" + i;
-			Debug.Log(canvasName);
-			GameObject stuCanvas = GameObject.Find(canvasName);
+			GameObject stuCanvas = gameObjs;
 
 			// Check for an empty canvas space
 			if (stuCanvas != null && stuCanvas.GetComponent<Renderer>().
@@ -582,7 +580,6 @@ public class PaintOnCanvas : MonoBehaviour
 				clicked = true;
 				break;
 			}
-			Debug.Log("Not Called On " + canvasName);
 
 			i++;
 		}
