@@ -80,7 +80,7 @@ public class CanvasSpawner : MonoBehaviour
         }
     }
 
-    void ChangeWallSizePos(int wallSize)
+    public void ChangeWallSizePos(int wallSize)
 	{
         GameObject ground = GameObject.Find("Ground");
         ground.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>

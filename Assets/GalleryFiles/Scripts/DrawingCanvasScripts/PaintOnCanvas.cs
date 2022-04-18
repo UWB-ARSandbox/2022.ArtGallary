@@ -62,9 +62,82 @@ public class PaintOnCanvas : MonoBehaviour
 
 	bool previousMouseDown = false;
 
+	// UI field listeners
+	InputField rField = null;
+	InputField gField = null;
+	InputField bField = null;
+	InputField aField = null;
+
+	InputField slField = null;
+	InputField textField = null;
+	InputField brushSizeField = null;
+
+	// UI button listeners
+	Button loadB = null;
+	Button saveB = null;
+	Button deleteB = null;
+
+	Button subGalB = null;
+	Button subStuB = null;
+
+	// UI toggle listeners
+	Toggle eraseTog = null;
+	Toggle textTog = null;
+
 	// Start is called before the first frame update
 	void Start()
 	{
+		// UI field code
+		rField = GameObject.Find("RedInputField").GetComponent<InputField>();
+		gField = GameObject.Find("GreenInputField").GetComponent<InputField>();
+		bField = GameObject.Find("BlueInputField").GetComponent<InputField>();
+		aField = GameObject.Find("AlphaInputField").GetComponent<InputField>();
+
+		slField = GameObject.Find("SaveField").GetComponent<InputField>();
+		textField = GameObject.Find("TextInput").GetComponent<InputField>();
+		brushSizeField = GameObject.Find("SizeInputField").GetComponent<InputField>();
+
+		rField.onEndEdit.AddListener(ChangeRed);
+		gField.onEndEdit.AddListener(ChangeGreen);
+		bField.onEndEdit.AddListener(ChangeBlue);
+		aField.onEndEdit.AddListener(ChangeAlpha);
+
+		slField.onEndEdit.AddListener(SaveOrLoadToPNG);
+		textField.onEndEdit.AddListener(SetTextOnType);
+		brushSizeField.onEndEdit.AddListener(SetBrushSize);
+
+		// UI Button Code
+		loadB = GameObject.Find("LoadButton").GetComponent<Button>();
+		saveB = GameObject.Find("SaveButton").GetComponent<Button>();
+		deleteB = GameObject.Find("DeleteCanvasButton").GetComponent<Button>();
+
+		GameObject tGal = GameObject.Find("SubmitToGalleryButton");
+		if (tGal != null)
+		{
+			subGalB = tGal.GetComponent<Button>();
+			subGalB.onClick.AddListener(SubmitPainting);
+		}
+
+		GameObject tSubGal = GameObject.Find("SubmitWork");
+		if(tSubGal != null)
+		{
+			subStuB = tSubGal.GetComponent<Button>();
+			subStuB.onClick.AddListener(SubmitPainting);
+		}
+		
+
+		loadB.onClick.AddListener(SetCanLoad);
+		saveB.onClick.AddListener(SetCanSave);
+		deleteB.onClick.AddListener(EraseEntireCanvas);
+
+		// UI toggle code
+		eraseTog = GameObject.Find("EraserToggle").GetComponent<Toggle>();
+		textTog = GameObject.Find("TextToggle").GetComponent<Toggle>();
+
+		eraseTog.onValueChanged.AddListener(SetErase);
+		textTog.onValueChanged.AddListener(SetText);
+
+		// Canvas variables
 		brushSize = 10;
 		canvasWidth = 768;
 		canvasHeight = 512;
@@ -470,7 +543,7 @@ public class PaintOnCanvas : MonoBehaviour
 		}
 		return modifiedVal;
 	}
-	public void SubmitPaiting()
+	public void SubmitPainting()
 	{
 		/*
 		if(clicked)
