@@ -13,9 +13,9 @@ public class SendAndPlayAudio : MonoBehaviour
     bool audioInput = false;
 
     int count = 0;
-    
+    int previousCount = 0;
 
-    int hrz = 36000;
+    int hrz = 39000;
 
     int audioPerSecond = 40; //If changing, will need to make sure stuff in update gets called less as well;
 
@@ -29,7 +29,7 @@ public class SendAndPlayAudio : MonoBehaviour
         }
         audioPlayer = GetComponent<AudioSource>();
         
-        clip2 = AudioClip.Create("MyMic", 36000, 1, hrz, false);
+        clip2 = AudioClip.Create("MyMic", hrz, 1, hrz, false);
         this.GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(UserDefinedFunction);
         
         
@@ -42,13 +42,14 @@ public class SendAndPlayAudio : MonoBehaviour
     {
         if(audioInput == true)
         {
+            
             if(count < 40)
             {
 
         
             this.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
             {
-                Debug.Log("Sending " + count);
+                //Debug.Log("Sending " + count);
                 float[] x = new float[hrz / audioPerSecond];
                 clip.GetData(x, (count * hrz) / audioPerSecond);
                 this.GetComponent<ASL.ASLObject>().SendFloatArray(x); 
@@ -91,7 +92,8 @@ public class SendAndPlayAudio : MonoBehaviour
             count = 0;
             if(audioInput)
             {
-                clip = Microphone.Start(Microphone.devices[0], true, 1, hrz);
+                //Debug.Log("Microphone starting");
+                //clip = Microphone.Start(Microphone.devices[0], true, 1, hrz);
             }
         }
         
