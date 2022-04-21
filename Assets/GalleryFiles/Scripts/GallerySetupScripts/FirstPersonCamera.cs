@@ -57,9 +57,25 @@ public class FirstPersonCamera : MonoBehaviour
         // Toggle Cursor Lock
         if(Input.GetKeyDown(KeyCode.LeftAlt))
         {
-            isLocked = !isLocked;
-            SetCursorLock(isLocked);
-            crosshair.SetActive(isLocked);
+            if (Cursor.lockState == CursorLockMode.Locked)
+            {
+                isLocked = false;
+            }
+            else
+			{
+                isLocked = true;
+			}
+            bool canLock = transform.parent.GetComponent<GoToCanvas>().GetCanvasLock();
+            if (canLock == true)
+            {
+                crosshair.SetActive(false);
+                SetCursorLock(false);
+            }
+            else
+            {
+                crosshair.SetActive(isLocked);
+                SetCursorLock(isLocked);
+            }
         }
        
     }

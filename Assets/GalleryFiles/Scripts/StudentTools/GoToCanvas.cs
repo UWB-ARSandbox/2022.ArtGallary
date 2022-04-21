@@ -20,10 +20,10 @@ public class GoToCanvas : MonoBehaviour
 			if (isLocked == false)
 			{
 				isLocked = true;
-				Cursor.lockState = CursorLockMode.Locked;
-				transform.Find("Main Camera").GetComponent<FirstPersonCamera>().SetCursorLock(false);
+				Cursor.lockState = CursorLockMode.None;
 				GameObject canvas = transform.parent.GetChild(1).gameObject;
-				transform.LookAt(canvas.transform);
+				transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+				transform.GetChild(0).transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
 				transform.Find("Main Camera").GetComponent<FirstPersonCamera>().SetIsLocked(false);
 				crosshair.SetActive(false);
 				transform.position = canvas.transform.position;
@@ -33,12 +33,16 @@ public class GoToCanvas : MonoBehaviour
 			else
 			{
 				isLocked = false;
-				Cursor.lockState = CursorLockMode.None;
-				transform.Find("Main Camera").GetComponent<FirstPersonCamera>().SetCursorLock(true);
+				Cursor.lockState = CursorLockMode.Locked;
 				transform.Find("Main Camera").GetComponent<FirstPersonCamera>().SetIsLocked(true);
 				crosshair.SetActive(true);
 				GetComponent<Pavel_Player>().SetLockAtCanvas(false);
 			}
 		}
+	}
+
+	public bool GetCanvasLock()
+	{
+		return isLocked;
 	}
 }
