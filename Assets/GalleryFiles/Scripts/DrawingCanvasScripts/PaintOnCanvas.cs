@@ -465,8 +465,6 @@ public class PaintOnCanvas : MonoBehaviour
 		brushColor = new Color(red, brushColor.g, brushColor.b, brushColor.a);
 		GameObject brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
-		Debug.Log(brushColorUI.GetComponent<Image>().color);
-
 	}
 	public void ChangeGreen(string g)
 	{

@@ -56,7 +56,7 @@ public class SendAndPlayAudio : MonoBehaviour
             });
             }
             else{
-                Debug.Log("count is greater than 40");
+                //Debug.Log("count is greater than 40");
                 count = 0;
             }
             

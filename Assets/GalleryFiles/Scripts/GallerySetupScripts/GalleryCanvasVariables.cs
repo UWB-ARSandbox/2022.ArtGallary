@@ -6,7 +6,6 @@ public class GalleryCanvasVariables : MonoBehaviour
 {
 	int votes = 0;
 	bool voted = false;
-	bool claimed = false;
 	string studentName = "Bob";
 	ASL.GameLiftManager manager;
 	// Start is called before the first frame update
@@ -23,16 +22,16 @@ public class GalleryCanvasVariables : MonoBehaviour
 		{
 			transform.GetChild(1).gameObject.SetActive(true);
 		}
+		GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(retrieveVote);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		/*
-		GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
+		/*GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
 		{
-			GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(retrieveVote);
-			//Debug.Log(votes);
+			GetComponent<ASL.ASLObject>().SendFloatArray(tempVote);
+			Debug.Log(votes);
 		});
 		*/
 		if (Input.GetMouseButtonDown(0))
@@ -48,20 +47,16 @@ public class GalleryCanvasVariables : MonoBehaviour
 					Debug.Log(a.studentName);
 					Debug.Log("Clicked once");
 					voted = true;
-					float[] tempVote = new float[1];
-					tempVote[0] = 1;
-					//GetComponent<ASL.ASLObject>().SendFloatArray(tempVote);
+					//GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(retrieveVote);
 					transform.GetChild(0).GetComponent<TextMesh>().color = Color.green;
-					claimed = false;
 				}
 			}
-			Debug.Log("votes " + votes);
+			//Debug.Log("votes " + votes);
 		}
 	}
 
 	public void retrieveVote(string id, float[] vote)
 	{
-		votes += (int)vote[0];
-		claimed = true;
+		votes = (int)vote[0];
 	}
 }

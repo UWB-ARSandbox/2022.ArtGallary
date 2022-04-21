@@ -8,6 +8,7 @@ public class Pavel_Player : MonoBehaviour
 {
     [Tooltip("This determines the speed that the PlayerCube will move.")]
     public float MovementSpeed = 3f;
+    bool lockAtCanvas = false;
 
     ASLObject m_ASLObject;
     GameLiftManager manager;
@@ -30,16 +31,19 @@ public class Pavel_Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        Vector3 move = transform.right * x + transform.forward * z;
-
-        m_ASLObject.SendAndSetClaim(() =>
+        if (lockAtCanvas == false)
         {
-            Vector3 m_AdditiveMovementAmount = move * MovementSpeed * Time.deltaTime;
-            m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
-        });
+            float x = Input.GetAxis("Horizontal");
+            float z = Input.GetAxis("Vertical");
+
+            Vector3 move = transform.right * x + transform.forward * z;
+
+            m_ASLObject.SendAndSetClaim(() =>
+            {
+                Vector3 m_AdditiveMovementAmount = move * MovementSpeed * Time.deltaTime;
+                m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
+            });
+        }
         /* if (Input.GetKey(KeyCode.W) ^ Input.GetKey(KeyCode.S))
         {
             if (Input.GetKey(KeyCode.W))
@@ -91,6 +95,11 @@ public class Pavel_Player : MonoBehaviour
             manager.DisconnectFromServer();
             Application.Quit();
         });
+    }
+
+    public void SetLockAtCanvas(bool locked)
+    {
+        lockAtCanvas = locked;
     }
 }
 

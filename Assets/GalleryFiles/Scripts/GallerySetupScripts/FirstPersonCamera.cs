@@ -73,7 +73,7 @@ public class FirstPersonCamera : MonoBehaviour
         isActive = true;
     }
 
-    void SetCursorLock(bool isLocked)
+    public void SetCursorLock(bool isLocked)
     {
         if(isLocked)
         {
@@ -83,8 +83,10 @@ public class FirstPersonCamera : MonoBehaviour
         {
             Cursor.lockState = CursorLockMode.None;
         }
-
     }
 
-
+    public void SetIsLocked(bool locked)
+	{
+        isLocked = locked;
+	}
 }
