@@ -89,8 +89,6 @@ public class Pavel_Player : MonoBehaviour
         // Delete player model in space
         gameObject.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
         {
-            
-            
             GetComponent<ASL.ASLObject>().DeleteObject();
             manager.DisconnectFromServer();
             Application.Quit();

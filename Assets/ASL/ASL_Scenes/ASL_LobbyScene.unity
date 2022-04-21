@@ -3356,44 +3356,6 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: ARObjectSync_Example
-      m_Image: {fileID: 0}
-    - m_Text: OnCollisionEnterScene
-      m_Image: {fileID: 0}
-    - m_Text: OnCollisionExitScene
-      m_Image: {fileID: 0}
-    - m_Text: OnTriggerEnterScene
-      m_Image: {fileID: 0}
-    - m_Text: OnTriggerExitScene
-      m_Image: {fileID: 0}
-    - m_Text: OnTriggerStayScene
-      m_Image: {fileID: 0}
-    - m_Text: ASL_KinematicCollisionTestScene
-      m_Image: {fileID: 0}
-    - m_Text: ASL_RigidBodyCollisionTestScene
-      m_Image: {fileID: 0}
-    - m_Text: ASL_StaticColliderTestScene
-      m_Image: {fileID: 0}
-    - m_Text: StressTest_OnTriggerEnter
-      m_Image: {fileID: 0}
-    - m_Text: StressTestOnTriggerExit
-      m_Image: {fileID: 0}
-    - m_Text: StressTestOnTriggerStay
-      m_Image: {fileID: 0}
-    - m_Text: SimplePlatformerTutorial
-      m_Image: {fileID: 0}
-    - m_Text: ComplexPlatformerScene
-      m_Image: {fileID: 0}
-    - m_Text: PhysicsMasterOrdering
-      m_Image: {fileID: 0}
-    - m_Text: AutonomousObjectTestScene
-      m_Image: {fileID: 0}
-    - m_Text: ColorObject_Example
-      m_Image: {fileID: 0}
-    - m_Text: AutonomousObjectStressTest
-      m_Image: {fileID: 0}
-    - m_Text: TransformObjectViaWorldSpace_Example
-      m_Image: {fileID: 0}
     - m_Text: GalleryScene
       m_Image: {fileID: 0}
   m_OnValueChanged:
@@ -5128,7 +5090,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: ARObjectSync_Example
+  m_Text: GalleryScene
 --- !u!222 &1522670409
 CanvasRenderer:
   m_ObjectHideFlags: 0
