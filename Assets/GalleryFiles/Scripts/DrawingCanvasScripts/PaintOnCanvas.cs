@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Windows;
+using UnityEngine.EventSystems;
 
 public class PaintOnCanvas : MonoBehaviour
 {
@@ -195,105 +196,63 @@ public class PaintOnCanvas : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (Input.GetMouseButton(0) == true)
+		if(!EventSystem.current.IsPointerOverGameObject())
 		{
-			RaycastHit raycastHit;
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(ray, out raycastHit) == true
-			&& raycastHit.transform.GetComponent<PaintOnCanvas>() != null)
+			if (Input.GetMouseButton(0) == true)
 			{
-				Vector2 uv;
-				if((int)transform.forward.z == -1)
+				RaycastHit raycastHit;
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				if (Physics.Raycast(ray, out raycastHit) == true
+				&& raycastHit.transform.GetComponent<PaintOnCanvas>() != null)
 				{
-					uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
-					(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
-				}
-				else if((int)transform.forward.z == 1)
-				{
-					uv = new Vector2(1 - (raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
-					(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
-				}
-				else if((int)transform.forward.x == -1)
-				{
-					uv = new Vector2(1 -(raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
-					(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
-				}
-				else if((int)transform.forward.x == 1)
-				{
-					uv = new Vector2((raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
-					(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
-				}
-				else{
-					Debug.Log("Bad canvas angle");
-					uv = new Vector2(0.5f, 0.5f);
-				}
-				//converts raycastHit point into a UV coordinate
-				//Vector2 uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
-				//(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
-				Vector2 pixelCoord = new Vector2((int)(uv.x * (float)(canvasWidth)), (int)(uv.y * (float)(canvasHeight)));
-				dirPath = Application.dataPath;
-				//draw area of brush size if greater than 1
-
-				//If the mouse wasn't down, don't interpolate
-				if (!previousMouseDown)
-				{
-					if (brushSize > 1)
+					Vector2 uv;
+					if((int)transform.forward.z == -1)
 					{
-
-
-						if (textMode == false)
-						{
-							for (int x = (int)(pixelCoord.x - (brushSize / 2)); x < (int)(pixelCoord.x + (brushSize / 2)); x++)
-							{
-								if (x >= canvasWidth || x < 0)
-								{
-									continue;
-								}
-								for (int y = (int)(pixelCoord.y - (brushSize / 2)); y < (int)(pixelCoord.y + (brushSize / 2)); y++)
-								{
-									if (y >= canvasHeight || y < 0)
-									{
-										continue;
-									}
-									if (eraseMode == false)
-									{
-										studentCanvas.SetPixel(x, y, brushColor);
-									}
-									else
-									{
-										studentCanvas.SetPixel(x, y, Color.white);
-									}
-								}
-							}
-						}
-						else
-						{
-							//save point for text
-							pixelToDraw = pixelCoord;
-
-						}
+						uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
+						(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
 					}
-				}
-				//If the mouse was down, interpolate
-				else
-				{
-					if (brushSize > 1)
+					else if((int)transform.forward.z == 1)
 					{
-						for (int i = 0; i < numberOfInterpolations; i++)
+						uv = new Vector2(1 - (raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
+						(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+					}
+					else if((int)transform.forward.x == -1)
+					{
+						uv = new Vector2(1 -(raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
+						(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+					}
+					else if((int)transform.forward.x == 1)
+					{
+						uv = new Vector2((raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
+						(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+					}
+					else{
+						Debug.Log("Bad canvas angle");
+						uv = new Vector2(0.5f, 0.5f);
+					}
+					//converts raycastHit point into a UV coordinate
+					//Vector2 uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
+					//(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+					Vector2 pixelCoord = new Vector2((int)(uv.x * (float)(canvasWidth)), (int)(uv.y * (float)(canvasHeight)));
+					dirPath = Application.dataPath;
+					//draw area of brush size if greater than 1
+
+					//If the mouse wasn't down, don't interpolate
+					if (!previousMouseDown)
+					{
+						if (brushSize > 1)
 						{
-							float distanceX = (i * (pixelCoord.x - previousCoord.x) / numberOfInterpolations);
-							float distanceY = (i * (pixelCoord.y - previousCoord.y) / numberOfInterpolations);
 
 
 							if (textMode == false)
 							{
-								for (int x = (int)(pixelCoord.x - distanceX - (brushSize / 2)); x < (int)(pixelCoord.x - distanceX + (brushSize / 2)); x++)
+								for (int x = (int)(pixelCoord.x - (brushSize / 2)); x < (int)(pixelCoord.x + (brushSize / 2)); x++)
 								{
 									if (x >= canvasWidth || x < 0)
 									{
 										continue;
 									}
-									for (int y = (int)(pixelCoord.y - distanceY - (brushSize / 2)); y < (int)(pixelCoord.y - distanceY + (brushSize / 2)); y++)
+									for (int y = (int)(pixelCoord.y - (brushSize / 2)); y < (int)(pixelCoord.y + (brushSize / 2)); y++)
 									{
 										if (y >= canvasHeight || y < 0)
 										{
@@ -312,59 +271,104 @@ public class PaintOnCanvas : MonoBehaviour
 							}
 							else
 							{
+								//save point for text
 								pixelToDraw = pixelCoord;
+
 							}
 						}
 					}
+					//If the mouse was down, interpolate
 					else
 					{
-						for (int i = 0; i < numberOfInterpolations; i++)
+						if (brushSize > 1)
 						{
-							float distanceX = (i * (pixelCoord.x - previousCoord.x) / numberOfInterpolations);
-							float distanceY = (i * (pixelCoord.y - previousCoord.y) / numberOfInterpolations);
-							if (textMode == false && eraseMode == false && textMode == false)
+							for (int i = 0; i < numberOfInterpolations; i++)
 							{
-								studentCanvas.SetPixel((int)(pixelCoord.x - distanceX), (int)(pixelCoord.y - distanceY), brushColor);
-							}
-							else if (eraseMode == true)
-							{
-								studentCanvas.SetPixel((int)(pixelCoord.x - distanceX), (int)(pixelCoord.y - distanceY), Color.white);
+								float distanceX = (i * (pixelCoord.x - previousCoord.x) / numberOfInterpolations);
+								float distanceY = (i * (pixelCoord.y - previousCoord.y) / numberOfInterpolations);
+
+
+								if (textMode == false)
+								{
+									for (int x = (int)(pixelCoord.x - distanceX - (brushSize / 2)); x < (int)(pixelCoord.x - distanceX + (brushSize / 2)); x++)
+									{
+										if (x >= canvasWidth || x < 0)
+										{
+											continue;
+										}
+										for (int y = (int)(pixelCoord.y - distanceY - (brushSize / 2)); y < (int)(pixelCoord.y - distanceY + (brushSize / 2)); y++)
+										{
+											if (y >= canvasHeight || y < 0)
+											{
+												continue;
+											}
+											if (eraseMode == false)
+											{
+												studentCanvas.SetPixel(x, y, brushColor);
+											}
+											else
+											{
+												studentCanvas.SetPixel(x, y, Color.white);
+											}
+										}
+									}
+								}
+								else
+								{
+									pixelToDraw = pixelCoord;
+								}
 							}
 						}
-					}
-					studentCanvas.Apply();
+						else
+						{
+							for (int i = 0; i < numberOfInterpolations; i++)
+							{
+								float distanceX = (i * (pixelCoord.x - previousCoord.x) / numberOfInterpolations);
+								float distanceY = (i * (pixelCoord.y - previousCoord.y) / numberOfInterpolations);
+								if (textMode == false && eraseMode == false && textMode == false)
+								{
+									studentCanvas.SetPixel((int)(pixelCoord.x - distanceX), (int)(pixelCoord.y - distanceY), brushColor);
+								}
+								else if (eraseMode == true)
+								{
+									studentCanvas.SetPixel((int)(pixelCoord.x - distanceX), (int)(pixelCoord.y - distanceY), Color.white);
+								}
+							}
+						}
+						studentCanvas.Apply();
 
+					}
+					previousCoord = pixelCoord;
+					previousMouseDown = true;
 				}
-				previousCoord = pixelCoord;
-				previousMouseDown = true;
+
 			}
 
-		}
-
-		else if (Input.GetMouseButtonUp(0) == true)
-		{
-			//on mouse release write text to image
-			if (textOnType.Equals("") == false && textMode == true)
+			else if (Input.GetMouseButtonUp(0) == true)
 			{
-				Vector2 startChar = new Vector2(pixelToDraw.x, pixelToDraw.y);
-				for (int i = 0; i < textOnType.Length; i++)
+				//on mouse release write text to image
+				if (textOnType.Equals("") == false && textMode == true)
 				{
-					int spot = DetermineCharacter(textOnType[i]);
-					if (spot != -1)
+					Vector2 startChar = new Vector2(pixelToDraw.x, pixelToDraw.y);
+					for (int i = 0; i < textOnType.Length; i++)
 					{
-						DrawCharacter(startChar, spot);
-						startChar.x += 7;
+						int spot = DetermineCharacter(textOnType[i]);
+						if (spot != -1)
+						{
+							DrawCharacter(startChar, spot);
+							startChar.x += 7;
+						}
 					}
 				}
+				else if (textMode == true && textOnType.Equals("") == true)
+				{
+					GameObject.Find("TextPlaceholder").GetComponent<Text>().text = "empty response not allowed";
+				}
 			}
-			else if (textMode == true && textOnType.Equals("") == true)
+			else
 			{
-				GameObject.Find("TextPlaceholder").GetComponent<Text>().text = "empty response not allowed";
+				previousMouseDown = false;
 			}
-		}
-		else
-		{
-			previousMouseDown = false;
 		}
 	}
 
