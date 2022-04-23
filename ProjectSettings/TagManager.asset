@@ -8,6 +8,7 @@ TagManager:
   - AvailableMatches
   - StuCanvas
   - StuPanel
+  - StuNames
   layers:
   - Default
   - TransparentFX

@@ -6,7 +6,7 @@ using ASL;
 public class SpawnPlayer : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int playerID;
+    static public int playerID;
 
     public string teacherPrefab = "Teacher";
 
@@ -15,12 +15,19 @@ public class SpawnPlayer : MonoBehaviour
     public Transform teacherSpawn;
     public Transform[] studentSpawn;
 
+    GameLiftManager manager;
+    static StudentNames namer;
+
     void Start()
     {
+        namer = GameObject.Find("StudentKicker").GetComponent<StudentNames>();
         playerID = ASL.GameLiftManager.GetInstance().m_PeerId;
-        if(playerID == 1)
+        manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
+
+        if (playerID == 1)
         {
-            ASLHelper.InstantiateASLObject(teacherPrefab, teacherSpawn.position, teacherSpawn.rotation);
+            ASLHelper.InstantiateASLObject(teacherPrefab, teacherSpawn.position, teacherSpawn.rotation,
+                "", "", GameObjRecevied);
         }
         else
         {
@@ -28,12 +35,11 @@ public class SpawnPlayer : MonoBehaviour
                 studentSpawn[playerID - 2].position, studentSpawn[playerID - 2].rotation, "", "", 
                 GameObjRecevied);
         }
-        
     }
 
     static void GameObjRecevied(GameObject gameObj)
 	{
-        
+        namer.RecievedName(playerID);
 	}
 
     // Update is called once per frame
