@@ -41,7 +41,9 @@ public class Pavel_Player : MonoBehaviour
             m_ASLObject.SendAndSetClaim(() =>
             {
                 Vector3 m_AdditiveMovementAmount = move * MovementSpeed * Time.deltaTime;
-                m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
+                m_AdditiveMovementAmount.y = 0;
+                m_ASLObject.SendAndIncrementWorldPosition(m_AdditiveMovementAmount);
+                //m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
             });
         }
         /* if (Input.GetKey(KeyCode.W) ^ Input.GetKey(KeyCode.S))
