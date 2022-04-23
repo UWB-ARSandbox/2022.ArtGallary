@@ -11,7 +11,7 @@ public class RequestHandler : MonoBehaviour
     int host, peerid, request;
     
     [SerializeField]
-    GameObject[] StudentPanels;
+    List<GameObject> StudentPanels;
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +32,12 @@ public class RequestHandler : MonoBehaviour
 
     public void Initialize()
     {
-        StudentPanels = GameObject.FindGameObjectsWithTag("StuPanel");
+        StudentPanels.Clear();
+        GameObject[] Panels = GameObject.FindGameObjectsWithTag("StuPanel");
+        foreach(GameObject p in Panels)
+        {
+            StudentPanels.Add(p);
+        }
     }
 
     public void SendHelpRequest()

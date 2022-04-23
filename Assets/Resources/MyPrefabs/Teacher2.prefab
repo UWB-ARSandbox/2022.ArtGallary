@@ -211,6 +211,7 @@ GameObject:
   - component: {fileID: 5596159553905294102}
   - component: {fileID: 188582969013511990}
   - component: {fileID: 1116569084299027736}
+  - component: {fileID: 7075836330737266864}
   m_Layer: 0
   m_Name: TeacherName
   m_TagString: StuNames
@@ -227,7 +228,7 @@ RectTransform:
   m_GameObject: {fileID: 4401841045020408140}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: -1}
   m_LocalPosition: {x: 0, y: 0, z: -0.039}
-  m_LocalScale: {x: 1.5, y: 1.4285713, z: 0.099999994}
+  m_LocalScale: {x: 1.5, y: 1.4285715, z: 0.099999994}
   m_Children: []
   m_Father: {fileID: 7988937399276719328}
   m_RootOrder: 0
@@ -313,6 +314,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.27, y: 0.14523439, z: 0.1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &7075836330737266864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4401841045020408140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa9ab9afa5d12ab4fa176b36204bf44c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4512052990992581514
 GameObject:
   m_ObjectHideFlags: 0
