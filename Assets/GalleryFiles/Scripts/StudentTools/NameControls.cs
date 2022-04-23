@@ -14,7 +14,7 @@ public class NameControls : MonoBehaviour
         camera = Camera.main.transform;
         manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
 
-        if(manager.m_PeerId == 1 && this.transform.parent.parent.gameObject.name == ("Teacher 2 (Clone)"))
+        if(this.transform.parent.parent.gameObject.name == ("Teacher2(Clone)"))
         {
             this.gameObject.SetActive(false);
         }

@@ -5,13 +5,16 @@ using ASL;
 
 public class RequestHandler : MonoBehaviour
 {
-    GameLiftManager manager;
+    static GameLiftManager manager;
     ASLObject m_ASLObject;
     [SerializeField]
-    int host, peerid, request;
+    static int host, peerid, request;
     
     [SerializeField]
     List<GameObject> StudentPanels;
+    
+    [SerializeField]
+    GameObject Requestor, Canvas;
 
     // Start is called before the first frame update
     void Start()
@@ -27,7 +30,11 @@ public class RequestHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Requestor == null && Camera.main.transform.parent.parent != null)
+        {
+            Requestor = Camera.main.transform.parent.parent.gameObject;
+            Canvas = Requestor.transform.GetChild(1).gameObject;
+        }
     }
 
     public void Initialize()
@@ -44,6 +51,15 @@ public class RequestHandler : MonoBehaviour
     {
         peerid = manager.m_PeerId;
         float[] request = {peerid};
+
+        ASLObject canASL = Canvas.GetComponent<ASLObject>();
+        Texture2D text = (Texture2D)Canvas.GetComponent<Renderer>().material.mainTexture;
+        canASL.SendAndSetClaim(() =>
+        {
+            canASL.GetComponent<ASLObject>().SendAndSetTexture2D(text, changeTexture);
+        });
+
+
         m_ASLObject.SendAndSetClaim(() =>
         {
             m_ASLObject.SendFloatArray(request);
@@ -64,6 +80,14 @@ public class RequestHandler : MonoBehaviour
             }
             
         }
-        
     }
+
+    public static void changeTexture(GameObject gameObject, Texture2D tex)
+	{
+        if(host == manager.m_PeerId)
+		{
+            gameObject.GetComponent<Renderer>().material.mainTexture = tex;
+        }
+    }
+
 }

@@ -88,7 +88,6 @@ public class ClassScroll : MonoBehaviour
 			{
                 int peerId = item.Key;
                 string username = item.Value;
-                Debug.Log(i + ", " + iIndexer);
 
                 iIndexer += 1;
 

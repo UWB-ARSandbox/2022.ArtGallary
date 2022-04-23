@@ -402,6 +402,7 @@ MonoBehaviour:
   peerid: 0
   request: 0
   StudentPanels: []
+  Students: []
 --- !u!4 &92277015
 Transform:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class StudentPanel : MonoBehaviour
@@ -10,7 +11,8 @@ public class StudentPanel : MonoBehaviour
     [SerializeField]
     private int ID;
     
-    private GameObject viewButton;
+    [SerializeField]
+    private GameObject viewButton, preview, player;
 
     // Start is called before the first frame update
     void Start()
@@ -21,7 +23,24 @@ public class StudentPanel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(player == null && GameObject.Find("StudentHolder").transform.GetChild(0) != null)
+        {
+            GameObject holder = GameObject.Find("StudentHolder");
+            foreach(Transform child in holder.transform)
+            {
+                int childID = child.gameObject.GetComponent<StudentEnable>().studentID;
+                if(childID == ID)
+                {
+                    player = child.gameObject;
+                    break;
+                }
+            }
+        }
+
+        if(player != null)
+        {
+            SetPreview((Texture2D)player.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.mainTexture);
+        }
     }
 
     // Changes name displayed by the student panel. Should only be used at initialization of the UI.
@@ -38,11 +57,12 @@ public class StudentPanel : MonoBehaviour
         studentName = this.transform.GetChild(0).GetComponent<TMP_Text>();
         help = this.transform.GetChild(1).GetComponent<TMP_Text>();
         viewButton = this.transform.GetChild(2).gameObject;
+        preview = this.transform.GetChild(3).gameObject;
 
         help.enabled = false;
         viewButton.SetActive(false);
+        preview.SetActive(false);
 
-        Debug.Log("Current Text: " + studentName.text);
         ID = peerId;
     }
 
@@ -51,9 +71,20 @@ public class StudentPanel : MonoBehaviour
     {
         if(ID == peerId)
         {
-            help.enabled = true;
-            viewButton.SetActive(true);
+            help.enabled = !help.enabled;
+            viewButton.SetActive(help.enabled);
+            preview.SetActive(help.enabled);
             Debug.Log("Set: " + ID);
         }
+    }
+
+    public void SetPreview(Texture2D tex)
+    {
+        preview.GetComponent<RawImage>().texture = tex;
+    }
+
+    public int GetID()
+    {
+        return ID;
     }
 }
