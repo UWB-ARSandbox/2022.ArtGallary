@@ -70,6 +70,7 @@ public class SendAndPlayAudio : MonoBehaviour
 
     public void UserDefinedFunction(string _id, float[] _f) 
     {
+        
         if(count == 0)
         {
             
@@ -77,14 +78,18 @@ public class SendAndPlayAudio : MonoBehaviour
         if(count < 40)
         {
             count++;
-            clip2.SetData(_f, ((count - 1) * hrz) / audioPerSecond);
-            if(count == 3)
+            if(!GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>().AmLowestPeer())
             {
+                clip2.SetData(_f, ((count - 1) * hrz) / audioPerSecond);
+                if(count == 3)
+                {
                 audioPlayer.clip = clip2;
                 audioPlayer.Play();
                 //Debug.Log("Playing");
                 
+                }
             }
+            
             
         }
         else{
