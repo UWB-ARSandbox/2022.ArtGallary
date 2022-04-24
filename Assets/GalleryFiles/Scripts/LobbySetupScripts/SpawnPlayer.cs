@@ -20,7 +20,7 @@ public class SpawnPlayer : MonoBehaviour
 
     void Start()
     {
-        namer = GameObject.Find("StudentKicker").GetComponent<StudentNames>();
+        namer = GameObject.Find("StudentNamer").GetComponent<StudentNames>();
         playerID = ASL.GameLiftManager.GetInstance().m_PeerId;
         manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
 

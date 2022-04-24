@@ -398,11 +398,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d6a2349ae3d6e14c839d031066a295b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  host: 0
-  peerid: 0
-  request: 0
   StudentPanels: []
-  Students: []
+  Requestor: {fileID: 0}
+  Canvas: {fileID: 0}
 --- !u!4 &92277015
 Transform:
   m_ObjectHideFlags: 0
@@ -4718,6 +4716,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1019871735}
   m_CullTransparentMesh: 1
+--- !u!1 &1048989496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1048989499}
+  - component: {fileID: 1048989498}
+  - component: {fileID: 1048989497}
+  m_Layer: 0
+  m_Name: StudentNamer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1048989497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048989496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a6d05a831ba98e4fa41a7e2da98b4fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1048989498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048989496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c58412da33e154692db87cbf8c6ff0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &1048989499
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1048989496}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.7997012, y: 8.349303, z: 1.844269}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 20
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1059138777
 GameObject:
   m_ObjectHideFlags: 0
@@ -8118,7 +8172,6 @@ GameObject:
   - component: {fileID: 2014157606}
   - component: {fileID: 2014157605}
   - component: {fileID: 2014157607}
-  - component: {fileID: 2014157608}
   m_Layer: 0
   m_Name: StudentKicker
   m_TagString: Untagged
@@ -8146,7 +8199,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014157604}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.2874818, y: 8.369938, z: 5.4531946}
+  m_LocalPosition: {x: 2.2874818, y: 8.369938, z: 1.89}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -8162,18 +8215,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 03c58412da33e154692db87cbf8c6ff0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2014157608
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2014157604}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a6d05a831ba98e4fa41a7e2da98b4fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &2030627559

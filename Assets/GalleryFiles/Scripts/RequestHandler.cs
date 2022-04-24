@@ -30,7 +30,8 @@ public class RequestHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Requestor == null && Camera.main.transform.parent.parent != null)
+        if (Requestor == null && Camera.main.transform.parent != null && 
+            Camera.main.transform.parent.parent != null)
         {
             Requestor = Camera.main.transform.parent.parent.gameObject;
             Canvas = Requestor.transform.GetChild(1).gameObject;
