@@ -16,11 +16,11 @@ public class NameControls : MonoBehaviour
 
         if(manager.m_PeerId == manager.GetLowestPeerId() && this.transform.parent.parent.gameObject.name == ("Teacher2(Clone)"))
         {
-            this.gameObject.SetActive(false);
+            GetComponent<TextMesh>().color = new Vector4(0, 0, 0, 0);
         }
         else if(manager.m_PeerId == this.transform.parent.parent.gameObject.GetComponent<StudentEnable>().studentID)
         {
-            this.gameObject.SetActive(false);
+            GetComponent<TextMesh>().color = new Vector4(0, 0, 0, 0);
         }
     }
 
