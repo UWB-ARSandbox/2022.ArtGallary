@@ -8,15 +8,18 @@ public class CanvasSpawner : MonoBehaviour
     static List<GameObject> allCans = new List<GameObject>();
     int totalStu = 0;
 
+    ResubmissionHandler subHandler;
+
     bool clicked = false;
 
     static float point1 = 4;
-    static float point2 = 4.5f;
+    static float point2 = 3.5f;
     static float point3 = 5;
 
-    // Start is called before the first frame update
-    void Start()
+	// Start is called before the first frame update
+	void Start()
     {
+        subHandler = GameObject.Find("Resubmission").GetComponent<ResubmissionHandler>();
         int wallNum = 1;
         for(int i = 0; i < 4; i++)
 		{
@@ -25,12 +28,14 @@ public class CanvasSpawner : MonoBehaviour
 		}
     }
 
-    public void GalleryOpitions()
+	public void GalleryOpitions()
 	{
         if(clicked)
 		{
             ClearGallery();
             clicked = false;
+            // Makes sure that user can now submit work to gallery
+            subHandler.AllCanSubmit(1);
 		}
         else
 		{
@@ -48,7 +53,7 @@ public class CanvasSpawner : MonoBehaviour
             DeleteCanvas(delCan);
         }
         point1 = 4;
-        point2 = 4.5f;
+        point2 = 3.5f;
         point3 = 5;
     }
 
@@ -202,14 +207,14 @@ public class CanvasSpawner : MonoBehaviour
 
                 Advance(spawnedObject);
 
-                if(point2 == 4.5)
+                if(point2 == 3.5)
 				{
                     point2 = 1.5f;
 				}
 				else
 				{
                     point1 -= 2f;
-                    point2 = 4.5f;
+                    point2 = 3.5f;
 				}
             }
         });

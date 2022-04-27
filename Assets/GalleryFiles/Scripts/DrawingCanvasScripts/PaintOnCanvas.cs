@@ -85,9 +85,14 @@ public class PaintOnCanvas : MonoBehaviour
 	Toggle eraseTog = null;
 	Toggle textTog = null;
 
+	ResubmissionHandler handler;
+
 	// Start is called before the first frame update
 	void Start()
 	{
+		// Allows students to resubmit work
+		handler = GameObject.Find("Resubmission").GetComponent<ResubmissionHandler>();
+
 		// UI field code
 		rField = GameObject.Find("RedInputField").GetComponent<InputField>();
 		gField = GameObject.Find("GreenInputField").GetComponent<InputField>();
@@ -196,6 +201,11 @@ public class PaintOnCanvas : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		if(clicked == true)
+		{
+			clicked = handler.SubmissionStatus();
+		}
+
 		if(!EventSystem.current.IsPointerOverGameObject())
 		{
 			if (Input.GetMouseButton(0) == true)
@@ -572,12 +582,11 @@ public class PaintOnCanvas : MonoBehaviour
 	}
 	public void SubmitPainting()
 	{
-		/*
+		// Make sure multiple submissions are not allowed
 		if(clicked)
 		{
 			return;
 		}
-		*/
 
 		GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
 		byte[] bytes = studentCanvas.EncodeToPNG();
@@ -604,6 +613,9 @@ public class PaintOnCanvas : MonoBehaviour
 					stuCanvas.GetComponent<ASL.ASLObject>().SendAndSetTexture2D(tex,
 						changeTexture, true);
 				});
+
+				// Makes sure that students cannot submit multiple drawings.
+				handler.AllCanSubmit(0);
 				clicked = true;
 				break;
 			}
