@@ -14,6 +14,9 @@ public class Pavel_Player : MonoBehaviour
     GameLiftManager manager;
     Button LeaveButton;
 
+    Transform lastTran;
+    bool clicked = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -84,6 +87,55 @@ public class Pavel_Player : MonoBehaviour
                 });
             }
         } */
+
+        if (Input.GetMouseButtonDown(0) && clicked == false)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.
+                name.Contains("StuCanvas"))
+            {
+                lastTran = transform;
+                transform.GetChild(1).position = hit.transform.position;
+                transform.GetChild(1).eulerAngles = new Vector3(0, hit.transform.eulerAngles.y + 180, 0);
+
+                transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(true);
+
+                // Front wall
+                if(hit.transform.eulerAngles.y == 180)
+				{
+                    transform.GetChild(1).position -= new Vector3(0, 0, 2);
+
+                }
+                // Right wall
+                else if(hit.transform.eulerAngles.y == 270)
+				{
+                    transform.GetChild(1).position -= new Vector3(2, 0, 0);
+                }
+                // Back wall
+                else if(hit.transform.eulerAngles.y == 0)
+				{
+                    transform.GetChild(1).position += new Vector3(0, 0, 2);
+                }
+                else
+				{
+                    transform.GetChild(1).position += new Vector3(2, 0, 0);
+                }
+                clicked = true;
+            }
+        }
+
+        else if(clicked && Input.anyKeyDown)
+		{
+            Debug.Log("Why");
+            clicked = false;
+            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(false);
+
+            Debug.Log(lastTran.position);
+            Debug.Log(lastTran.eulerAngles);
+            transform.GetChild(1).position = lastTran.position;
+            transform.GetChild(1).rotation = lastTran.rotation;
+        }
     }
 
     public void LeaveClass()
