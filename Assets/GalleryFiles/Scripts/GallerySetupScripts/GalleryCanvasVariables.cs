@@ -22,41 +22,37 @@ public class GalleryCanvasVariables : MonoBehaviour
 		{
 			transform.GetChild(1).gameObject.SetActive(true);
 		}
+
 		GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(retrieveVote);
 	}
 
-	// Update is called once per frame
-	void Update()
+	public void ChangeVoteStatus()
 	{
-		/*GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
+		voted = true;
+		float[] tempVote = new float[1];
+
+		//GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(retrieveVote);
+		if(transform.GetChild(0).GetComponent<TextMesh>().color == Color.white)
+		{
+			transform.GetChild(0).GetComponent<TextMesh>().color = Color.green;
+			tempVote[0] = 1;
+		}
+		else
+		{
+			transform.GetChild(0).GetComponent<TextMesh>().color = Color.white;
+			tempVote[0] = -1;
+		}
+
+		GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
 		{
 			GetComponent<ASL.ASLObject>().SendFloatArray(tempVote);
-			Debug.Log(votes);
 		});
-		*/
-		if (Input.GetMouseButtonDown(0))
-		{
-			RaycastHit raycastHit;
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			if (Physics.Raycast(ray, out raycastHit) == true
-			&& voted == false && raycastHit.transform.parent != null)
-			{
-				if (raycastHit.transform.parent.name.Equals(transform.name) &&
-				raycastHit.transform.parent.TryGetComponent(out GalleryCanvasVariables a) == true)
-				{
-					Debug.Log(a.studentName);
-					Debug.Log("Clicked once");
-					voted = true;
-					//GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(retrieveVote);
-					transform.GetChild(0).GetComponent<TextMesh>().color = Color.green;
-				}
-			}
-			//Debug.Log("votes " + votes);
-		}
 	}
 
 	public void retrieveVote(string id, float[] vote)
 	{
-		votes = (int)vote[0];
+		votes += (int)vote[0];
+		transform.GetChild(0).GetComponent<TextMesh>().text = 
+			"Votes: " +  votes;
 	}
 }

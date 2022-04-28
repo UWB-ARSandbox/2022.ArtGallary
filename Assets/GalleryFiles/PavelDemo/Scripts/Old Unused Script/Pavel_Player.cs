@@ -88,6 +88,20 @@ public class Pavel_Player : MonoBehaviour
             }
         } */
 
+        // Call for changing the vote
+        if(Input.GetMouseButtonDown(0))
+		{
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.
+                name.Contains("Vote"))
+            {
+                hit.transform.parent.gameObject.
+                    GetComponent<GalleryCanvasVariables>().ChangeVoteStatus();
+            }
+        }
+
+        // Call for moving closer to the canvas
         if (Input.GetMouseButtonDown(0) && clicked == false)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -105,7 +119,6 @@ public class Pavel_Player : MonoBehaviour
                 if(hit.transform.eulerAngles.y == 180)
 				{
                     transform.GetChild(1).position -= new Vector3(0, 0, 2);
-
                 }
                 // Right wall
                 else if(hit.transform.eulerAngles.y == 270)
@@ -125,14 +138,12 @@ public class Pavel_Player : MonoBehaviour
             }
         }
 
+        // Resetting camera back to the player
         else if(clicked && Input.anyKeyDown)
 		{
-            Debug.Log("Why");
             clicked = false;
             transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(false);
 
-            Debug.Log(lastTran.position);
-            Debug.Log(lastTran.eulerAngles);
             transform.GetChild(1).position = lastTran.position;
             transform.GetChild(1).rotation = lastTran.rotation;
         }
