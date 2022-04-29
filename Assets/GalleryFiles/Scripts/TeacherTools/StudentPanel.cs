@@ -39,6 +39,7 @@ public class StudentPanel : MonoBehaviour
 
         if(player != null)
         {
+            // Sets the texture of the preview of panel to the corresponding student's canvas, which is the second child of player.
             SetPreview((Texture2D)player.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.mainTexture);
         }
     }
@@ -86,5 +87,10 @@ public class StudentPanel : MonoBehaviour
     public int GetID()
     {
         return ID;
+    }
+
+    public GameObject GetPlayer()
+    {
+        return player;
     }
 }
