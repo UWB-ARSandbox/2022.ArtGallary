@@ -14,14 +14,6 @@ public class GalleryCanvasVariables : MonoBehaviour
 		transform.GetChild(1).GetComponent<TextMesh>().text = studentName;
 		manager = GameObject.Find("GameLiftManager").GetComponent<ASL.GameLiftManager>();
 		int host = manager.GetLowestPeerId();
-		if(host != manager.m_PeerId)
-		{
-			transform.GetChild(1).gameObject.SetActive(false);
-		}
-		else
-		{
-			transform.GetChild(1).gameObject.SetActive(true);
-		}
 
 		GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(retrieveVote);
 	}
@@ -49,10 +41,46 @@ public class GalleryCanvasVariables : MonoBehaviour
 		});
 	}
 
+	public void ChangeName(string name)
+	{
+		// One is addded onto the end of array so that vote is not triggered
+		// for players who have one char names
+		float[] fName = new float[name.Length + 1];
+		for(int i = 0; i < name.Length; i++)
+		{
+			fName[i] = (float)name[i];
+		}
+
+		GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
+		{
+			GetComponent<ASL.ASLObject>().SendFloatArray(fName);
+		});
+	}
+
 	public void retrieveVote(string id, float[] vote)
 	{
-		votes += (int)vote[0];
-		transform.GetChild(0).GetComponent<TextMesh>().text = 
-			"Votes: " +  votes;
+		// Votes will always be a length of one
+		if(vote.Length == 1)
+		{
+			votes += (int)vote[0];
+			transform.GetChild(0).GetComponent<TextMesh>().text =
+				"Votes: " + votes;
+		}
+		// This is for changing the name on the canvas
+		else
+		{
+			// Null the placeholder name
+			studentName = "";
+			for(int i = 0; i < vote.Length - 1; i++)
+			{
+				studentName += (char)vote[i];
+			}
+			// Only teacher can see the names
+			if(manager.AmLowestPeer())
+			{
+				transform.GetChild(1).GetComponent<TextMesh>().text = studentName;
+				transform.GetChild(1).GetComponent<TextMesh>().color = Color.white;
+			}
+		}
 	}
 }

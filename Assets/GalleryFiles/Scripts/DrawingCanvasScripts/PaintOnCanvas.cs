@@ -612,6 +612,7 @@ public class PaintOnCanvas : MonoBehaviour
 				{
 					stuCanvas.GetComponent<ASL.ASLObject>().SendAndSetTexture2D(tex,
 						changeTexture, true);
+					stuCanvas.GetComponent<GalleryCanvasVariables>().ChangeName(manager.m_Username);
 				});
 
 				// Makes sure that students cannot submit multiple drawings.
