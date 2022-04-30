@@ -30,6 +30,12 @@ public class PaintOnCanvas : MonoBehaviour
 
 	//how long the canvas is in pixels
 	int canvasHeight;
+	
+	//how wide is one grid character in alphabet.png
+	int textWidth;
+
+	//how high is the text character in alphabet.png
+	int textHeight;
 
 	//Is the player erasing
 	bool eraseMode;
@@ -51,6 +57,8 @@ public class PaintOnCanvas : MonoBehaviour
 
 	//alphabet of characters
 	Texture2D alphabet;
+	Texture2D alphabet2;
+	Texture2D alphabetUsed;
 
 	Vector2 pixelToDraw;
 
@@ -84,7 +92,10 @@ public class PaintOnCanvas : MonoBehaviour
 	// UI toggle listeners
 	Toggle eraseTog = null;
 	Toggle textTog = null;
-
+	
+	//UI dropdown listeners
+	Dropdown textSizeDrop = null;
+	
 	ResubmissionHandler handler;
 
 	// Start is called before the first frame update
@@ -102,6 +113,9 @@ public class PaintOnCanvas : MonoBehaviour
 		slField = GameObject.Find("SaveField").GetComponent<InputField>();
 		textField = GameObject.Find("TextInput").GetComponent<InputField>();
 		brushSizeField = GameObject.Find("SizeInputField").GetComponent<InputField>();
+		textSizeDrop = GameObject.Find("TextSizeDropdown").GetComponent<Dropdown>();
+		
+		textSizeDrop.onValueChanged.AddListener(ChangeTextSize);
 
 		rField.onEndEdit.AddListener(ChangeRed);
 		gField.onEndEdit.AddListener(ChangeGreen);
@@ -147,6 +161,8 @@ public class PaintOnCanvas : MonoBehaviour
 		brushSize = 10;
 		canvasWidth = 768;
 		canvasHeight = 512;
+		textWidth = 7;
+		textHeight = 14;
 		eraseMode = false;
 		textMode = false;
 		canSave = false;
@@ -163,6 +179,8 @@ public class PaintOnCanvas : MonoBehaviour
 		compression is none, texture type is default, texture shape is 2D,
 		FilterPoint is Point(no filter)*/
 		alphabet = Resources.Load("alphabet", typeof(Texture2D)) as Texture2D;
+		alphabet2 = Resources.Load("alphabet2", typeof(Texture2D)) as Texture2D;
+		alphabetUsed = alphabet;
 		GameObject brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
 		//this covers RGBA format and is good for opacity changing if needed
@@ -252,8 +270,6 @@ public class PaintOnCanvas : MonoBehaviour
 					{
 						if (brushSize > 1)
 						{
-
-
 							if (textMode == false)
 							{
 								for (int x = (int)(pixelCoord.x - (brushSize / 2)); x < (int)(pixelCoord.x + (brushSize / 2)); x++)
@@ -366,7 +382,7 @@ public class PaintOnCanvas : MonoBehaviour
 						if (spot != -1)
 						{
 							DrawCharacter(startChar, spot);
-							startChar.x += 7;
+							startChar.x += textWidth;
 						}
 					}
 				}
@@ -545,14 +561,14 @@ public class PaintOnCanvas : MonoBehaviour
 	}
 	void DrawCharacter(Vector2 currUV, int spot)
 	{
-		spot *= 7;
+		spot *= textWidth;
 		int currX = (int)currUV.x;
 		int currY = (int)currUV.y;
-		for (int x = spot; x < (spot + 7); x++)
+		for (int x = spot; x < (spot + textWidth); x++)
 		{
-			for (int y = 0; y < 14; y++)
+			for (int y = 0; y < textHeight; y++)
 			{
-				Color pixelColor = alphabet.GetPixel(x, y);
+				Color pixelColor = alphabetUsed.GetPixel(x, y);
 				studentCanvas.SetPixel(currX, currY + y, pixelColor);
 				studentCanvas.Apply();
 			}
@@ -579,6 +595,21 @@ public class PaintOnCanvas : MonoBehaviour
 			modifiedVal = c - 29;
 		}
 		return modifiedVal;
+	}
+	public void ChangeTextSize(int option)
+	{
+		if(option == 0)
+		{
+			textWidth = 7;
+			textHeight = 14;
+			alphabetUsed = alphabet;
+		}
+		else if(option == 1)
+		{
+			textWidth = 12;
+			textHeight = 28;
+			alphabetUsed = alphabet2;
+		}
 	}
 	public void SubmitPainting()
 	{
