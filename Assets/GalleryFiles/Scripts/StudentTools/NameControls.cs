@@ -5,7 +5,7 @@ using ASL;
 
 public class NameControls : MonoBehaviour
 {
-    private Transform camera;
+    public Transform camera;
     GameLiftManager manager;
     
     // Start is called before the first frame update
@@ -18,7 +18,7 @@ public class NameControls : MonoBehaviour
         {
             GetComponent<TextMesh>().color = new Vector4(0, 0, 0, 0);
         }
-        else if(manager.m_PeerId == this.transform.parent.parent.gameObject.GetComponent<StudentEnable>().studentID)
+        if(manager.m_PeerId == this.transform.parent.parent.gameObject.GetComponent<StudentEnable>().studentID)
         {
             GetComponent<TextMesh>().color = new Vector4(0, 0, 0, 0);
         }
