@@ -19,13 +19,26 @@ public class SendAndPlayAudio : MonoBehaviour
 
     int audioPerSecond = 40; //If changing, will need to make sure stuff in update gets called less as well;
 
+    bool audioEnabled = true;
+
     // hrz/audiopersecond must be less than 1000
     void Start()
     {
         if(GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>().m_PeerId == 1)
         {
-            audioInput = true;
-            clip = Microphone.Start(Microphone.devices[0], true, 1, hrz);
+            if(this.transform.parent.GetComponent<TeacherEnable>() != null)
+            {
+                audioInput = true;
+                clip = Microphone.Start(Microphone.devices[0], true, 1, hrz);
+            }
+            
+        }
+        else{
+            if(this.transform.parent.GetComponent<StudentEnable>() != null && this.transform.parent.GetComponent<StudentEnable>().studentID == GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>().m_PeerId)
+            {
+                audioInput = true;
+                clip = Microphone.Start(Microphone.devices[0], true, 1, hrz);
+            }
         }
         audioPlayer = GetComponent<AudioSource>();
         
@@ -40,28 +53,36 @@ public class SendAndPlayAudio : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(audioInput == true)
+        if(audioEnabled)
         {
-            
-            if(count < 40)
+            if(audioInput == true)
             {
+                
+                if(count < 40)
+                {
 
-        
-            this.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
-            {
-                //Debug.Log("Sending " + count);
-                float[] x = new float[hrz / audioPerSecond];
-                clip.GetData(x, (count * hrz) / audioPerSecond);
-                this.GetComponent<ASL.ASLObject>().SendFloatArray(x); 
-            });
-            }
-            else{
-                //Debug.Log("count is greater than 40");
-                count = 0;
-            }
             
-            
+                this.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
+                {
+                    //Debug.Log("Sending " + count);
+                    float[] x = new float[hrz / audioPerSecond];
+                    clip.GetData(x, (count * hrz) / audioPerSecond);
+                    this.GetComponent<ASL.ASLObject>().SendFloatArray(x); 
+                });
+                }
+                else{
+                    //Debug.Log("count is greater than 40");
+                    count = 0;
+                }
+                
+                
+            }
         }
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            audioEnabled = !audioEnabled;
+        }
+        
         
         
         
@@ -78,14 +99,27 @@ public class SendAndPlayAudio : MonoBehaviour
         if(count < 40)
         {
             count++;
-            if(!GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>().AmLowestPeer())
+            if(this.transform.parent.GetComponent<TeacherEnable>() != null && !GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>().AmLowestPeer())
             {
+                
                 clip2.SetData(_f, ((count - 1) * hrz) / audioPerSecond);
                 if(count == 3)
                 {
-                audioPlayer.clip = clip2;
-                audioPlayer.Play();
-                //Debug.Log("Playing");
+                    audioPlayer.clip = clip2;
+                    audioPlayer.Play();
+                    //Debug.Log("Playing");
+                
+                }
+            }
+            else if(this.transform.parent.GetComponent<StudentEnable>() != null && this.transform.parent.GetComponent<StudentEnable>().studentID != GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>().m_PeerId)
+            {
+                
+                clip2.SetData(_f, ((count - 1) * hrz) / audioPerSecond);
+                if(count == 3)
+                {
+                    audioPlayer.clip = clip2;
+                    audioPlayer.Play();
+                    //Debug.Log("Playing");
                 
                 }
             }
