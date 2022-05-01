@@ -15,7 +15,7 @@ public class SpawnPlayer : MonoBehaviour
     public Transform teacherSpawn;
     public Transform[] studentSpawn;
 
-    GameLiftManager manager;
+    static GameLiftManager manager;
     static StudentNames namer;
 
     void Start()
@@ -39,8 +39,12 @@ public class SpawnPlayer : MonoBehaviour
 
     static void GameObjRecevied(GameObject gameObj)
 	{
-        namer.RecievedName(playerID);
-	}
+        // Gets the current order that this player was spawned.
+        GameObject[] textName = GameObject.FindGameObjectsWithTag("StuNames");
+        int arraySpot = textName.Length - 1;
+
+        namer.RecievedName(arraySpot, playerID);
+    }
 
     // Update is called once per frame
     void Update()

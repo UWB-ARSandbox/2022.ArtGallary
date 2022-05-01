@@ -5,20 +5,19 @@ using ASL;
 
 public class StudentNames : MonoBehaviour
 {
-    float[] idName;
-    int myID = -1;
-    GameLiftManager manager;
-    GameObject[] textName;
     bool allSet = false;
+
+    GameLiftManager manager;
+    float[] nameArray;
+    
+    int mySpot = -1;
+    int myID = -1;
 
     // Start is called before the first frame update
     void Start()
     {
         manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
-        idName = new float[manager.m_Players.Count];
-
-        textName = new GameObject[manager.m_Players.Count];
-        textName[0] = new GameObject();
+        nameArray = new float[manager.m_Players.Count];
 
         GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(SetName);
     }
@@ -27,55 +26,51 @@ public class StudentNames : MonoBehaviour
     void Update()
     {
         // Update the id array if number was not pushed
-        if(myID != -1 && myID != idName[myID - 1])
+        if(myID != -1 && mySpot != -1 && myID != nameArray[mySpot])
 		{
-            SendName(myID);
+            SendName(mySpot, myID);
 		}
         if(allSet == false)
 		{
-            textName = GameObject.FindGameObjectsWithTag("StuNames");
+            GameObject[] textName = GameObject.FindGameObjectsWithTag("StuNames");
             ChangePlayerNames(textName);
-            textName = new GameObject[0];
         }
     }
 
-    public void RecievedName(int id)
+    public void RecievedName(int spot, int playerID)
 	{
-        myID = id;
-        SendName(id);
-	}
+        myID = playerID;
+        mySpot = spot;
 
-    void SendName(int id)
+        SendName(mySpot, myID);
+    }
+
+    void SendName(int spot, int playerID)
 	{
         gameObject.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
         {
             float[] temp = new float[manager.m_Players.Count];
-            temp[id - 1] = id;
+            temp[spot] = playerID;
             GetComponent<ASLObject>().SendFloatArray(temp);
         });
     }
 
     void ChangePlayerNames(GameObject[] textMeshes)
     {
+        // Check to make sure all player keys are pushed into array.
+        for(int i = 0; i < nameArray.Length; i++)
+		{
+            if(nameArray[i] == 0)
+			{
+                return;
+			}
+		}
+
         for(int i = 0; i < textMeshes.Length; i++)
 		{
-            // This is the teacher
-            if((int)idName[i] != 0 && i + 1 >= textMeshes.Length)
-			{
-                textMeshes[i].GetComponent<TextMesh>().text = manager.m_Players[(int)idName[0]];
-                allSet = true;
-            }
-            else if((int)idName[i] != 0)
-			{
-                textMeshes[i].GetComponent<TextMesh>().text = manager.m_Players[(int)idName[i + 1]];
-                allSet = true;
-            }
-			else
-			{
-                allSet = false;
-                break;
-			}
+            textMeshes[i].GetComponent<TextMesh>().text = manager.m_Players[(int)nameArray[i]];
         }
+        allSet = true;
     }
 
     void SetName(string _id, float[] _f)
@@ -83,9 +78,9 @@ public class StudentNames : MonoBehaviour
         // Change order
         for(int i = 0; i < _f.Length; i++)
 		{
-            if(_f[i] != 0)
+            if(nameArray[i] == 0)
 			{
-                idName[i] = _f[i];
+                nameArray[i] = _f[i];
             }
 		}
 	}

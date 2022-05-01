@@ -18,7 +18,7 @@ public class NameControls : MonoBehaviour
         {
             GetComponent<TextMesh>().color = new Vector4(0, 0, 0, 0);
         }
-        if(manager.m_PeerId == this.transform.parent.parent.gameObject.GetComponent<StudentEnable>().studentID)
+        else if(manager.m_PeerId == this.transform.parent.parent.gameObject.GetComponent<StudentEnable>().studentID)
         {
             GetComponent<TextMesh>().color = new Vector4(0, 0, 0, 0);
         }
