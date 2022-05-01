@@ -223,8 +223,7 @@ public class PaintOnCanvas : MonoBehaviour
 		{
 			clicked = handler.SubmissionStatus();
 		}
-
-		if(!EventSystem.current.IsPointerOverGameObject())
+		if (!EventSystem.current.IsPointerOverGameObject())
 		{
 			if (Input.GetMouseButton(0) == true)
 			{
@@ -234,27 +233,28 @@ public class PaintOnCanvas : MonoBehaviour
 				&& raycastHit.transform.GetComponent<PaintOnCanvas>() != null)
 				{
 					Vector2 uv;
-					if((int)transform.forward.z == -1)
+					if ((int)transform.forward.z == -1)
 					{
 						uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
 						(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
 					}
-					else if((int)transform.forward.z == 1)
+					else if ((int)transform.forward.z == 1)
 					{
 						uv = new Vector2(1 - (raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
 						(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
 					}
-					else if((int)transform.forward.x == -1)
+					else if ((int)transform.forward.x == -1)
 					{
-						uv = new Vector2(1 -(raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
+						uv = new Vector2(1 - (raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
 						(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
 					}
-					else if((int)transform.forward.x == 1)
+					else if ((int)transform.forward.x == 1)
 					{
 						uv = new Vector2((raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
 						(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
 					}
-					else{
+					else
+					{
 						Debug.Log("Bad canvas angle");
 						uv = new Vector2(0.5f, 0.5f);
 					}
@@ -263,11 +263,11 @@ public class PaintOnCanvas : MonoBehaviour
 					//(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
 					Vector2 pixelCoord = new Vector2((int)(uv.x * (float)(canvasWidth)), (int)(uv.y * (float)(canvasHeight)));
 					dirPath = Application.dataPath;
-					//draw area of brush size if greater than 1
 
 					//If the mouse wasn't down, don't interpolate
 					if (!previousMouseDown)
 					{
+						//draw area of brush size if greater than 1
 						if (brushSize > 1)
 						{
 							if (textMode == false)
@@ -369,7 +369,6 @@ public class PaintOnCanvas : MonoBehaviour
 				}
 
 			}
-
 			else if (Input.GetMouseButtonUp(0) == true)
 			{
 				//on mouse release write text to image
@@ -570,10 +569,10 @@ public class PaintOnCanvas : MonoBehaviour
 			{
 				Color pixelColor = alphabetUsed.GetPixel(x, y);
 				studentCanvas.SetPixel(currX, currY + y, pixelColor);
-				studentCanvas.Apply();
 			}
 			currX += 1;
 		}
+		studentCanvas.Apply();
 	}
 	int DetermineCharacter(char c)
 	{
