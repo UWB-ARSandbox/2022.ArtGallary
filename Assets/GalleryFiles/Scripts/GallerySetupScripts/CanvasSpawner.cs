@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CanvasSpawner : MonoBehaviour
 {
-    GameObject[] WallArray = new GameObject[4];
+    static GameObject[] WallArray = new GameObject[4];
     static List<GameObject> allCans = new List<GameObject>();
     int totalStu = 0;
 
@@ -47,9 +47,10 @@ public class CanvasSpawner : MonoBehaviour
     // Start the deletion of objects
     public void ClearGallery()
     {
-        for (int i = 0; i < totalStu; i++)
+        GameObject[] stuCanvases = GameObject.FindGameObjectsWithTag("StuCanvas");
+        for (int i = 0; i < stuCanvases.Length; i++)
         {
-            GameObject delCan = GameObject.Find("StuCanvas" + i.ToString());
+            GameObject delCan = stuCanvases[i];
             DeleteCanvas(delCan);
         }
         point1 = 4;
@@ -157,14 +158,14 @@ public class CanvasSpawner : MonoBehaviour
     public static void RecievedGameObj(GameObject spawnedObject)
     {
         allCans.Insert(0, spawnedObject);
-        int i = allCans.Count - 1;
+        int i = allCans.Count;
         spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
         {
             // Name is changed at to fit the time it was recieved
             spawnedObject.name = "StuCanvas" + i.ToString();
 
             // Wall 1
-            if (i % 4 == 0)
+            if (Mathf.CeilToInt(i / WallArray[0].transform.localScale.x) == 1)
             {
                 Vector3 newSpot = new Vector3(-point1, point2, point3);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
@@ -173,9 +174,10 @@ public class CanvasSpawner : MonoBehaviour
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldRotation(rot);
 
                 Advance(spawnedObject);
+                ChangeCurCanPos(i);
             }
             // Wall 2
-            else if (i % 4 == 1)
+            else if (Mathf.CeilToInt(i / WallArray[0].transform.localScale.x) == 2)
             {
                 Vector3 newSpot = new Vector3(point3, point2, point1);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
@@ -184,9 +186,10 @@ public class CanvasSpawner : MonoBehaviour
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldRotation(rot);
 
                 Advance(spawnedObject);
+                ChangeCurCanPos(i);
             }
             // Wall 3
-            else if (i % 4 == 2)
+            else if (Mathf.CeilToInt(i / WallArray[0].transform.localScale.x) == 3)
             {
                 Vector3 newSpot = new Vector3(point1, point2, -point3);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
@@ -195,9 +198,10 @@ public class CanvasSpawner : MonoBehaviour
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldRotation(rot);
 
                 Advance(spawnedObject);
+                ChangeCurCanPos(i);
             }
             // Wall 4
-            else if (i % 4 == 3)
+            else if (Mathf.CeilToInt(i / WallArray[0].transform.localScale.x) == 4)
             {
                 Vector3 newSpot = new Vector3(-point3, point2, -point1);
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldPosition(newSpot);
@@ -206,18 +210,29 @@ public class CanvasSpawner : MonoBehaviour
                 spawnedObject.GetComponent<ASL.ASLObject>().SendAndSetWorldRotation(rot);
 
                 Advance(spawnedObject);
-
-                if(point2 == 3.5)
-				{
-                    point2 = 1.5f;
-				}
-				else
-				{
-                    point1 -= 2f;
-                    point2 = 3.5f;
-				}
+                ChangeCurCanPos(i);
             }
         });
+    }
+
+    static void ChangeCurCanPos(int index)
+	{
+        if (point2 == 3.5)
+        {
+            point2 = 1.5f;
+        }
+        // Checks to see if a wall transfer is coming next
+        else if (Mathf.CeilToInt(index / WallArray[0].transform.localScale.x) ==
+            Mathf.CeilToInt((index + 1) / WallArray[0].transform.localScale.x))
+        {
+            point1 -= 2f;
+            point2 = 3.5f;
+        }
+        else
+		{
+            point1 = WallArray[0].transform.localScale.x / 2 - 1;
+            point2 = 3.5f;
+        }
     }
 
     static void Advance(GameObject spawnedObject)
