@@ -108,7 +108,7 @@ public class PaintOnCanvas : MonoBehaviour
 		rField = GameObject.Find("RedInputField").GetComponent<InputField>();
 		gField = GameObject.Find("GreenInputField").GetComponent<InputField>();
 		bField = GameObject.Find("BlueInputField").GetComponent<InputField>();
-		aField = GameObject.Find("AlphaInputField").GetComponent<InputField>();
+		//aField = GameObject.Find("AlphaInputField").GetComponent<InputField>();
 
 		slField = GameObject.Find("SaveField").GetComponent<InputField>();
 		textField = GameObject.Find("TextInput").GetComponent<InputField>();
@@ -120,7 +120,7 @@ public class PaintOnCanvas : MonoBehaviour
 		rField.onEndEdit.AddListener(ChangeRed);
 		gField.onEndEdit.AddListener(ChangeGreen);
 		bField.onEndEdit.AddListener(ChangeBlue);
-		aField.onEndEdit.AddListener(ChangeAlpha);
+		//aField.onEndEdit.AddListener(ChangeAlpha);
 
 		slField.onEndEdit.AddListener(SaveOrLoadToPNG);
 		textField.onEndEdit.AddListener(SetTextOnType);
