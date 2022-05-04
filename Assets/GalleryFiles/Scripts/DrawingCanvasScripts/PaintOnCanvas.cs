@@ -123,6 +123,7 @@ public class PaintOnCanvas : MonoBehaviour
 		//aField.onEndEdit.AddListener(ChangeAlpha);
 
 		slField.onEndEdit.AddListener(SaveOrLoadToPNG);
+		slField.onValueChanged.AddListener(ChangeToWhite);
 		textField.onEndEdit.AddListener(SetTextOnType);
 		brushSizeField.onEndEdit.AddListener(SetBrushSize);
 
@@ -405,6 +406,7 @@ public class PaintOnCanvas : MonoBehaviour
 			if (png.Contains("/") == false && png.EndsWith(".png") == false && png.Equals("alphabet") == false)
 			{
 				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
+				GameObject.Find("SaveField").GetComponent<Image>().color = Color.green;
 				byte[] bytes = studentCanvas.EncodeToPNG();
 				System.IO.File.WriteAllBytes(dirPath + "/" + png + ".png", bytes);
 			}
@@ -417,6 +419,7 @@ public class PaintOnCanvas : MonoBehaviour
 			else
 			{
 				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Do not enter '/'";
+				GameObject.Find("SaveField").GetComponent<Image>().color = Color.red;
 			}
 		}
 		else
@@ -425,22 +428,40 @@ public class PaintOnCanvas : MonoBehaviour
 			if (png.Contains("/") == false && png.EndsWith(".png") == false && png.Equals("alphabet") == false)
 			{
 				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "File_Name";
-				studentCanvas.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + png + ".png"));
+				try
+				{
+					studentCanvas.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + png + ".png"));
+				}
+				catch
+				{
+					GameObject.Find("SaveField").GetComponent<Image>().color = Color.red;
+				}
 				studentCanvas.Apply();
 			}
 			else if (png.Contains("/") == false && png.EndsWith(".png") == true && png.Equals("alphabet.png") == false)
 			{
 				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "File_Name";
-				studentCanvas.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + png));
+				try
+				{
+					studentCanvas.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + png + ".png"));
+				}
+				catch
+				{
+					GameObject.Find("SaveField").GetComponent<Image>().color = Color.red;
+				}
 				studentCanvas.Apply();
 			}
 			else
 			{
 				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Do not enter '/'";
+				GameObject.Find("SaveField").GetComponent<Image>().color = Color.red;
 			}
 		}
 	}
-
+	public void ChangeToWhite(string s)
+	{
+		GameObject.Find("SaveField").GetComponent<Image>().color = Color.white;
+	}
 	//sets whether save field will display for UI
 	public void SetCanSave()
 	{
