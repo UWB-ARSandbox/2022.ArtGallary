@@ -163,6 +163,32 @@ public class Pavel_Player : MonoBehaviour
     public void SetLockAtCanvas(bool locked)
     {
         lockAtCanvas = locked;
+
+        // Render player models
+        if(lockAtCanvas)
+		{
+            DoNotRenderPlayer();
+		}
+        else
+		{
+            DoRenderPlayer();
+		}
+    }
+
+    public void DoNotRenderPlayer()
+	{
+        // Get this players camera
+        Camera cam = transform.GetChild(1).GetComponent<Camera>();
+        // Sets player to not render to camera
+        cam.cullingMask &= ~(1 << 9);
+    }
+
+    public void DoRenderPlayer()
+    {
+        // Get this players camera
+        Camera cam = transform.GetChild(1).GetComponent<Camera>();
+        // Set player to render to camera
+        cam.cullingMask |= (1 << 9);
     }
 }
 

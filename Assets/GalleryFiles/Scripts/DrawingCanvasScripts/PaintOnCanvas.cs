@@ -223,7 +223,12 @@ public class PaintOnCanvas : MonoBehaviour
 		if(clicked == true)
 		{
 			clicked = handler.SubmissionStatus();
+			if(clicked == false)
+			{
+				RenderCanvas();
+			}
 		}
+
 		if (!EventSystem.current.IsPointerOverGameObject())
 		{
 			if (Input.GetMouseButton(0) == true)
@@ -668,6 +673,7 @@ public class PaintOnCanvas : MonoBehaviour
 
 				// Makes sure that students cannot submit multiple drawings.
 				handler.AllCanSubmit(0);
+				DoNotRenderCanvas();
 				clicked = true;
 				break;
 			}
@@ -684,5 +690,37 @@ public class PaintOnCanvas : MonoBehaviour
 	public void ResetSubmission(bool reset)
 	{
 		canLoad = reset;
+	}
+
+	public void RenderCanvas()
+	{
+		Camera cam = transform.parent.GetChild(0).GetChild(1).GetComponent<Camera>();
+		GameObject manager = GameObject.Find("GameLiftManager");
+		if(manager.GetComponent<ASL.GameLiftManager>().AmLowestPeer())
+		{
+			// Set canvas to render to screen
+			cam.cullingMask |= (1 << 11);
+		}
+		else
+		{
+			// Set canvas to render to screen
+			cam.cullingMask |= (1 << 10);
+		}
+	}
+
+	public void DoNotRenderCanvas()
+	{
+		Camera cam = transform.parent.GetChild(0).GetChild(1).GetComponent<Camera>();
+		GameObject manager = GameObject.Find("GameLiftManager");
+		if (manager.GetComponent<ASL.GameLiftManager>().AmLowestPeer())
+		{
+			// Set canvas to render to screen
+			cam.cullingMask &= ~(1 << 11);
+		}
+		else
+		{
+			// Set canvas to render to screen
+			cam.cullingMask &= ~(1 << 10);
+		}
 	}
 }

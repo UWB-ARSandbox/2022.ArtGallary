@@ -19,9 +19,9 @@ TagManager:
   - Auto
   - Stat
   - PostProcessing
-  - DoNotRender
-  - 
-  - 
+  - DoNotRenderPlayer
+  - DoNotRenderCanvas
+  - DoNotRenderTCan
   - 
   - 
   - 
