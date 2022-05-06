@@ -17,6 +17,7 @@ public class FirstPersonCamera : MonoBehaviour
     
     public GameObject crosshair;
     
+    [SerializeField]
     bool isLocked, isActive;
 
     // Start is called before the first frame update
@@ -65,7 +66,14 @@ public class FirstPersonCamera : MonoBehaviour
 			{
                 isLocked = true;
 			}
-            bool canLock = transform.parent.GetComponent<GoToCanvas>().GetCanvasLock();
+            crosshair.SetActive(isLocked);
+            SetCursorLock(isLocked);
+            GoToCanvas();
+            
+
+            // Previous Code utilizing GoToCanvas script attached to student body.
+
+            /* bool canLock = transform.parent.GetComponent<GoToCanvas>().GetCanvasLock();
             if (canLock == true)
             {
                 crosshair.SetActive(false);
@@ -75,7 +83,7 @@ public class FirstPersonCamera : MonoBehaviour
             {
                 crosshair.SetActive(isLocked);
                 SetCursorLock(isLocked);
-            }
+            } */
         }
        
     }
@@ -105,4 +113,28 @@ public class FirstPersonCamera : MonoBehaviour
 	{
         isLocked = locked;
 	}
+
+    public void GoToCanvas()
+    {
+        if (isLocked == false)
+		{
+			GameObject canvas = transform.parent.parent.GetChild(1).gameObject;
+            GameObject body = transform.parent.gameObject;
+			Vector3 pos = canvas.transform.position;
+			pos += (3f * canvas.transform.forward);
+            transform.parent.GetComponent<Pavel_Player>().SetPosition(pos);
+			transform.parent.GetComponent<Pavel_Player>().SetLockAtCanvas(true);
+            xRotation = 0;
+            yRotation = 0;
+            m_ASLObject.SendAndSetClaim(() =>
+                {
+                    m_ASLObject.SendAndSetLocalRotation(Quaternion.Euler(0, 0, 0f));
+                    //Debug.Log("Sent Local Rotation");
+                });
+		}
+		else
+		{
+			transform.parent.GetComponent<Pavel_Player>().SetLockAtCanvas(false);
+		}
+    }
 }
