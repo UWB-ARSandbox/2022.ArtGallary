@@ -15,13 +15,17 @@ public class ResubmissionHandler : MonoBehaviour
 
 	public void AllCanSubmit(float sub)
 	{
-
 		gameObject.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
 		{
 			float[] f = new float[1];
 			f[0] = sub;
 			GetComponent<ASLObject>().SendFloatArray(f);
 		});
+	}
+
+	public void LocallySetClick(bool clk)
+	{
+		clicked = clk;
 	}
 
 	public bool SubmissionStatus()

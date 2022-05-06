@@ -225,6 +225,7 @@ public class PaintOnCanvas : MonoBehaviour
 			clicked = handler.SubmissionStatus();
 			if(clicked == false)
 			{
+				handler.LocallySetClick(true);
 				RenderCanvas();
 			}
 		}
@@ -695,32 +696,20 @@ public class PaintOnCanvas : MonoBehaviour
 	public void RenderCanvas()
 	{
 		Camera cam = transform.parent.GetChild(0).GetChild(1).GetComponent<Camera>();
-		GameObject manager = GameObject.Find("GameLiftManager");
-		if(manager.GetComponent<ASL.GameLiftManager>().AmLowestPeer())
-		{
-			// Set canvas to render to screen
-			cam.cullingMask |= (1 << 11);
-		}
-		else
-		{
-			// Set canvas to render to screen
-			cam.cullingMask |= (1 << 10);
-		}
+
+		// Set canvas to render to screen
+		cam.cullingMask |= (1 << 10);
+		// Set canvas to render to screen
+		cam.cullingMask |= (1 << 11);
 	}
 
 	public void DoNotRenderCanvas()
 	{
 		Camera cam = transform.parent.GetChild(0).GetChild(1).GetComponent<Camera>();
-		GameObject manager = GameObject.Find("GameLiftManager");
-		if (manager.GetComponent<ASL.GameLiftManager>().AmLowestPeer())
-		{
-			// Set canvas to render to screen
-			cam.cullingMask &= ~(1 << 11);
-		}
-		else
-		{
-			// Set canvas to render to screen
-			cam.cullingMask &= ~(1 << 10);
-		}
+
+		// Set canvas to render to screen
+		cam.cullingMask &= ~(1 << 10);
+		// Set canvas to render to screen
+		cam.cullingMask &= ~(1 << 11);
 	}
 }
