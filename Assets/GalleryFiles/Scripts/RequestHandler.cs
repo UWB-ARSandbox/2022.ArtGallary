@@ -9,6 +9,7 @@ public class RequestHandler : MonoBehaviour
     ASLObject m_ASLObject;
     [SerializeField]
     static int host, peerid, request;
+    int studentAmount;
     
     [SerializeField]
     List<GameObject> StudentPanels;
@@ -36,6 +37,11 @@ public class RequestHandler : MonoBehaviour
             Requestor = Camera.main.transform.parent.parent.gameObject;
             Canvas = Requestor.transform.GetChild(1).gameObject;
         }
+        
+        if (manager.m_Players.Count < studentAmount)
+        {
+            Initialize();
+        }
     }
 
     public void Initialize()
@@ -46,6 +52,7 @@ public class RequestHandler : MonoBehaviour
         {
             StudentPanels.Add(p);
         }
+        studentAmount = StudentPanels.Count;
     }
 
     public void SendHelpRequest()
@@ -71,6 +78,9 @@ public class RequestHandler : MonoBehaviour
     {
         ASLHelper.m_ASLObjects.TryGetValue(_id, out ASLObject myObject);
         peerid = (int)_myFloats[0];
+        List<GameObject> needsHelp = new List<GameObject>();
+        List<GameObject> everyoneElse = new List<GameObject>();
+
         foreach(GameObject panel in StudentPanels)
         {
             if(panel != null)
@@ -78,8 +88,24 @@ public class RequestHandler : MonoBehaviour
                 StudentPanel p = panel.GetComponent<StudentPanel>();
                 p.HelpToggle(peerid);
                 Debug.Log("Searched " + peerid);
+                if(p.needsHelp)
+                {
+                    needsHelp.Add(panel);
+                }
+                else
+                {
+                    everyoneElse.Add(panel);
+                }
             }
-            
+        }
+        needsHelp.AddRange(everyoneElse);
+        StudentPanels = new List<GameObject>(needsHelp);
+
+        int index = 0;
+        foreach(GameObject panel in StudentPanels)
+        {
+            panel.transform.SetSiblingIndex(index);
+            index++;
         }
     }
 
