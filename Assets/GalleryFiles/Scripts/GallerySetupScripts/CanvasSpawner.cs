@@ -15,6 +15,7 @@ public class CanvasSpawner : MonoBehaviour
     static float point1 = 4;
     static float point2 = 3.5f;
     static float point3 = 5;
+    bool firstFrame = true;
 
 	// Start is called before the first frame update
 	void Start()
@@ -26,7 +27,85 @@ public class CanvasSpawner : MonoBehaviour
             WallArray[i] = GameObject.Find("Wall" + wallNum.ToString());
             wallNum += 1;
 		}
+
+
+        //Locally expands the place
+        ASL.GameLiftManager manager = GameObject.Find("GameLiftManager").
+            GetComponent<ASL.GameLiftManager>();
+        
+        float amountStu = manager.m_Players.Count;
+        amountStu = 20;
+
+        totalStu = (int)amountStu;
+        //amountStu = 6;
+        float wallSize;
+        if(amountStu <= 3)
+        {
+            wallSize =  1f;
+        }
+        else if(amountStu <= 9)
+        {
+            wallSize =  2f;
+        }
+        else
+        {
+            wallSize =  3f;
+        }
+        
+        
+
+        GameObject ground = GameObject.Find("Ground");
+        Vector3 size = ground.transform.localScale;
+        Vector3 expandSize = new Vector3(wallSize, size.y, wallSize);
+        ground.transform.localScale = expandSize;
+        for (int i = 0; i < WallArray.Length; i++)
+        {
+            Debug.Log(i);
+            GameObject wall = WallArray[i];
+            Vector3 sizeWall = wall.transform.localScale;
+            Vector3 expandSizeWall = new Vector3(10 * wallSize, sizeWall.y, sizeWall.z);
+            wall.transform.localScale = expandSizeWall;
+
+            float wallX = 0;
+            float wallZ = 0;
+            if(wall.transform.position.x != 0)
+			{
+                if(wall.transform.position.x < 0)
+				{
+                    wallX = -1;
+                }
+                else
+				{
+                    wallX = 1;
+                }
+			}
+            if (wall.transform.position.z != 0)
+			{
+                if (wall.transform.position.z < 0)
+                {
+                    wallZ = -1;
+                }
+                else
+                {
+                    wallZ = 1;
+                }
+            }
+
+            Vector3 newPos = new Vector3((5 * wallSize + 0.5f) * wallX,
+                wall.transform.position.y, (5 * wallSize + 0.5f) * wallZ);
+            wall.transform.position = newPos;
+
+            if(wall.gameObject.name.Contains("Wall1"))
+			{
+                point1 = expandSizeWall.x / 2 - 1;
+                point3 = newPos.z - 0.5f;
+            }
+        }
+        
+        
+        
     }
+    
 
 	public void GalleryOpitions()
 	{
@@ -76,7 +155,21 @@ public class CanvasSpawner : MonoBehaviour
 
         totalStu = amountStu;
 
-        int wallSize = (int)(amountStu / 40) + 1;
+        int wallSize;
+        if(amountStu <= 3)
+        {
+            wallSize =  1;
+        }
+        else if(amountStu <= 9)
+        {
+            wallSize =  2;
+        }
+        else
+        {
+            wallSize =  3;
+        }
+        
+        
 
         ChangeWallSizePos(wallSize);
 
@@ -88,6 +181,7 @@ public class CanvasSpawner : MonoBehaviour
 
     public void ChangeWallSizePos(int wallSize)
 	{
+        
         GameObject ground = GameObject.Find("Ground");
         ground.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
         {
