@@ -34,7 +34,7 @@ public class CanvasSpawner : MonoBehaviour
             GetComponent<ASL.GameLiftManager>();
         
         float amountStu = manager.m_Players.Count;
-        amountStu = 20;
+        //amountStu = 20;
 
         totalStu = (int)amountStu;
         //amountStu = 6;
@@ -154,7 +154,6 @@ public class CanvasSpawner : MonoBehaviour
         int amountStu = manager.m_Players.Count;
 
         totalStu = amountStu;
-
         int wallSize;
         if(amountStu <= 3)
         {
