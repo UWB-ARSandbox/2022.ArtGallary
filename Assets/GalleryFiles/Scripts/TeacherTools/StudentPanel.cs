@@ -39,6 +39,11 @@ public class StudentPanel : MonoBehaviour
                 }
             }
         }
+
+        if(player != null)
+        {
+            SetPreview((Texture2D)player.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.mainTexture);
+        }
     }
 
     // Changes name displayed by the student panel. Should only be used at initialization of the UI.
