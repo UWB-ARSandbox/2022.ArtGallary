@@ -4,7 +4,8 @@
  * Description: PaintOnCanvas allows user to create a blank canvas
  * then paint on it. User must save canvas before quitting application
  * to save progress. The load button will allow the user to load a png.
- * The user is allowed to change the brush size and color.
+ * The user is allowed to change the brush size and color. User can type
+ * text in two sizes 7 pixels wide or 12 pixels wide.
 */
 
 using System.Collections;
@@ -452,7 +453,15 @@ public class PaintOnCanvas : MonoBehaviour
 				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "File_Name";
 				try
 				{
-					studentCanvas.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + png + ".png"));
+					Texture2D testText = new Texture2D(1, 1);
+					testText.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + png + ".png"));
+					for(int x = 0; x < testText.width; x++)
+					{
+						for(int y = 0; y < testText.height; y++)
+						{
+							studentCanvas.SetPixel(x, y, testText.GetPixel(x, y));
+						}
+					}
 				}
 				catch
 				{
@@ -465,7 +474,15 @@ public class PaintOnCanvas : MonoBehaviour
 				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "File_Name";
 				try
 				{
-					studentCanvas.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + png + ".png"));
+					Texture2D testText = new Texture2D(1, 1);
+					testText.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/" + png + ".png"));
+					for (int x = 0; x < testText.width; x++)
+					{
+						for (int y = 0; y < testText.height; y++)
+						{
+							studentCanvas.SetPixel(x, y, testText.GetPixel(x, y));
+						}
+					}
 				}
 				catch
 				{
@@ -480,6 +497,12 @@ public class PaintOnCanvas : MonoBehaviour
 			}
 		}
 	}
+
+	/*ChangeToWhite
+	* Description: this is for the save and load text field
+	* for when it is need to be returned back to white.
+	* Parameter: string s, used to make Unity happy not used for anything
+	*/
 	public void ChangeToWhite(string s)
 	{
 		GameObject.Find("SaveField").GetComponent<Image>().color = Color.white;
@@ -587,6 +610,12 @@ public class PaintOnCanvas : MonoBehaviour
 		GameObject brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
 	}
+	/*EraseEntireCanvas
+	* Description: fills all pixels on the canvas with
+	* white. Also will go back to default resolution (768x512)
+	* Note: do not use color.clear because clear is effectively
+	* black in the eyes of Unity
+	*/
 	public void EraseEntireCanvas()
 	{
 		for (int x = 0; x < canvasWidth; x++)
@@ -601,6 +630,12 @@ public class PaintOnCanvas : MonoBehaviour
 		studentCanvas.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/BlankCanvas" + ".png"));
 		gameObject.GetComponent<Renderer>().material.mainTexture = studentCanvas;
 	}
+	/*DrawCharacter
+	* Description: Draws the pixel of each character on to the canvas. 
+	* Parameters: Vector2 currUV, the beginning spot to draw
+	* int spot, spot is the starting place of each character
+	* based on the width of the text.
+	*/
 	void DrawCharacter(Vector2 currUV, int spot)
 	{
 		spot *= textWidth;
@@ -617,6 +652,16 @@ public class PaintOnCanvas : MonoBehaviour
 		}
 		studentCanvas.Apply();
 	}
+	/*DetermineCharacter
+	* Description: converts the character value (bascially an int)
+	* to where it is in the alphabet.png or alphabet2.png. Due to functionality
+	* issues with some of the ascii values (NUL, carriage return, etc.) 
+	* the alphabet.png and alphabet2.png do not follow ascii and if changed
+	* must reflect in this function.
+	* Parameter: char c, which character to pull from the alphabet.
+	* Return: int, modified spot in ascii inside of the png. -1 is a 
+	* character that does not currently exist in the png.
+	*/
 	int DetermineCharacter(char c)
 	{
 		int modifiedVal = -1;
