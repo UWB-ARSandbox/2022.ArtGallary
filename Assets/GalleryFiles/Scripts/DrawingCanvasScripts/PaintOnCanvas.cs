@@ -389,6 +389,7 @@ public class PaintOnCanvas : MonoBehaviour
 						{
 							DrawCharacter(startChar, spot);
 							startChar.x += textWidth;
+							startChar.x += 1;
 						}
 					}
 				}
@@ -619,6 +620,10 @@ public class PaintOnCanvas : MonoBehaviour
 		else if (c >= 65 && c < 91)
 		{
 			modifiedVal = c - 29;
+		}
+		else if(c >= 58 && c < 65)
+		{
+			modifiedVal = c + 20;
 		}
 		return modifiedVal;
 	}
