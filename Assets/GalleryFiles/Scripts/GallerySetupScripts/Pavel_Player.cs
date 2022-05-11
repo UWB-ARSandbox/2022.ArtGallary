@@ -93,7 +93,11 @@ public class Pavel_Player : MonoBehaviour
 		{
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.
+
+            PaintOnCanvas gone = transform.parent.GetChild(1).GetComponent<PaintOnCanvas>();
+            int layerMask = LayMaskForRay();
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask) && hit.transform.gameObject.
                 name.Contains("Vote"))
             {
                 hit.transform.parent.gameObject.
@@ -106,7 +110,9 @@ public class Pavel_Player : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(ray, out hit) && hit.transform.gameObject.
+            int layerMask = LayMaskForRay();
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask) && hit.transform.gameObject.
                 name.Contains("StuCanvas"))
             {
                 lastTran = transform;
@@ -136,6 +142,7 @@ public class Pavel_Player : MonoBehaviour
                 }
                 clicked = true;
             }
+            Debug.Log(hit.transform.gameObject.name);
         }
 
         // Resetting camera back to the player
@@ -147,6 +154,25 @@ public class Pavel_Player : MonoBehaviour
             transform.GetChild(1).position = lastTran.position;
             transform.GetChild(1).rotation = lastTran.rotation;
         }
+    }
+
+    int LayMaskForRay()
+	{
+        PaintOnCanvas gone = transform.parent.GetChild(1).GetComponent<PaintOnCanvas>();
+        int layerMask = 1 << 30;
+        if (gone.GetClickStatus())
+        {
+            layerMask = (1 << LayerMask.NameToLayer("DoNotRenderCanavas")) |
+            (1 << LayerMask.NameToLayer("DoNotRenderTCan"));
+
+            // Set canvas to render to screen
+            layerMask |= (1 << 10);
+            // Set canvas to render to screen
+            layerMask |= (1 << 11);
+        }
+        layerMask = ~layerMask;
+
+        return layerMask;
     }
 
     public void LeaveClass()

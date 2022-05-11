@@ -236,8 +236,23 @@ public class PaintOnCanvas : MonoBehaviour
 			{
 				RaycastHit raycastHit;
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-				if (Physics.Raycast(ray, out raycastHit) == true
-				&& raycastHit.transform.GetComponent<PaintOnCanvas>() != null)
+
+
+				int layerMask = 1 << 30;
+				if (clicked)
+				{
+					layerMask = (1 << LayerMask.NameToLayer("DoNotRenderCanavas")) |
+					(1 << LayerMask.NameToLayer("DoNotRenderTCan"));
+
+					// Set canvas to render to screen
+					layerMask |= (1 << 10);
+					// Set canvas to render to screen
+					layerMask |= (1 << 11);
+				}
+				layerMask = ~layerMask;
+
+				if (Physics.Raycast(ray, out raycastHit, Mathf.Infinity ,layerMask) == true
+					&& raycastHit.transform.GetComponent<PaintOnCanvas>() != null)
 				{
 					Vector2 uv;
 					if ((int)transform.forward.z == -1)
@@ -687,6 +702,8 @@ public class PaintOnCanvas : MonoBehaviour
 			i++;
 		}
 	}
+
+	public bool GetClickStatus() { return clicked;}
 
 	public static void changeTexture(GameObject gameObject, Texture2D tex)
 	{
