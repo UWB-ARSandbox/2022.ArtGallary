@@ -19,7 +19,9 @@ public class SendAndPlayAudio : MonoBehaviour
 
     int audioPerSecond = 40; //If changing, will need to make sure stuff in update gets called less as well;
 
-    bool audioEnabled = true;
+    bool audioEnabled = false;
+    GameObject microphoneIcon;
+    
 
     // hrz/audiopersecond must be less than 1000
     void Start()
@@ -28,6 +30,7 @@ public class SendAndPlayAudio : MonoBehaviour
         {
             if(this.transform.parent.GetComponent<TeacherEnable>() != null)
             {
+                microphoneIcon = GameObject.Find("AudioIcon");
                 audioInput = true;
                 clip = Microphone.Start(Microphone.devices[0], true, 1, hrz);
             }
@@ -36,6 +39,7 @@ public class SendAndPlayAudio : MonoBehaviour
         else{
             if(this.transform.parent.GetComponent<StudentEnable>() != null && this.transform.parent.GetComponent<StudentEnable>().studentID == GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>().m_PeerId)
             {
+                microphoneIcon = GameObject.Find("AudioIcon");
                 audioInput = true;
                 clip = Microphone.Start(Microphone.devices[0], true, 1, hrz);
             }
@@ -81,6 +85,10 @@ public class SendAndPlayAudio : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.X))
         {
             audioEnabled = !audioEnabled;
+            if(microphoneIcon != null)
+            {
+                microphoneIcon.SetActive(!audioEnabled);
+            }
         }
         
         
