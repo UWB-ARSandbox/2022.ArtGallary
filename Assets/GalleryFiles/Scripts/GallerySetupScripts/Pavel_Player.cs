@@ -34,7 +34,7 @@ public class Pavel_Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (lockAtCanvas == false)
+        if (lockAtCanvas == false && !clicked)
         {
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
@@ -119,10 +119,13 @@ public class Pavel_Player : MonoBehaviour
                 transform.GetChild(1).position = hit.transform.position;
                 transform.GetChild(1).eulerAngles = new Vector3(0, hit.transform.eulerAngles.y + 180, 0);
 
-                transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(true);
+                transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(false);
+                transform.GetChild(1).GetComponent<FirstPersonCamera>().SetIsLocked(false);
+
+                DoNotRenderPlayer();
 
                 // Front wall
-                if(hit.transform.eulerAngles.y == 180)
+                if (hit.transform.eulerAngles.y == 180)
 				{
                     transform.GetChild(1).position -= new Vector3(0, 0, 2);
                 }
@@ -142,14 +145,16 @@ public class Pavel_Player : MonoBehaviour
                 }
                 clicked = true;
             }
-            Debug.Log(hit.transform.gameObject.name);
         }
 
         // Resetting camera back to the player
         else if(clicked && Input.anyKeyDown)
 		{
             clicked = false;
-            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(false);
+            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(true);
+            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetIsLocked(true);
+            
+            DoRenderPlayer();
 
             transform.GetChild(1).position = lastTran.position;
             transform.GetChild(1).rotation = lastTran.rotation;
@@ -162,12 +167,11 @@ public class Pavel_Player : MonoBehaviour
         int layerMask = 1 << 30;
         if (gone.GetClickStatus())
         {
-            layerMask = (1 << LayerMask.NameToLayer("DoNotRenderCanavas")) |
-            (1 << LayerMask.NameToLayer("DoNotRenderTCan"));
-
-            // Set canvas to render to screen
+            // Set students to be raycasted through
+            layerMask |= (1 << 9);
+            // Set canvas to be raycasted through
             layerMask |= (1 << 10);
-            // Set canvas to render to screen
+            // Set teacher canvas to be raycasted through
             layerMask |= (1 << 11);
         }
         layerMask = ~layerMask;

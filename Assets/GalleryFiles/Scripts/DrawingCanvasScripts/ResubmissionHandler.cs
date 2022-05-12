@@ -6,7 +6,7 @@ using ASL;
 public class ResubmissionHandler : MonoBehaviour
 {
 
-	bool clicked = true;
+	bool clicked = false;
     // Start is called before the first frame update
     void Start()
     {

@@ -67,6 +67,7 @@ public class PaintOnCanvas : MonoBehaviour
 
 	// Current Canvas has been loaded
 	bool clicked = false;
+	float freeze = 1f;
 
 	Vector2 previousCoord;
 
@@ -223,10 +224,19 @@ public class PaintOnCanvas : MonoBehaviour
 	{
 		if(clicked == true)
 		{
-			clicked = handler.SubmissionStatus();
-			if(clicked == false)
+			if(freeze > 0)
+			{
+				freeze -= Time.deltaTime;
+			}
+			else
+			{
+				clicked = handler.SubmissionStatus();
+			}
+			
+			if(clicked == false && freeze <= 0)
 			{
 				handler.LocallySetClick(true);
+				freeze = 1;
 				RenderCanvas();
 			}
 		}
@@ -741,6 +751,7 @@ public class PaintOnCanvas : MonoBehaviour
 				handler.AllCanSubmit(0);
 				DoNotRenderCanvas();
 				clicked = true;
+
 				break;
 			}
 
