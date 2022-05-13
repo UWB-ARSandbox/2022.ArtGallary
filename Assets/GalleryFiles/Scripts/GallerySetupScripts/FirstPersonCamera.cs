@@ -32,7 +32,7 @@ public class FirstPersonCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isActive && isLocked)
+        if(isActive && !isLocked)
         {
             // Code for first person camera movement taken from Brackeys. https://www.youtube.com/watch?v=_QajrabyTJc
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
@@ -60,14 +60,14 @@ public class FirstPersonCamera : MonoBehaviour
         {
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                isLocked = false;
+                isLocked = true;
             }
             else
 			{
-                isLocked = true;
+                isLocked = false;
 			}
-            crosshair.SetActive(isLocked);
-            SetCursorLock(isLocked);
+            crosshair.SetActive(!isLocked);
+            SetCursorLock(!isLocked);
             GoToCanvas();
             
 
@@ -84,6 +84,21 @@ public class FirstPersonCamera : MonoBehaviour
                 crosshair.SetActive(isLocked);
                 SetCursorLock(isLocked);
             } */
+        }
+
+        if(Input.GetKeyDown(KeyCode.LeftControl))
+        {
+            if(Cursor.lockState == CursorLockMode.Locked)
+            {
+                isLocked = true;
+            }
+            else
+            {
+                isLocked = false;
+            }
+            crosshair.SetActive(!isLocked);
+            SetCursorLock(!isLocked);
+            ShowMouse(!isLocked);
         }
        
     }
@@ -116,7 +131,7 @@ public class FirstPersonCamera : MonoBehaviour
 
     public void GoToCanvas()
     {
-        if (isLocked == false)
+        if (isLocked == true)
 		{
 			GameObject canvas = transform.parent.parent.GetChild(1).gameObject;
             GameObject body = transform.parent.gameObject;
@@ -136,5 +151,17 @@ public class FirstPersonCamera : MonoBehaviour
 		{
 			transform.parent.GetComponent<Pavel_Player>().SetLockAtCanvas(false);
 		}
+    }
+
+    public void ShowMouse(bool Locked)
+    {
+        if (isLocked == true)
+        {
+            transform.parent.GetComponent<Pavel_Player>().SetLockAtCanvas(true);
+        }
+        else
+        {
+            transform.parent.GetComponent<Pavel_Player>().SetLockAtCanvas(false);
+        }
     }
 }
