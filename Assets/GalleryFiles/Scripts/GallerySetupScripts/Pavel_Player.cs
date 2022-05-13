@@ -119,8 +119,8 @@ public class Pavel_Player : MonoBehaviour
                 transform.GetChild(1).position = hit.transform.position;
                 transform.GetChild(1).eulerAngles = new Vector3(0, hit.transform.eulerAngles.y + 180, 0);
 
-                transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(false);
-                transform.GetChild(1).GetComponent<FirstPersonCamera>().SetIsLocked(false);
+                transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(true);
+                transform.GetChild(1).GetComponent<FirstPersonCamera>().SetIsLocked(true);
 
                 DoNotRenderPlayer();
 
@@ -151,8 +151,8 @@ public class Pavel_Player : MonoBehaviour
         else if(clicked && Input.anyKeyDown)
 		{
             clicked = false;
-            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(true);
-            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetIsLocked(true);
+            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(false);
+            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetIsLocked(false);
             
             DoRenderPlayer();
 
