@@ -656,7 +656,12 @@ public class PaintOnCanvas : MonoBehaviour
 			for (int y = 0; y < textHeight; y++)
 			{
 				Color pixelColor = alphabetUsed.GetPixel(x, y);
-				studentCanvas.SetPixel(currX, currY + y, pixelColor);
+				if(pixelColor.a != 0)
+				{
+					pixelColor = brushColor;
+					studentCanvas.SetPixel(currX, currY + y, pixelColor);
+				}
+				
 			}
 			currX += 1;
 		}
