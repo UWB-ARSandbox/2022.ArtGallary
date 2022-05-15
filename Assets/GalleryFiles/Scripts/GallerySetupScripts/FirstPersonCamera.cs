@@ -24,7 +24,7 @@ public class FirstPersonCamera : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
-        isLocked = true;
+        isLocked = false;
         isActive = false;
         crosshair = GameObject.Find("Crosshair");
     }

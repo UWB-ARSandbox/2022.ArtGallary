@@ -74,14 +74,13 @@ public class PaintOnCanvas : MonoBehaviour
 	bool previousMouseDown = false;
 
 	// UI field listeners
-	InputField rField = null;
-	InputField gField = null;
-	InputField bField = null;
+	Slider rSlider, gSlider, bSlider;
 	InputField aField = null;
 
 	InputField slField = null;
 	InputField textField = null;
-	InputField brushSizeField = null;
+	InputField brushSizeInput = null;
+	Slider brushSizeSlider = null;
 
 	// UI button listeners
 	Button loadB = null;
@@ -107,27 +106,29 @@ public class PaintOnCanvas : MonoBehaviour
 		handler = GameObject.Find("Resubmission").GetComponent<ResubmissionHandler>();
 
 		// UI field code
-		rField = GameObject.Find("RedInputField").GetComponent<InputField>();
-		gField = GameObject.Find("GreenInputField").GetComponent<InputField>();
-		bField = GameObject.Find("BlueInputField").GetComponent<InputField>();
+		rSlider = GameObject.Find("RedSlider").GetComponent<Slider>();
+		gSlider = GameObject.Find("GreenSlider").GetComponent<Slider>();
+		bSlider = GameObject.Find("BlueSlider").GetComponent<Slider>();
 		//aField = GameObject.Find("AlphaInputField").GetComponent<InputField>();
 
 		slField = GameObject.Find("SaveField").GetComponent<InputField>();
 		textField = GameObject.Find("TextInput").GetComponent<InputField>();
-		brushSizeField = GameObject.Find("SizeInputField").GetComponent<InputField>();
+		brushSizeInput = GameObject.Find("SizeInputField").GetComponent<InputField>();
+		brushSizeSlider = GameObject.Find("BrushSizeSlider").GetComponent<Slider>();
 		textSizeDrop = GameObject.Find("TextSizeDropdown").GetComponent<Dropdown>();
 		
 		textSizeDrop.onValueChanged.AddListener(ChangeTextSize);
 
-		rField.onEndEdit.AddListener(ChangeRed);
-		gField.onEndEdit.AddListener(ChangeGreen);
-		bField.onEndEdit.AddListener(ChangeBlue);
+		rSlider.onValueChanged.AddListener(delegate {ChangeRed(rSlider.value);});
+		gSlider.onValueChanged.AddListener(delegate {ChangeGreen(gSlider.value);});
+		bSlider.onValueChanged.AddListener(delegate {ChangeBlue(bSlider.value);});
 		//aField.onEndEdit.AddListener(ChangeAlpha);
 
 		slField.onEndEdit.AddListener(SaveOrLoadToPNG);
 		slField.onValueChanged.AddListener(ChangeToWhite);
 		textField.onEndEdit.AddListener(SetTextOnType);
-		brushSizeField.onEndEdit.AddListener(SetBrushSize);
+		brushSizeInput.onEndEdit.AddListener(SetBrushSize);
+		brushSizeSlider.onValueChanged.AddListener(delegate {SetBrushSize(brushSizeSlider.value);});
 
 		// UI Button Code
 		loadB = GameObject.Find("LoadButton").GetComponent<Button>();
@@ -174,6 +175,8 @@ public class PaintOnCanvas : MonoBehaviour
 		brushColor = Color.black;
 		pixelToDraw = new Vector2(0, 0);
 		dirPath = Application.dataPath;
+
+		brushSizeSlider.value = brushSize;
 		//another way to load in alphabet.png
 		//alphabet = new Texture2D(456, 14, TextureFormat.RGBA32, false);
 		//alphabet.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/alphabet.png"));
@@ -587,28 +590,34 @@ public class PaintOnCanvas : MonoBehaviour
 	public void SetBrushSize(string size)
 	{
 		int.TryParse(size, out brushSize);
+		brushSizeSlider.value = brushSize;
 	}
-	public void ChangeRed(string r)
+
+	public void SetBrushSize(float size)
 	{
-		float red;
-		float.TryParse(r, out red);
-		brushColor = new Color(red, brushColor.g, brushColor.b, brushColor.a);
+		brushSize = (int)size;
+	}
+	public void ChangeRed(float r)
+	{
+		//float red;
+		//float.TryParse(r, out red);
+		brushColor = new Color(r, brushColor.g, brushColor.b, brushColor.a);
 		GameObject brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
 	}
-	public void ChangeGreen(string g)
+	public void ChangeGreen(float g)
 	{
-		float green;
-		float.TryParse(g, out green);
-		brushColor = new Color(brushColor.r, green, brushColor.b, brushColor.a);
+		//float green;
+		//float.TryParse(g, out green);
+		brushColor = new Color(brushColor.r, g, brushColor.b, brushColor.a);
 		GameObject brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
 	}
-	public void ChangeBlue(string b)
+	public void ChangeBlue(float b)
 	{
-		float blue;
-		float.TryParse(b, out blue);
-		brushColor = new Color(brushColor.r, brushColor.g, blue, brushColor.a);
+		//float blue;
+		//float.TryParse(b, out blue);
+		brushColor = new Color(brushColor.r, brushColor.g, b, brushColor.a);
 		GameObject brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
 	}
