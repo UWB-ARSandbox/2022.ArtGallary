@@ -54,20 +54,20 @@ public class TeacherCam : MonoBehaviour
         }
 
 
-        if(Input.GetKey(KeyCode.Keypad8) && transform.position.y < 1.9f)
+        if(Input.GetKey(KeyCode.UpArrow) && transform.position.y < 1.9f)
 		{
             transform.position += new Vector3(0,0.05f,0);
 		}
-        else if(Input.GetKey(KeyCode.Keypad5) && transform.position.y > 0.1f)
+        else if(Input.GetKey(KeyCode.DownArrow) && transform.position.y > 0.1f)
 		{
             transform.position -= new Vector3(0, 0.05f, 0);
         }
 
-        if(Input.GetKey(KeyCode.Keypad4) && transform.position.x > -1.4f)
+        if(Input.GetKey(KeyCode.LeftArrow) && transform.position.x > -1.4f)
 		{
             transform.position -= new Vector3(0.05f, 0, 0);
         }
-        else if(Input.GetKey(KeyCode.Keypad6) && transform.position.x < 1.4f)
+        else if(Input.GetKey(KeyCode.RightArrow) && transform.position.x < 1.4f)
 		{
             transform.position += new Vector3(0.05f, 0, 0);
         }
