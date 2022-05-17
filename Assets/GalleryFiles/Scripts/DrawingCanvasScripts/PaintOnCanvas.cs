@@ -99,6 +99,13 @@ public class PaintOnCanvas : MonoBehaviour
 	
 	ResubmissionHandler handler;
 
+	public Renderer maskRenderer;
+	Texture2D maskCanvas;
+	Color maskColor;
+
+
+
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -191,13 +198,19 @@ public class PaintOnCanvas : MonoBehaviour
 		brushColorUI.GetComponent<Image>().color = brushColor;
 		//this covers RGBA format and is good for opacity changing if needed
 		studentCanvas = new Texture2D(canvasWidth, canvasHeight, TextureFormat.RGBA32, false);
+		maskCanvas = new Texture2D(canvasWidth, canvasHeight, TextureFormat.RGBA32, false);
+
+
 		for (int x = 0; x < canvasWidth; x++)
 		{
 			for (int y = 0; y < canvasHeight; y++)
 			{
 				studentCanvas.SetPixel(x, y, Color.white);
+				maskCanvas.SetPixel(x, y, Color.clear);
+				
 			}
 		}
+		maskCanvas.Apply();
 		//allocate amount of bytes needed for the png image
 		byte[] bytes = studentCanvas.EncodeToPNG();
 		if (System.IO.Directory.Exists(dirPath))
@@ -214,6 +227,7 @@ public class PaintOnCanvas : MonoBehaviour
 			}
 			studentCanvas.LoadImage(System.IO.File.ReadAllBytes(dirPath + "/BlankCanvas.png"));
 			gameObject.GetComponent<Renderer>().material.mainTexture = studentCanvas;
+			maskRenderer.material.mainTexture = maskCanvas;
 		}
 		else
 		{
@@ -225,6 +239,7 @@ public class PaintOnCanvas : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		UpdateMask();
 		if(clicked == true)
 		{
 			if(freeze > 0)
@@ -246,6 +261,7 @@ public class PaintOnCanvas : MonoBehaviour
 
 		if (!EventSystem.current.IsPointerOverGameObject())
 		{
+			
 			if (Input.GetMouseButton(0) == true)
 			{
 				RaycastHit raycastHit;
@@ -323,6 +339,7 @@ public class PaintOnCanvas : MonoBehaviour
 										if (eraseMode == false)
 										{
 											studentCanvas.SetPixel(x, y, brushColor);
+											//maskCanvas.SetPixel(x,y, brushColor);
 										}
 										else
 										{
@@ -383,21 +400,28 @@ public class PaintOnCanvas : MonoBehaviour
 						}
 						else
 						{
-							for (int i = 0; i < numberOfInterpolations; i++)
+							if(!textMode)
 							{
-								float distanceX = (i * (pixelCoord.x - previousCoord.x) / numberOfInterpolations);
-								float distanceY = (i * (pixelCoord.y - previousCoord.y) / numberOfInterpolations);
-								if (textMode == false && eraseMode == false && textMode == false)
+								for (int i = 0; i < numberOfInterpolations; i++)
 								{
-									studentCanvas.SetPixel((int)(pixelCoord.x - distanceX), (int)(pixelCoord.y - distanceY), brushColor);
+									float distanceX = (i * (pixelCoord.x - previousCoord.x) / numberOfInterpolations);
+									float distanceY = (i * (pixelCoord.y - previousCoord.y) / numberOfInterpolations);
+									if (textMode == false && eraseMode == false && textMode == false)
+									{
+										studentCanvas.SetPixel((int)(pixelCoord.x - distanceX), (int)(pixelCoord.y - distanceY), brushColor);
+									}
+									else if (eraseMode == true)
+									{
+										studentCanvas.SetPixel((int)(pixelCoord.x - distanceX), (int)(pixelCoord.y - distanceY), Color.white);
+									}
 								}
-								else if (eraseMode == true)
-								{
-									studentCanvas.SetPixel((int)(pixelCoord.x - distanceX), (int)(pixelCoord.y - distanceY), Color.white);
-								}
+							}
+							else{
+								pixelToDraw = pixelCoord;
 							}
 						}
 						studentCanvas.Apply();
+						
 
 					}
 					previousCoord = pixelCoord;
@@ -417,10 +441,11 @@ public class PaintOnCanvas : MonoBehaviour
 						if (spot != -1)
 						{
 							DrawCharacter(startChar, spot);
-							startChar.x += textWidth;
+							startChar.x += textWidth * brushSize;
 							startChar.x += 1;
 						}
 					}
+					
 				}
 				else if (textMode == true && textOnType.Equals("") == true)
 				{
@@ -434,6 +459,130 @@ public class PaintOnCanvas : MonoBehaviour
 		}
 	}
 
+	public void UpdateMask()
+	{
+		for (int x = 0; x < canvasWidth; x++)
+		{
+			for (int y = 0; y < canvasHeight; y++)
+			{
+				maskCanvas.SetPixel(x, y, Color.clear);
+				
+			}
+		}
+		RaycastHit raycastHit;
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+		
+		int layerMask = 1 << 30;
+		if (clicked)
+		{
+			layerMask = (1 << LayerMask.NameToLayer("DoNotRenderCanavas")) |
+			(1 << LayerMask.NameToLayer("DoNotRenderTCan"));
+
+			// Set canvas to render to screen
+			layerMask |= (1 << 10);
+			// Set canvas to render to screen
+			layerMask |= (1 << 11);
+		}
+		layerMask = ~layerMask;
+
+		if (Physics.Raycast(ray, out raycastHit, Mathf.Infinity ,layerMask) == true
+		&& raycastHit.transform.GetComponent<PaintOnCanvas>() != null)
+		{
+			Vector2 uv;
+			if ((int)transform.forward.z == -1)
+			{
+				uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
+				(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+			}
+			else if ((int)transform.forward.z == 1)
+			{
+				uv = new Vector2(1 - (raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
+				(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+			}
+			else if ((int)transform.forward.x == -1)
+			{
+				uv = new Vector2(1 - (raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
+				(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+			}
+			else if ((int)transform.forward.x == 1)
+			{
+				uv = new Vector2((raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
+				(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+			}
+			else
+			{
+				Debug.Log("Bad canvas angle");
+				uv = new Vector2(0.5f, 0.5f);
+			}
+			//converts raycastHit point into a UV coordinate
+			//Vector2 uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
+			//(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+			Vector2 pixelCoord = new Vector2((int)(uv.x * (float)(canvasWidth)), (int)(uv.y * (float)(canvasHeight)));
+			if (brushSize > 1)
+			{
+				if (textMode == false)
+				{
+					for (int x = (int)(pixelCoord.x - (brushSize / 2)); x < (int)(pixelCoord.x + (brushSize / 2)); x++)
+					{
+						if (x >= canvasWidth || x < 0)
+						{
+							continue;
+						}
+						for (int y = (int)(pixelCoord.y - (brushSize / 2)); y < (int)(pixelCoord.y + (brushSize / 2)); y++)
+						{
+							if (y >= canvasHeight || y < 0)
+							{
+								continue;
+							}
+							if (eraseMode == false)
+							{
+								maskColor = brushColor;
+								maskColor.a = 0.5f;
+								maskCanvas.SetPixel(x,y, maskColor);
+							}
+							else
+							{
+								maskColor = Color.white;
+								maskColor.a = 0.5f;
+								maskCanvas.SetPixel(x,y, maskColor);
+							}
+						}
+					}
+				}
+				
+				else
+				{
+					//save point for text
+					pixelToDraw = pixelCoord;
+
+				}
+			}
+			
+			if (textOnType.Equals("") == false && textMode == true)
+			{
+				Vector2 startChar = new Vector2(pixelToDraw.x, pixelToDraw.y);
+				for (int i = 0; i < textOnType.Length; i++)
+				{
+					
+					int spot = DetermineCharacter(textOnType[i]);
+					if (spot != -1)
+					{
+						DrawCharacterMask(startChar, spot);
+						startChar.x += textWidth * brushSize;
+						startChar.x += 1;
+					}
+				}
+				
+			}
+			
+			else if (textMode == true && textOnType.Equals("") == true)
+			{
+				GameObject.Find("TextPlaceholder").GetComponent<Text>().text = "empty response not allowed";
+			}
+			maskCanvas.Apply();
+		}
+	}
 	public void SaveOrLoadToPNG(string png)
 	{
 		if (canSave == true)
@@ -657,6 +806,45 @@ public class PaintOnCanvas : MonoBehaviour
 	*/
 	void DrawCharacter(Vector2 currUV, int spot)
 	{
+		
+		spot *= textWidth;
+		int currX = (int)currUV.x;
+		int currY = (int)currUV.y;
+		
+		for (int x = spot; x < (spot + textWidth); x++)
+		{
+			for (int y = 0; y < textHeight; y++)
+			{
+				
+				Color pixelColor = alphabetUsed.GetPixel(x, y);
+				if(pixelColor.a != 0)
+				{
+					pixelColor = brushColor;
+					for(int i = 0; i < brushSize; i++)
+					{
+						for(int j = 0; j < brushSize; j++)
+						{
+							if(((currX + j) < canvasWidth) && (currY + ((y - 2) * brushSize) < canvasHeight))
+							{
+								studentCanvas.SetPixel(currX + j, currY + ((y - 2) * brushSize) + i, pixelColor);
+							}
+							
+						}
+						
+						
+						
+					}
+					
+				}
+				
+			}
+			currX += brushSize;
+		}
+		
+		studentCanvas.Apply();
+	}
+	void DrawCharacterMask(Vector2 currUV, int spot)
+	{
 		spot *= textWidth;
 		int currX = (int)currUV.x;
 		int currY = (int)currUV.y;
@@ -664,17 +852,34 @@ public class PaintOnCanvas : MonoBehaviour
 		{
 			for (int y = 0; y < textHeight; y++)
 			{
+				
 				Color pixelColor = alphabetUsed.GetPixel(x, y);
 				if(pixelColor.a != 0)
 				{
 					pixelColor = brushColor;
-					studentCanvas.SetPixel(currX, currY + y, pixelColor);
+					pixelColor.a = 0.5f;
+					for(int i = 0; i < brushSize; i++)
+					{
+						for(int j = 0; j < brushSize; j++)
+						{
+							if(((currX + j) < canvasWidth) && (currY + ((y - 2) * brushSize) < canvasHeight))
+							{
+								maskCanvas.SetPixel(currX + j, currY + ((y - 2) * brushSize) + i, pixelColor);
+							}
+							
+							
+						}
+						
+						
+						
+					}
+					
 				}
 				
 			}
-			currX += 1;
+			currX += brushSize;
 		}
-		studentCanvas.Apply();
+		maskCanvas.Apply();
 	}
 	/*DetermineCharacter
 	* Description: converts the character value (bascially an int)
