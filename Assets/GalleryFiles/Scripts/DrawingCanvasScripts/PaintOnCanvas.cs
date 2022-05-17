@@ -112,6 +112,8 @@ public class PaintOnCanvas : MonoBehaviour
 		// Allows students to resubmit work
 		handler = GameObject.Find("Resubmission").GetComponent<ResubmissionHandler>();
 
+		gameObject.AddComponent<SaveLoadNewPNG>();
+
 		// UI field code
 		rSlider = GameObject.Find("RedSlider").GetComponent<Slider>();
 		gSlider = GameObject.Find("GreenSlider").GetComponent<Slider>();
@@ -215,7 +217,6 @@ public class PaintOnCanvas : MonoBehaviour
 		byte[] bytes = studentCanvas.EncodeToPNG();
 		if (System.IO.Directory.Exists(dirPath))
 		{
-			Debug.Log(dirPath);
 			if (System.IO.File.Exists(dirPath + "/BlankCanvas.png") == false)
 			{
 				System.IO.File.WriteAllBytes(dirPath + "/BlankCanvas.png", bytes);
@@ -550,7 +551,7 @@ public class PaintOnCanvas : MonoBehaviour
 						}
 					}
 				}
-				
+
 				else
 				{
 					//save point for text
@@ -609,6 +610,7 @@ public class PaintOnCanvas : MonoBehaviour
 		}
 		else
 		{
+			
 			//dont add any directories or file extensions
 			if (png.Contains("/") == false && png.EndsWith(".png") == false && png.Equals("alphabet") == false)
 			{
@@ -672,6 +674,13 @@ public class PaintOnCanvas : MonoBehaviour
 	//sets whether save field will display for UI
 	public void SetCanSave()
 	{
+		if(canLoad == false)
+		{
+			canSave = true;
+			GetComponent<SaveLoadNewPNG>().SaveNewPNG(studentCanvas);
+		}
+		canSave = false;
+		/*
 		canSave = !canSave;
 		canLoad = false;
 		if (canSave == true)
@@ -685,10 +694,30 @@ public class PaintOnCanvas : MonoBehaviour
 			GameObject.Find("SaveField").GetComponent<InputField>().interactable = false;
 			GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "File_Name";
 		}
+		*/
 	}
 	//sets whether load field will display for UI
 	public void SetCanLoad()
 	{
+		if(canSave == false)
+		{
+			canLoad = true;
+			Texture2D newPng = new Texture2D(1,1);
+			GetComponent<SaveLoadNewPNG>().LoadNewPNG(newPng);
+			for(int x = 0; x < newPng.width; x++)
+			{
+				for(int y = 0; y < newPng.height; y++)
+				{
+					if(x < studentCanvas.width && y < studentCanvas.height)
+					{
+						studentCanvas.SetPixel(x, y, newPng.GetPixel(x, y));
+					}
+				}
+			}
+			studentCanvas.Apply();
+		}
+		canLoad = false;
+		/*
 		canLoad = !canLoad;
 		canSave = false;
 		if (canLoad == true)
@@ -702,6 +731,8 @@ public class PaintOnCanvas : MonoBehaviour
 			GameObject.Find("SaveField").GetComponent<InputField>().interactable = false;
 			GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "File_Name";
 		}
+		*/
+
 	}
 	//sets erase mode on and off
 	public void SetErase(bool erase)
