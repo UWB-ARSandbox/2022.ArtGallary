@@ -689,13 +689,6 @@ public class PaintOnCanvas : MonoBehaviour
 	//sets whether save field will display for UI
 	public void SetCanSave()
 	{
-		if(canLoad == false)
-		{
-			canSave = true;
-			GetComponent<SaveLoadNewPNG>().SaveNewPNG(studentCanvas);
-		}
-		canSave = false;
-		/*
 		canSave = !canSave;
 		canLoad = false;
 		if (canSave == true)
@@ -709,7 +702,6 @@ public class PaintOnCanvas : MonoBehaviour
 			GameObject.Find("SaveField").GetComponent<InputField>().interactable = false;
 			GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "File_Name";
 		}
-		*/
 	}
 	//sets whether load field will display for UI
 	public void SetCanLoad()
@@ -1078,7 +1070,7 @@ public class PaintOnCanvas : MonoBehaviour
 
 	public void RenderCanvas()
 	{
-		Camera cam = transform.parent.GetChild(0).GetChild(1).GetComponent<Camera>();
+		Camera cam = transform.parent.GetChild(0).GetChild(2).GetComponent<Camera>();
 
 		// Set canvas to render to screen
 		cam.cullingMask |= (1 << 10);
@@ -1088,7 +1080,7 @@ public class PaintOnCanvas : MonoBehaviour
 
 	public void DoNotRenderCanvas()
 	{
-		Camera cam = transform.parent.GetChild(0).GetChild(1).GetComponent<Camera>();
+		Camera cam = transform.parent.GetChild(0).GetChild(2).GetComponent<Camera>();
 
 		// Set canvas to render to screen
 		cam.cullingMask &= ~(1 << 10);

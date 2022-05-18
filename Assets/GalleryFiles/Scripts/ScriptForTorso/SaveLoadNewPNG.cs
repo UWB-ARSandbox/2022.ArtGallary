@@ -7,6 +7,7 @@ using SimpleFileBrowser;
 
 public class SaveLoadNewPNG : MonoBehaviour
 {
+	bool done = true;
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -20,7 +21,11 @@ public class SaveLoadNewPNG : MonoBehaviour
 	}
 	public void LoadNewPNG(Texture2D texture)
 	{
-		StartCoroutine(LoadWindow(texture));
+		if(done)
+		{
+			done = false;
+			StartCoroutine(LoadWindow(texture));
+		}
 	}
 
 	IEnumerator LoadWindow(Texture2D texture)
@@ -30,17 +35,12 @@ public class SaveLoadNewPNG : MonoBehaviour
 
 		if (FileBrowser.Success && FileBrowser.Result.Length == 1)
 		{
+			done = true;
 			Texture2D text2D = (Texture2D)texture;
-			Debug.Log(FileBrowser.Result[0]);
 			text2D.LoadImage(System.IO.File.ReadAllBytes(FileBrowser.Result[0]));
 			text2D.Apply();
 			GetComponent<PaintOnCanvas>().LoadCompleteCanvas(texture);
 			yield return FileBrowser.Result[0];
 		}
-	}
-
-	public string SaveNewPNG(Texture2D texture)
-	{
-		return "";
 	}
 }

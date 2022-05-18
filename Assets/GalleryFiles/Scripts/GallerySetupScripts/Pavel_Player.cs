@@ -99,32 +99,32 @@ public class Pavel_Player : MonoBehaviour
                 name.Contains("StuCanvas"))
             {
                 lastTran = transform;
-                transform.GetChild(1).position = hit.transform.position;
-                transform.GetChild(1).eulerAngles = new Vector3(0, hit.transform.eulerAngles.y + 180, 0);
+                transform.GetChild(2).position = hit.transform.position;
+                transform.GetChild(2).eulerAngles = new Vector3(0, hit.transform.eulerAngles.y + 180, 0);
 
-                transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(true);
-                transform.GetChild(1).GetComponent<FirstPersonCamera>().SetIsLocked(true);
+                transform.GetChild(2).GetComponent<FirstPersonCamera>().SetCursorLock(true);
+                transform.GetChild(2).GetComponent<FirstPersonCamera>().SetIsLocked(true);
 
                 DoNotRenderPlayer();
 
                 // Front wall
                 if (hit.transform.eulerAngles.y == 180)
 				{
-                    transform.GetChild(1).position -= new Vector3(0, 0, 2);
+                    transform.GetChild(2).position -= new Vector3(0, 0, 2);
                 }
                 // Right wall
                 else if(hit.transform.eulerAngles.y == 270)
 				{
-                    transform.GetChild(1).position -= new Vector3(2, 0, 0);
+                    transform.GetChild(2).position -= new Vector3(2, 0, 0);
                 }
                 // Back wall
                 else if(hit.transform.eulerAngles.y == 0)
 				{
-                    transform.GetChild(1).position += new Vector3(0, 0, 2);
+                    transform.GetChild(2).position += new Vector3(0, 0, 2);
                 }
                 else
 				{
-                    transform.GetChild(1).position += new Vector3(2, 0, 0);
+                    transform.GetChild(2).position += new Vector3(2, 0, 0);
                 }
                 clicked = true;
             }
@@ -134,13 +134,13 @@ public class Pavel_Player : MonoBehaviour
         else if(clicked && Input.anyKeyDown)
 		{
             clicked = false;
-            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(false);
-            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetIsLocked(false);
+            transform.GetChild(2).GetComponent<FirstPersonCamera>().SetCursorLock(false);
+            transform.GetChild(2).GetComponent<FirstPersonCamera>().SetIsLocked(false);
             
             DoRenderPlayer();
 
-            transform.GetChild(1).position = lastTran.position;
-            transform.GetChild(1).rotation = lastTran.rotation;
+            transform.GetChild(2).position = lastTran.position;
+            transform.GetChild(2).rotation = lastTran.rotation;
         }
     }
 
@@ -191,7 +191,7 @@ public class Pavel_Player : MonoBehaviour
     public void DoNotRenderPlayer()
 	{
         // Get this players camera
-        Camera cam = transform.GetChild(1).GetComponent<Camera>();
+        Camera cam = transform.GetChild(2).GetComponent<Camera>();
         // Sets player to not render to camera
         cam.cullingMask &= ~(1 << 9);
     }
@@ -199,7 +199,7 @@ public class Pavel_Player : MonoBehaviour
     public void DoRenderPlayer()
     {
         // Get this players camera
-        Camera cam = transform.GetChild(1).GetComponent<Camera>();
+        Camera cam = transform.GetChild(2).GetComponent<Camera>();
         // Set player to render to camera
         cam.cullingMask |= (1 << 9);
     }
