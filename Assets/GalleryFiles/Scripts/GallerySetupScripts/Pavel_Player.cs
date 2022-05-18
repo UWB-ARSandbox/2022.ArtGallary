@@ -88,24 +88,7 @@ public class Pavel_Player : MonoBehaviour
             }
         } */
 
-        // Call for changing the vote
-        if(Input.GetMouseButtonDown(0))
-		{
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            PaintOnCanvas gone = transform.parent.GetChild(1).GetComponent<PaintOnCanvas>();
-            int layerMask = LayMaskForRay();
-
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask) && hit.transform.gameObject.
-                name.Contains("Vote"))
-            {
-                hit.transform.parent.gameObject.
-                    GetComponent<GalleryCanvasVariables>().ChangeVoteStatus();
-            }
-        }
-
-        // Call for moving closer to the canvas
+        // Call for moving/zooming into the canvas
         if (Input.GetMouseButtonDown(0) && clicked == false)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

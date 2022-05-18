@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEditor;
-using UnityEngine.Windows;
+using SimpleFileBrowser;
 
 public class SaveLoadNewPNG : MonoBehaviour
 {
 	// Start is called before the first frame update
 	void Start()
 	{
+		FileBrowser.SetDefaultFilter(".png");
 	}
 
 	// Update is called once per frame
@@ -17,26 +18,29 @@ public class SaveLoadNewPNG : MonoBehaviour
 	{
 		
 	}
-	public string LoadNewPNG(Texture2D texture)
+	public void LoadNewPNG(Texture2D texture)
 	{
-		string directory = EditorUtility.OpenFilePanel("File To Load", "", "png");
-		if(directory != null)
+		StartCoroutine(LoadWindow(texture));
+	}
+
+	IEnumerator LoadWindow(Texture2D texture)
+	{
+		yield return FileBrowser.WaitForLoadDialog(FileBrowser.PickMode.FilesAndFolders, true,
+			null, null, "Load Files and Folders", "Load");
+
+		if (FileBrowser.Success && FileBrowser.Result.Length == 1)
 		{
 			Texture2D text2D = (Texture2D)texture;
-			text2D.LoadImage(System.IO.File.ReadAllBytes(directory));
+			Debug.Log(FileBrowser.Result[0]);
+			text2D.LoadImage(System.IO.File.ReadAllBytes(FileBrowser.Result[0]));
 			text2D.Apply();
-			return directory;
-		}
-		else
-		{
-			return null;
+			GetComponent<PaintOnCanvas>().LoadCompleteCanvas(texture);
+			yield return FileBrowser.Result[0];
 		}
 	}
+
 	public string SaveNewPNG(Texture2D texture)
 	{
-		string directory = EditorUtility.SaveFilePanel(texture.ToString(), "File To Save", "", "png");
-		byte[] bytes = texture.EncodeToPNG();
-		System.IO.File.WriteAllBytes(directory, bytes);
-		return directory;
+		return "";
 	}
 }

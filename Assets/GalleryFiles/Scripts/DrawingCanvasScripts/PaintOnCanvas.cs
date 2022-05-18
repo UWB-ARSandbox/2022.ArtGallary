@@ -719,17 +719,6 @@ public class PaintOnCanvas : MonoBehaviour
 			canLoad = true;
 			Texture2D newPng = new Texture2D(1,1);
 			GetComponent<SaveLoadNewPNG>().LoadNewPNG(newPng);
-			for(int x = 0; x < newPng.width; x++)
-			{
-				for(int y = 0; y < newPng.height; y++)
-				{
-					if(x < studentCanvas.width && y < studentCanvas.height)
-					{
-						studentCanvas.SetPixel(x, y, newPng.GetPixel(x, y));
-					}
-				}
-			}
-			studentCanvas.Apply();
 		}
 		canLoad = false;
 		/*
@@ -748,6 +737,21 @@ public class PaintOnCanvas : MonoBehaviour
 		}
 		*/
 
+	}
+
+	public void LoadCompleteCanvas(Texture2D newPng)
+	{
+		for (int x = 0; x < newPng.width; x++)
+		{
+			for (int y = 0; y < newPng.height; y++)
+			{
+				if (x < studentCanvas.width && y < studentCanvas.height)
+				{
+					studentCanvas.SetPixel(x, y, newPng.GetPixel(x, y));
+				}
+			}
+		}
+		studentCanvas.Apply();
 	}
 	//sets erase mode on and off
 	public void SetErase(bool erase)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GalleryCanvasVariables : MonoBehaviour
 {
@@ -8,12 +9,18 @@ public class GalleryCanvasVariables : MonoBehaviour
 	bool voted = false;
 	string studentName = "Bob";
 	ASL.GameLiftManager manager;
+
+	Button voteButton;
+
 	// Start is called before the first frame update
 	void Start()
 	{
-		transform.GetChild(1).GetComponent<TextMesh>().text = studentName;
 		manager = GameObject.Find("GameLiftManager").GetComponent<ASL.GameLiftManager>();
 		int host = manager.GetLowestPeerId();
+
+		// Setup the change vote status on a button push
+		voteButton = transform.GetChild(0).GetChild(0).GetComponent<Button>();
+		voteButton.onClick.AddListener(ChangeVoteStatus);
 
 		GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(retrieveVote);
 	}
@@ -23,18 +30,19 @@ public class GalleryCanvasVariables : MonoBehaviour
 		voted = true;
 		float[] tempVote = new float[1];
 
-		//GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(retrieveVote);
-		if(transform.GetChild(0).GetComponent<TextMesh>().color == Color.white)
+		// Decides what color to turn the text on last input
+		if(voteButton.transform.GetChild(0).GetComponent<Text>().color == Color.black)
 		{
-			transform.GetChild(0).GetComponent<TextMesh>().color = Color.green;
+			voteButton.transform.GetChild(0).GetComponent<Text>().color = new Vector4(0, 0.5f, 0, 1);
 			tempVote[0] = 1;
 		}
 		else
 		{
-			transform.GetChild(0).GetComponent<TextMesh>().color = Color.white;
+			voteButton.transform.GetChild(0).GetComponent<Text>().color = Color.black;
 			tempVote[0] = -1;
 		}
 
+		// Updates vote locally for each user
 		GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
 		{
 			GetComponent<ASL.ASLObject>().SendFloatArray(tempVote);
@@ -63,10 +71,10 @@ public class GalleryCanvasVariables : MonoBehaviour
 		if(vote.Length == 1)
 		{
 			votes += (int)vote[0];
-			transform.GetChild(0).GetComponent<TextMesh>().text =
+			voteButton.transform.GetChild(0).GetComponent<Text>().text =
 				"Votes: " + votes;
 		}
-		// This is for changing the name on the canvas
+		// This is for changing the name under the canvas
 		else
 		{
 			// Null the placeholder name
@@ -78,8 +86,8 @@ public class GalleryCanvasVariables : MonoBehaviour
 			// Only teacher can see the names
 			if(manager.AmLowestPeer())
 			{
-				transform.GetChild(1).GetComponent<TextMesh>().text = studentName;
-				transform.GetChild(1).GetComponent<TextMesh>().color = Color.white;
+				transform.GetChild(0).GetChild(1).GetComponent<Text>().text = studentName;
+				transform.GetChild(0).GetChild(1).GetComponent<Text>().color = Color.white;
 			}
 		}
 	}

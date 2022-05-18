@@ -60,7 +60,6 @@ public class CanvasSpawner : MonoBehaviour
         ground.transform.localScale = expandSize;
         for (int i = 0; i < WallArray.Length; i++)
         {
-            Debug.Log(i);
             GameObject wall = WallArray[i];
             Vector3 sizeWall = wall.transform.localScale;
             Vector3 expandSizeWall = new Vector3(10 * wallSize, sizeWall.y, sizeWall.z);
