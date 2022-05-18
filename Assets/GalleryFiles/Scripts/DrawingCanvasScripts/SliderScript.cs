@@ -15,14 +15,7 @@ public class SliderScript : MonoBehaviour
     {
         thisSlider = this.transform.gameObject.GetComponent<Slider>();
         value = this.transform.GetChild(3).gameObject;
-        if(value.name == "Value")
-        {
-            valueText = value.GetComponent<TextMeshProUGUI>();
-        }
-        else if(value.name == "SizeInputField")
-        {
-            input = value.GetComponent<InputField>();
-        }
+        input = value.GetComponent<InputField>();
     }
 
     // Update is called once per frame

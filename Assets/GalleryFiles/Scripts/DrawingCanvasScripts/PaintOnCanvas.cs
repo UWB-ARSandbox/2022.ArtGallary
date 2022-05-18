@@ -75,6 +75,7 @@ public class PaintOnCanvas : MonoBehaviour
 
 	// UI field listeners
 	Slider rSlider, gSlider, bSlider;
+	InputField rInput, gInput, bInput;
 	InputField aField = null;
 
 	InputField slField = null;
@@ -103,6 +104,9 @@ public class PaintOnCanvas : MonoBehaviour
 	Texture2D maskCanvas;
 	Color maskColor;
 
+	// Brush Color Preview Box
+	GameObject brushColorUI;
+
 
 
 
@@ -120,11 +124,18 @@ public class PaintOnCanvas : MonoBehaviour
 		bSlider = GameObject.Find("BlueSlider").GetComponent<Slider>();
 		//aField = GameObject.Find("AlphaInputField").GetComponent<InputField>();
 
+		rInput = GameObject.Find("RedInputField").GetComponent<InputField>();
+		gInput = GameObject.Find("GreenInputField").GetComponent<InputField>();
+		bInput = GameObject.Find("BlueInputField").GetComponent<InputField>();
+
 		slField = GameObject.Find("SaveField").GetComponent<InputField>();
 		textField = GameObject.Find("TextInput").GetComponent<InputField>();
 		brushSizeInput = GameObject.Find("SizeInputField").GetComponent<InputField>();
 		brushSizeSlider = GameObject.Find("BrushSizeSlider").GetComponent<Slider>();
+		
 		textSizeDrop = GameObject.Find("TextSizeDropdown").GetComponent<Dropdown>();
+
+		// Adding Listeners to all relevant objects.
 		
 		textSizeDrop.onValueChanged.AddListener(ChangeTextSize);
 
@@ -132,6 +143,10 @@ public class PaintOnCanvas : MonoBehaviour
 		gSlider.onValueChanged.AddListener(delegate {ChangeGreen(gSlider.value);});
 		bSlider.onValueChanged.AddListener(delegate {ChangeBlue(bSlider.value);});
 		//aField.onEndEdit.AddListener(ChangeAlpha);
+
+		rInput.onEndEdit.AddListener(ChangeRed);
+		gInput.onEndEdit.AddListener(ChangeGreen);
+		bInput.onEndEdit.AddListener(ChangeBlue);
 
 		slField.onEndEdit.AddListener(SaveOrLoadToPNG);
 		slField.onValueChanged.AddListener(ChangeToWhite);
@@ -777,28 +792,64 @@ public class PaintOnCanvas : MonoBehaviour
 	{
 		brushSize = (int)size;
 	}
+
+	public void ChangeRed(string r)
+	{
+		float red;
+		float.TryParse(r, out red);
+		brushColor = new Color(red, brushColor.g, brushColor.b, brushColor.a);
+		brushColorUI = GameObject.Find("BrushColor");
+		brushColorUI.GetComponent<Image>().color = brushColor;
+
+		rSlider.value = red;
+	}
+
 	public void ChangeRed(float r)
 	{
 		//float red;
 		//float.TryParse(r, out red);
 		brushColor = new Color(r, brushColor.g, brushColor.b, brushColor.a);
-		GameObject brushColorUI = GameObject.Find("BrushColor");
+		brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
 	}
+
+	public void ChangeGreen(string g)
+	{
+		float green;
+		float.TryParse(g, out green);
+		brushColor = new Color(brushColor.r, green, brushColor.b, brushColor.a);
+		brushColorUI = GameObject.Find("BrushColor");
+		brushColorUI.GetComponent<Image>().color = brushColor;
+
+		gSlider.value = green;
+	}
+
 	public void ChangeGreen(float g)
 	{
 		//float green;
 		//float.TryParse(g, out green);
 		brushColor = new Color(brushColor.r, g, brushColor.b, brushColor.a);
-		GameObject brushColorUI = GameObject.Find("BrushColor");
+		brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
 	}
+
+	public void ChangeBlue(string b)
+	{
+		float blue;
+		float.TryParse(b, out blue);
+		brushColor = new Color(brushColor.b, brushColor.g, blue, brushColor.a);
+		brushColorUI = GameObject.Find("BrushColor");
+		brushColorUI.GetComponent<Image>().color = brushColor;
+
+		bSlider.value = blue;
+	}
+
 	public void ChangeBlue(float b)
 	{
 		//float blue;
 		//float.TryParse(b, out blue);
 		brushColor = new Color(brushColor.r, brushColor.g, b, brushColor.a);
-		GameObject brushColorUI = GameObject.Find("BrushColor");
+		brushColorUI = GameObject.Find("BrushColor");
 		brushColorUI.GetComponent<Image>().color = brushColor;
 	}
 	public void ChangeAlpha(string a)
