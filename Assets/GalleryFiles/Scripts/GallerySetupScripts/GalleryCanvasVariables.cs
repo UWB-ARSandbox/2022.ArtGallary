@@ -91,4 +91,8 @@ public class GalleryCanvasVariables : MonoBehaviour
 			}
 		}
 	}
+	public int GetVotes()
+	{
+		return votes;
+	}
 }
