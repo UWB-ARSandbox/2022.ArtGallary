@@ -902,7 +902,7 @@ public class PaintOnCanvas : MonoBehaviour
 					{
 						for(int j = 0; j < brushSize; j++)
 						{
-							if(((currX + j) < canvasWidth) && (currY + ((y - 2) * brushSize) < canvasHeight))
+							if(((currX + j) < canvasWidth) && (currY + ((y - 2) * brushSize)  + i < canvasHeight))
 							{
 								studentCanvas.SetPixel(currX + j, currY + ((y - 2) * brushSize) + i, pixelColor);
 							}
@@ -940,7 +940,7 @@ public class PaintOnCanvas : MonoBehaviour
 					{
 						for(int j = 0; j < brushSize; j++)
 						{
-							if(((currX + j) < canvasWidth) && (currY + ((y - 2) * brushSize) < canvasHeight))
+							if(((currX + j) < canvasWidth) && (currY + ((y - 2) * brushSize) + i < canvasHeight))
 							{
 								maskCanvas.SetPixel(currX + j, currY + ((y - 2) * brushSize) + i, pixelColor);
 							}
