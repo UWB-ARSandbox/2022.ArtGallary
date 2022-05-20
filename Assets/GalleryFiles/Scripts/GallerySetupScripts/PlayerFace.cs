@@ -51,6 +51,6 @@ public class PlayerFace : MonoBehaviour
 
     public static void changeTexture(GameObject gameObject, Texture2D tex)
     {
-        gameObject.GetComponent<Renderer>().material.mainTexture = tex;
+        gameObject.GetComponent<Renderer>().materials[1].mainTexture = tex;
     }
 }
