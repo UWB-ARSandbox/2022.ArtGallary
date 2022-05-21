@@ -44,6 +44,9 @@ public class PaintOnCanvas : MonoBehaviour
 	//Is the player typing things in
 	bool textMode;
 
+	//Is the player using the line tool
+	bool lineMode;
+
 	//Has the player clicked save canvas button
 	bool canSave;
 
@@ -94,12 +97,14 @@ public class PaintOnCanvas : MonoBehaviour
 	// UI toggle listeners
 	Toggle eraseTog = null;
 	Toggle textTog = null;
+	Toggle lineTog = null;
 	
 	//UI dropdown listeners
 	Dropdown textSizeDrop = null;
 	
 	ResubmissionHandler handler;
 
+	//Mask variables
 	public Renderer maskRenderer;
 	Texture2D maskCanvas;
 	Color maskColor;
