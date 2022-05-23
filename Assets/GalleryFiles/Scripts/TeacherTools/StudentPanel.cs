@@ -42,7 +42,7 @@ public class StudentPanel : MonoBehaviour
 
         if(player != null)
         {
-            SetPreview((Texture2D)player.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.mainTexture);
+            SetPreview((Texture2D)player.transform.GetChild(1).GetChild(1).gameObject.GetComponent<Renderer>().material.mainTexture);
         }
     }
 

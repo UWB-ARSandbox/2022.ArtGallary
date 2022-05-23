@@ -109,11 +109,11 @@ public class RequestHandler : MonoBehaviour
         }
     }
 
-    public static void changeTexture(GameObject gameObject, Texture2D tex)
+    public static void changeTexture(GameObject gObject, Texture2D tex)
 	{
         if(host == manager.m_PeerId)
 		{
-            gameObject.GetComponent<Renderer>().material.mainTexture = tex;
+            gObject.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.mainTexture = tex;
         }
     }
 

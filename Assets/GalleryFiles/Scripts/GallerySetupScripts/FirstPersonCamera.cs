@@ -15,10 +15,10 @@ public class FirstPersonCamera : MonoBehaviour
     public float yRotation = 0f;
     ASLObject m_ASLObject;
     
-    public GameObject crosshair;
+    public GameObject crosshair, settings;
     
     [SerializeField]
-    bool isLocked, isActive;
+    bool isLocked, isActive, mouseFree;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +26,10 @@ public class FirstPersonCamera : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         isLocked = false;
         isActive = false;
+        mouseFree = true;
         crosshair = GameObject.Find("Crosshair");
+        settings = GameObject.Find("Settings");
+
     }
 
     // Update is called once per frame
@@ -56,7 +59,7 @@ public class FirstPersonCamera : MonoBehaviour
         
         
         // Toggle Cursor Lock
-        if(Input.GetKeyDown(KeyCode.LeftAlt))
+        /* if(Input.GetKeyDown(KeyCode.LeftAlt))
         {
             if (Cursor.lockState == CursorLockMode.Locked)
             {
@@ -68,12 +71,14 @@ public class FirstPersonCamera : MonoBehaviour
 			}
             crosshair.SetActive(!isLocked);
             SetCursorLock(!isLocked);
+            
+            settings.SetActive(isLocked);
             GoToCanvas();
             
 
             // Previous Code utilizing GoToCanvas script attached to student body.
 
-            /* bool canLock = transform.parent.GetComponent<GoToCanvas>().GetCanvasLock();
+            bool canLock = transform.parent.GetComponent<GoToCanvas>().GetCanvasLock();
             if (canLock == true)
             {
                 crosshair.SetActive(false);
@@ -83,8 +88,8 @@ public class FirstPersonCamera : MonoBehaviour
             {
                 crosshair.SetActive(isLocked);
                 SetCursorLock(isLocked);
-            } */
-        }
+            }
+        } */
 
         if(Input.GetKeyDown(KeyCode.LeftControl))
         {
@@ -158,10 +163,12 @@ public class FirstPersonCamera : MonoBehaviour
         if (isLocked == true)
         {
             transform.parent.GetComponent<Pavel_Player>().SetLockAtCanvas(true);
+            mouseFree = false;
         }
         else
         {
             transform.parent.GetComponent<Pavel_Player>().SetLockAtCanvas(false);
+            mouseFree = true;
         }
     }
 }
