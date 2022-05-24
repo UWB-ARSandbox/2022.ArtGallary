@@ -579,6 +579,32 @@ public class PaintOnCanvas : MonoBehaviour
 
 				}
 			}
+			else
+			{
+				if(!textMode)
+				{
+					
+					//float distanceX = (i * (pixelCoord.x - previousCoord.x) / numberOfInterpolations);
+					//float distanceY = (i * (pixelCoord.y - previousCoord.y) / numberOfInterpolations);
+					if (textMode == false && eraseMode == false && textMode == false)
+					{
+						maskColor = brushColor;
+						maskColor.a = 0.5f;
+						maskCanvas.SetPixel((int)(pixelCoord.x), (int)(pixelCoord.y), maskColor);
+					}
+					else if (eraseMode == true)
+					{
+						maskColor = Color.white;
+						maskColor.a = 0.5f;
+						maskCanvas.SetPixel((int)(pixelCoord.x), (int)(pixelCoord.y), maskColor);
+					}
+					
+				}
+				else{
+					pixelToDraw = pixelCoord;
+				}
+			}
+			studentCanvas.Apply();
 			
 			if (textOnType.Equals("") == false && textMode == true)
 			{
