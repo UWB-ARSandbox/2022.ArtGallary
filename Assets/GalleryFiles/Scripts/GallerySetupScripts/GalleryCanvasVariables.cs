@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class GalleryCanvasVariables : MonoBehaviour
 {
@@ -86,8 +87,8 @@ public class GalleryCanvasVariables : MonoBehaviour
 			// Only teacher can see the names
 			if(manager.AmLowestPeer())
 			{
-				transform.GetChild(0).GetChild(1).GetComponent<Text>().text = studentName;
-				transform.GetChild(0).GetChild(1).GetComponent<Text>().color = Color.white;
+				transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().text = studentName;
+				transform.GetChild(0).GetChild(1).GetComponent<TextMeshProUGUI>().color = Color.white;
 			}
 		}
 	}

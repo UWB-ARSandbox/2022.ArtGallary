@@ -1101,7 +1101,7 @@ public class PaintOnCanvas : MonoBehaviour
 
 	public void RenderCanvas()
 	{
-		Camera cam = transform.parent.GetChild(0).GetChild(2).GetComponent<Camera>();
+		Camera cam = transform.parent.GetChild(0).GetChild(1).GetComponent<Camera>();
 
 		// Set canvas to render to screen
 		cam.cullingMask |= (1 << 10);
@@ -1111,7 +1111,7 @@ public class PaintOnCanvas : MonoBehaviour
 
 	public void DoNotRenderCanvas()
 	{
-		Camera cam = transform.parent.GetChild(0).GetChild(2).GetComponent<Camera>();
+		Camera cam = transform.parent.GetChild(0).GetChild(1).GetComponent<Camera>();
 
 		// Set canvas to render to screen
 		cam.cullingMask &= ~(1 << 10);
