@@ -91,6 +91,11 @@ public class FirstPersonCamera : MonoBehaviour
             }
         } */
 
+        if(Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            settings.SetActive(!settings.activeSelf);
+        }
+
         if(Input.GetKeyDown(KeyCode.LeftControl))
         {
             if(Cursor.lockState == CursorLockMode.Locked)

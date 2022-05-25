@@ -131,7 +131,7 @@ public class Pavel_Player : MonoBehaviour
         }
 
         // Resetting camera back to the player
-        else if(clicked && Input.anyKeyDown)
+        else if(clicked && Input.anyKeyDown && !Input.GetKeyDown(KeyCode.LeftControl) && !Input.GetMouseButtonDown(0))
 		{
             clicked = false;
             transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(false);

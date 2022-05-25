@@ -110,7 +110,7 @@ MonoBehaviour:
   m_charWidthMaxAdj: 0
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
+  m_overflowMode: 1
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
@@ -227,6 +227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 0
+  needsHelp: 0
   viewButton: {fileID: 0}
   preview: {fileID: 0}
   player: {fileID: 0}
@@ -644,6 +645,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e113ddba157a2a844a51a6f48844a58a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  View: {fileID: 0}
+  target: {fileID: 0}
+  myUser: {fileID: 0}
 --- !u!1 &8572689347293671477
 GameObject:
   m_ObjectHideFlags: 0
