@@ -46,6 +46,7 @@ public class PaintOnCanvas : MonoBehaviour
 
 	//Is the player using the line tool
 	bool lineMode;
+	Vector2 previousLineCoord;
 
 	//Has the player clicked save canvas button
 	bool canSave;
@@ -345,15 +346,19 @@ public class PaintOnCanvas : MonoBehaviour
 					if (!previousMouseDown)
 					{
 						//draw area of brush size if greater than 1
+						if(lineMode == true)
+						{
+							previousLineCoord = new Vector2(pixelCoord.x, pixelCoord.y);
+							//Save point for interpolation
+							//SetLineOnCanvas((int)pixelCoord.x, (int)pixelCoord.y, brushColor);
+							//return;
+						}
 						if (brushSize > 1)
 						{
-							if (textMode == false)
+							if (textMode == false && lineMode == false)
 							{
-								if(lineMode == true)
-								{
-									SetLineOnCanvas((int)pixelCoord.x, (int)pixelCoord.y, brushColor);
-									return;
-								}
+								
+								
 								for (int x = (int)(pixelCoord.x - (brushSize / 2)); x < (int)(pixelCoord.x + (brushSize / 2)); x++)
 								{
 									if (x >= canvasWidth || x < 0)
@@ -379,6 +384,8 @@ public class PaintOnCanvas : MonoBehaviour
 										}
 									}
 								}
+								
+								
 							}
 							//save point for text
 							else
@@ -392,6 +399,7 @@ public class PaintOnCanvas : MonoBehaviour
 					{
 						if (brushSize > 1)
 						{
+							
 							for (int i = 0; i < numberOfInterpolations; i++)
 							{
 								float distanceX = (i * (pixelCoord.x - previousCoord.x) / numberOfInterpolations);
@@ -428,10 +436,13 @@ public class PaintOnCanvas : MonoBehaviour
 									pixelToDraw = pixelCoord;
 								}
 							}
+							
+							
 						}
 						else
 						{
-							if(!textMode)
+							
+							if(!textMode && !lineMode)
 							{
 								for (int i = 0; i < numberOfInterpolations; i++)
 								{
@@ -464,7 +475,40 @@ public class PaintOnCanvas : MonoBehaviour
 			else if (Input.GetMouseButtonUp(0) == true)
 			{
 				//on mouse release write text to image
-				if (textOnType.Equals("") == false && textMode == true)
+				if(lineMode)
+				{
+					
+					float lineInterpolations = 1000 - 9 * brushSize;
+					for (int i = 0; i < lineInterpolations; i++)
+					{
+						float distanceX = (i * (pixelToDraw.x - previousLineCoord.x) / lineInterpolations);
+						float distanceY = (i * (pixelToDraw.y - previousLineCoord.y) / lineInterpolations);
+						for (int x = (int)(pixelToDraw.x - distanceX - ((float)brushSize / 2)); x < (int)(pixelToDraw.x - distanceX + ((float)brushSize / 2)); x++)
+						{
+							if (x >= canvasWidth || x < 0)
+							{
+								continue;
+							}
+							for (int y = (int)(pixelToDraw.y - distanceY - ((float)brushSize / 2)); y < (int)(pixelToDraw.y - distanceY + ((float)brushSize / 2)); y++)
+							{
+								if (y >= canvasHeight || y < 0)
+								{
+									continue;
+								}
+								if (eraseMode == false)
+								{
+									studentCanvas.SetPixel(x, y, brushColor);
+								}
+								else
+								{
+									studentCanvas.SetPixel(x, y, Color.white);
+								}
+							}
+						}
+					}
+					
+				}
+				else if (textOnType.Equals("") == false && textMode == true)
 				{
 					Vector2 startChar = new Vector2(pixelToDraw.x, pixelToDraw.y);
 					for (int i = 0; i < textOnType.Length; i++)
