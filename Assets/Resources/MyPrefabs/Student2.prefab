@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 515451013894654759}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -1.67, z: 0}
-  m_LocalScale: {x: 1, y: 1.4, z: 1}
+  m_LocalScale: {x: 0.6, y: 1.5, z: 0.6}
   m_Children:
   - {fileID: 4995731372589615742}
   m_Father: {fileID: 5660376191633701767}
@@ -618,7 +618,7 @@ Transform:
   m_GameObject: {fileID: 7181375703989522359}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.65, y: 0.65, z: 0.65}
+  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_Children:
   - {fileID: 8534417701044617651}
   m_Father: {fileID: 5660376191633701767}
@@ -748,7 +748,7 @@ GameObject:
   - component: {fileID: 359746743707207416}
   m_Layer: 0
   m_Name: Student2
-  m_TagString: Untagged
+  m_TagString: StudentPlayer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

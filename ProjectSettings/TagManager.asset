@@ -9,6 +9,7 @@ TagManager:
   - StuCanvas
   - StuPanel
   - StuNames
+  - StudentPlayer
   layers:
   - Default
   - TransparentFX
