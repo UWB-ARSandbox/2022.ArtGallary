@@ -13374,6 +13374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144d4549b7937e240ae1b989626d7527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadMenu: {fileID: 0}
   FaceButton: {fileID: 0}
 --- !u!1 &1955622323
 GameObject:
@@ -13479,7 +13480,7 @@ MonoBehaviour:
   settings: {fileID: 0}
   isLocked: 0
   isActive: 0
-  mouseFree: 0
+  menuActive: 0
 --- !u!1 &1972405758
 GameObject:
   m_ObjectHideFlags: 0

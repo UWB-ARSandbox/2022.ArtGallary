@@ -184,7 +184,9 @@ public class PaintOnCanvas : MonoBehaviour
 
 		saveB.onClick.AddListener(delegate{popUpMenu.ToggleActive(SaveConfirmMenu);});
 
-		// Disable Menus until called
+		Camera.main.GetComponent<FirstPersonCamera>().SetLoadMenuReference(LoadMenu, SaveConfirmMenu);
+
+		// Disable Menus until needed
 		SaveConfirmMenu.SetActive(false);
 		LoadMenu.SetActive(false);
 
@@ -557,6 +559,11 @@ public class PaintOnCanvas : MonoBehaviour
 			{
 				previousMouseDown = false;
 			}
+
+			if(!SaveConfirmMenu.activeSelf)
+			{
+				canSave = false;
+			}
 		}
 	}
 
@@ -845,7 +852,7 @@ public class PaintOnCanvas : MonoBehaviour
 		if (canSave == true)
 		{
 			GameObject.Find("SaveField").GetComponent<InputField>().interactable = true;
-			GameObject.Find("TextInput").GetComponent<InputField>().interactable = false;
+			//GameObject.Find("TextInput").GetComponent<InputField>().interactable = false;
 			GameObject.Find("TextToggle").GetComponent<Toggle>().isOn = false;
 		}
 		else

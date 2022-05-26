@@ -16,9 +16,12 @@ public class FirstPersonCamera : MonoBehaviour
     ASLObject m_ASLObject;
     
     public GameObject crosshair, settings;
+
+    [SerializeField]GameObject LoadMenu, SaveConfirmMenu;
+
     
     [SerializeField]
-    bool isLocked, isActive, mouseFree, menuActive;
+    bool isLocked, isActive, menuActive;
 
     // Start is called before the first frame update
     void Start()
@@ -26,10 +29,11 @@ public class FirstPersonCamera : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         isLocked = false;
         isActive = false;
-        menuActive = false;
-        mouseFree = true;
+        
         crosshair = GameObject.Find("Crosshair");
         settings = GameObject.Find("Settings");
+
+        menuActive = false;
 
     }
 
@@ -58,39 +62,6 @@ public class FirstPersonCamera : MonoBehaviour
 
         }
         
-        
-        // Toggle Cursor Lock
-        /* if(Input.GetKeyDown(KeyCode.LeftAlt))
-        {
-            if (Cursor.lockState == CursorLockMode.Locked)
-            {
-                isLocked = true;
-            }
-            else
-			{
-                isLocked = false;
-			}
-            crosshair.SetActive(!isLocked);
-            SetCursorLock(!isLocked);
-            
-            settings.SetActive(isLocked);
-            GoToCanvas();
-            
-
-            // Previous Code utilizing GoToCanvas script attached to student body.
-
-            bool canLock = transform.parent.GetComponent<GoToCanvas>().GetCanvasLock();
-            if (canLock == true)
-            {
-                crosshair.SetActive(false);
-                SetCursorLock(false);
-            }
-            else
-            {
-                crosshair.SetActive(isLocked);
-                SetCursorLock(isLocked);
-            }
-        } */
 
         if(Input.GetKeyDown(KeyCode.LeftAlt))
         {
@@ -98,8 +69,23 @@ public class FirstPersonCamera : MonoBehaviour
         }
         if(Input.GetKeyDown("q"))
         {
-            menuActive = !menuActive;
+            if(!SaveConfirmMenu.activeSelf)
+            {
+                Debug.Log("Toggling Menu");
+			    LoadMenu.SetActive(!LoadMenu.activeSelf);
+            }
+            else
+            {
+                SaveConfirmMenu.SetActive(false);
+			    LoadMenu.SetActive(false);
+            }
+            menuActive = LoadMenu.activeSelf;
+
             if(Cursor.lockState == CursorLockMode.Locked)
+            {
+                isLocked = true;
+            }
+            else if(Cursor.lockState == CursorLockMode.None && menuActive)
             {
                 isLocked = true;
             }
@@ -109,8 +95,8 @@ public class FirstPersonCamera : MonoBehaviour
             }
             crosshair.SetActive(!isLocked);
             SetCursorLock(!isLocked);
-            ShowMouse(!isLocked);
         }
+
         if(Input.GetKeyDown(KeyCode.LeftControl) && !menuActive)
         {
             if(Cursor.lockState == CursorLockMode.Locked)
@@ -123,7 +109,6 @@ public class FirstPersonCamera : MonoBehaviour
             }
             crosshair.SetActive(!isLocked);
             SetCursorLock(!isLocked);
-            ShowMouse(!isLocked);
         }
        
     }
@@ -178,17 +163,9 @@ public class FirstPersonCamera : MonoBehaviour
 		}
     }
 
-    public void ShowMouse(bool Locked)
+    public void SetLoadMenuReference(GameObject load, GameObject saveConfirm)
     {
-        if (isLocked == true)
-        {
-            transform.parent.GetComponent<Pavel_Player>().SetLockAtCanvas(true);
-            mouseFree = false;
-        }
-        else
-        {
-            transform.parent.GetComponent<Pavel_Player>().SetLockAtCanvas(false);
-            mouseFree = true;
-        }
+        LoadMenu = load;
+        SaveConfirmMenu = saveConfirm;
     }
 }

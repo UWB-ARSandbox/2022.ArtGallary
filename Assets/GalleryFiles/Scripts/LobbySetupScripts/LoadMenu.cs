@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class LoadMenu : MonoBehaviour
 {
-    GameObject loadMenu, saveButton, SaveConfirmMenu;
+    GameObject saveButton, SaveConfirmMenu;
 
-    public GameObject FaceButton;
+    public GameObject loadMenu, FaceButton;
     
     Button Save;
     // Start is called before the first frame update
@@ -21,7 +21,7 @@ public class LoadMenu : MonoBehaviour
     {
         if(Input.GetKeyDown("q"))
         {
-            loadMenu.SetActive(!loadMenu.activeSelf);
+            //loadMenu.SetActive(!loadMenu.activeSelf);
         }
     }
 
@@ -39,6 +39,7 @@ public class LoadMenu : MonoBehaviour
     public void ToggleActive(GameObject button)
     {
         button.SetActive(!button.activeSelf);
+
     }
 
 }
