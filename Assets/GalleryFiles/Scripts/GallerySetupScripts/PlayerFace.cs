@@ -53,6 +53,11 @@ public class PlayerFace : MonoBehaviour
             done = true;
             yield return FileBrowser.Result[0];
         }
+        // Allow user to open a file explorer without loading a null image
+        else
+        {
+            done = true;
+		}
     }
 
     public static void changeTexture(GameObject gameObject, Texture2D tex)

@@ -42,5 +42,10 @@ public class SaveLoadNewPNG : MonoBehaviour
 			GetComponent<PaintOnCanvas>().LoadCompleteCanvas(texture);
 			yield return FileBrowser.Result[0];
 		}
+		// Allow user to open a file explorer without loading a null image
+		else
+		{
+			done = true;
+		}
 	}
 }
