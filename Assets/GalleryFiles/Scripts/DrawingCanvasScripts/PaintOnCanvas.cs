@@ -113,7 +113,12 @@ public class PaintOnCanvas : MonoBehaviour
 	// Brush Color Preview Box
 	GameObject brushColorUI;
 
+	// UI Elements
+	GameObject LoadMenu, SaveConfirmMenu, PlayerFace;
 
+	LoadMenu popUpMenu;
+
+	Button saveCancelB = null;
 
 
 	// Start is called before the first frame update
@@ -123,6 +128,10 @@ public class PaintOnCanvas : MonoBehaviour
 		handler = GameObject.Find("Resubmission").GetComponent<ResubmissionHandler>();
 
 		gameObject.AddComponent<SaveLoadNewPNG>();
+
+		// UI Element Finding
+		LoadMenu = GameObject.Find("Load Menu");
+		SaveConfirmMenu = GameObject.Find("SaveConfirmMenu");
 
 		// UI field code
 		rSlider = GameObject.Find("RedSlider").GetComponent<Slider>();
@@ -164,6 +173,22 @@ public class PaintOnCanvas : MonoBehaviour
 		loadB = GameObject.Find("LoadButton").GetComponent<Button>();
 		saveB = GameObject.Find("SaveButton").GetComponent<Button>();
 		deleteB = GameObject.Find("DeleteCanvasButton").GetComponent<Button>();
+
+		// Initialize Elements of LoadMenu script in UI for popup menus
+		popUpMenu = GameObject.Find("UI").GetComponent<LoadMenu>();
+		popUpMenu.Initialize();
+
+		saveCancelB = GameObject.Find("SaveCancelButton").GetComponent<Button>();
+		saveCancelB.onClick.AddListener(SetCanSave);
+		saveCancelB.onClick.AddListener(delegate{popUpMenu.ToggleActive(SaveConfirmMenu);});
+
+		saveB.onClick.AddListener(delegate{popUpMenu.ToggleActive(SaveConfirmMenu);});
+
+		// Disable Menus until called
+		SaveConfirmMenu.SetActive(false);
+		LoadMenu.SetActive(false);
+
+
 
 		GameObject tGal = GameObject.Find("SubmitToGalleryButton");
 		if (tGal != null)
@@ -725,24 +750,28 @@ public class PaintOnCanvas : MonoBehaviour
 	{
 		if (canSave == true)
 		{
-			//dont add any directories or file extensions
-			if (png.Contains("/") == false && png.EndsWith(".png") == false && png.Equals("alphabet") == false)
+			if(!string.IsNullOrEmpty(png))
 			{
-				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
-				GameObject.Find("SaveField").GetComponent<Image>().color = Color.green;
-				byte[] bytes = studentCanvas.EncodeToPNG();
-				System.IO.File.WriteAllBytes(dirPath + "/" + png + ".png", bytes);
-			}
-			else if (png.Contains("/") == false && png.EndsWith(".png") == true && png.Equals("alphabet.png") == false)
-			{
-				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
-				byte[] bytes = studentCanvas.EncodeToPNG();
-				System.IO.File.WriteAllBytes(dirPath + "/" + png, bytes);
-			}
-			else
-			{
-				GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Do not enter '/'";
-				GameObject.Find("SaveField").GetComponent<Image>().color = Color.red;
+				//dont add any directories or file extensions
+				if (png.Contains("/") == false && png.EndsWith(".png") == false && png.Equals("alphabet") == false)
+				{
+					GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
+					GameObject.Find("SaveField").GetComponent<Image>().color = Color.green;
+					byte[] bytes = studentCanvas.EncodeToPNG();
+					System.IO.File.WriteAllBytes(dirPath + "/" + png + ".png", bytes);
+				
+				}
+				else if (png.Contains("/") == false && png.EndsWith(".png") == true && png.Equals("alphabet.png") == false)
+				{
+					GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
+					byte[] bytes = studentCanvas.EncodeToPNG();
+					System.IO.File.WriteAllBytes(dirPath + "/" + png, bytes);
+				}
+				else
+				{
+					GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Do not enter '/'";
+					GameObject.Find("SaveField").GetComponent<Image>().color = Color.red;
+				}
 			}
 		}
 		else
@@ -1166,7 +1195,7 @@ public class PaintOnCanvas : MonoBehaviour
 			return;
 		}
 
-		GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
+		// GameObject.Find("SavePlaceholder").GetComponent<Text>().text = "Successfully saved";
 		byte[] bytes = studentCanvas.EncodeToPNG();
 		System.IO.File.WriteAllBytes(dirPath + "/" + "StudentCanvas1" + ".png", bytes);
 

@@ -18,7 +18,7 @@ public class FirstPersonCamera : MonoBehaviour
     public GameObject crosshair, settings;
     
     [SerializeField]
-    bool isLocked, isActive, mouseFree;
+    bool isLocked, isActive, mouseFree, menuActive;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +26,7 @@ public class FirstPersonCamera : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         isLocked = false;
         isActive = false;
+        menuActive = false;
         mouseFree = true;
         crosshair = GameObject.Find("Crosshair");
         settings = GameObject.Find("Settings");
@@ -95,8 +96,22 @@ public class FirstPersonCamera : MonoBehaviour
         {
             settings.SetActive(!settings.activeSelf);
         }
-
-        if(Input.GetKeyDown(KeyCode.LeftControl))
+        if(Input.GetKeyDown("q"))
+        {
+            menuActive = !menuActive;
+            if(Cursor.lockState == CursorLockMode.Locked)
+            {
+                isLocked = true;
+            }
+            else
+            {
+                isLocked = false;
+            }
+            crosshair.SetActive(!isLocked);
+            SetCursorLock(!isLocked);
+            ShowMouse(!isLocked);
+        }
+        if(Input.GetKeyDown(KeyCode.LeftControl) && !menuActive)
         {
             if(Cursor.lockState == CursorLockMode.Locked)
             {

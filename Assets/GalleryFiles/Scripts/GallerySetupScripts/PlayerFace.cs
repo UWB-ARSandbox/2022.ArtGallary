@@ -6,14 +6,19 @@ using SimpleFileBrowser;
 
 public class PlayerFace : MonoBehaviour
 {
+    LoadMenu menu;
     Button faceButton;
-    bool done = true;
+    bool done;
 
     // Start is called before the first frame update
     void Start()
     {
-        faceButton = GameObject.Find("FaceButton").GetComponent<Button>();
+        menu = GameObject.Find("UI").GetComponent<LoadMenu>();
+        
+        faceButton = menu.FaceButton.GetComponent<Button>();
         faceButton.onClick.AddListener(ChangeFace);
+
+        done = true;
 
         FileBrowser.SetDefaultFilter(".png");
     }
@@ -25,6 +30,7 @@ public class PlayerFace : MonoBehaviour
         {
             done = false;
             StartCoroutine(LoadWindow());
+            Debug.Log("Loading... Done = " + done);
         }
 	}
 
