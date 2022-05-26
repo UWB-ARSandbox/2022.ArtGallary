@@ -186,9 +186,11 @@ public class PaintOnCanvas : MonoBehaviour
 		// UI toggle code
 		eraseTog = GameObject.Find("EraserToggle").GetComponent<Toggle>();
 		textTog = GameObject.Find("TextToggle").GetComponent<Toggle>();
+		lineTog = GameObject.Find("LineToggle").GetComponent<Toggle>();
 
 		eraseTog.onValueChanged.AddListener(SetErase);
 		textTog.onValueChanged.AddListener(SetText);
+		lineTog.onValueChanged.AddListener(SetLine);
 
 		// Canvas variables
 		brushSize = 10;
@@ -261,6 +263,8 @@ public class PaintOnCanvas : MonoBehaviour
 	void Update()
 	{
 		UpdateMask();
+		// This checks if the canvas should be rendered in
+		// by the main camera
 		if(clicked == true)
 		{
 			if(freeze > 0)
@@ -345,6 +349,11 @@ public class PaintOnCanvas : MonoBehaviour
 						{
 							if (textMode == false)
 							{
+								if(lineMode == true)
+								{
+									SetLineOnCanvas((int)pixelCoord.x, (int)pixelCoord.y, brushColor);
+									return;
+								}
 								for (int x = (int)(pixelCoord.x - (brushSize / 2)); x < (int)(pixelCoord.x + (brushSize / 2)); x++)
 								{
 									if (x >= canvasWidth || x < 0)
@@ -357,11 +366,13 @@ public class PaintOnCanvas : MonoBehaviour
 										{
 											continue;
 										}
+										// Set pixel on canvas to the current brush color
 										if (eraseMode == false)
 										{
 											studentCanvas.SetPixel(x, y, brushColor);
 											//maskCanvas.SetPixel(x,y, brushColor);
 										}
+										// Erase by making current pixel white
 										else
 										{
 											studentCanvas.SetPixel(x, y, Color.white);
@@ -369,11 +380,10 @@ public class PaintOnCanvas : MonoBehaviour
 									}
 								}
 							}
+							//save point for text
 							else
 							{
-								//save point for text
 								pixelToDraw = pixelCoord;
-
 							}
 						}
 					}
@@ -387,8 +397,8 @@ public class PaintOnCanvas : MonoBehaviour
 								float distanceX = (i * (pixelCoord.x - previousCoord.x) / numberOfInterpolations);
 								float distanceY = (i * (pixelCoord.y - previousCoord.y) / numberOfInterpolations);
 
-
-								if (textMode == false)
+								// Make sure no other toggle are on
+								if (textMode == false && lineMode == false)
 								{
 									for (int x = (int)(pixelCoord.x - distanceX - (brushSize / 2)); x < (int)(pixelCoord.x - distanceX + (brushSize / 2)); x++)
 									{
@@ -437,7 +447,8 @@ public class PaintOnCanvas : MonoBehaviour
 									}
 								}
 							}
-							else{
+							else
+							{
 								pixelToDraw = pixelCoord;
 							}
 						}
@@ -630,6 +641,42 @@ public class PaintOnCanvas : MonoBehaviour
 			maskCanvas.Apply();
 		}
 	}
+
+	Vector2 lineStart = new Vector2(-1,-1);
+	Vector2 lineEnd = new Vector2(-1,-1);
+	void SetLineOnCanvas(int x, int y, Vector4 brushColor)
+	{
+		if(lineStart.x == -1)
+		{
+			lineStart = new Vector2(x, y);
+		}
+		if(lineStart.x == x && lineStart.y == y)
+		{
+			Debug.Log("" + x + " " + y + " " + lineStart);
+			return;
+		}
+		else if(lineEnd.x == -1)
+		{
+			lineEnd = new Vector2(x, y);
+
+			// Code below is from https://answers.unity.com/questions/244417/create-line-on-a-texture.html
+			float frac = 1 / Mathf.Sqrt(Mathf.Pow(lineEnd.x - lineStart.x, 2) + 
+				Mathf.Pow(lineEnd.y - lineStart.y, 2));
+			float ctr = 0;
+			Vector2 t = lineStart;
+
+			while (t.x != (int)lineEnd.x || (int)t.y != (int)lineEnd.y)
+			{
+				t = Vector2.Lerp(lineStart, lineEnd, ctr);
+				ctr += frac;
+				studentCanvas.SetPixel((int)t.x, (int)t.y, brushColor);
+			}
+
+			lineStart = new Vector2(-1,-1);
+			lineEnd = new Vector2(-1,-1);
+		}
+	}
+
 	public void SaveOrLoadToPNG(string png)
 	{
 		if (canSave == true)
@@ -783,8 +830,12 @@ public class PaintOnCanvas : MonoBehaviour
 		if (eraseMode == true)
 		{
 			textMode = false;
+			lineMode = false;
+
+			textTog.isOn = false;
+			lineTog.isOn = false;
+
 			GameObject.Find("TextInput").GetComponent<InputField>().interactable = false;
-			GameObject.Find("TextToggle").GetComponent<Toggle>().isOn = false;
 		}
 	}
 	//sets text mode on and off
@@ -793,10 +844,17 @@ public class PaintOnCanvas : MonoBehaviour
 		textMode = text;
 		if (textMode == true)
 		{
+			// Turning Modes off 
 			eraseMode = false;
+			lineMode = false;
+
+			// Turning toggles off
+			lineTog.isOn = false;
+			eraseTog.isOn = false;
+
 			GameObject.Find("TextInput").GetComponent<InputField>().interactable = true;
 			GameObject.Find("SaveField").GetComponent<InputField>().interactable = false;
-			GameObject.Find("EraserToggle").GetComponent<Toggle>().isOn = false;
+
 			canLoad = false;
 			canSave = false;
 		}
@@ -805,6 +863,22 @@ public class PaintOnCanvas : MonoBehaviour
 			GameObject.Find("TextInput").GetComponent<InputField>().interactable = false;
 		}
 	}
+
+	public void SetLine(bool line)
+	{
+		lineMode = line;
+		if(line)
+		{
+			// Properly set the apprioate modes
+			eraseMode = false;
+			textMode = false;
+
+			// Set other toggles to off
+			textTog.isOn = false;
+			eraseTog.isOn = false;
+		}
+	}
+
 	public void SetTextOnType(string output)
 	{
 		textOnType = output;
