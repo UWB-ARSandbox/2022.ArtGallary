@@ -27,12 +27,11 @@ public class LoadMenu : MonoBehaviour
 
     public void Initialize()
     {
+        FaceButton = GameObject.Find("FaceButton");
         loadMenu = GameObject.Find("Load Menu");
         SaveConfirmMenu = GameObject.Find("SaveConfirmMenu");
 
         saveButton = GameObject.Find("SaveButton");
-
-        FaceButton = GameObject.Find("FaceButton");
     }
 
     // Toggles object based on argument.
@@ -40,6 +39,11 @@ public class LoadMenu : MonoBehaviour
     {
         button.SetActive(!button.activeSelf);
 
+    }
+
+    public void SetFaceReference(GameObject faceButton)
+    {
+        FaceButton = faceButton;
     }
 
 }

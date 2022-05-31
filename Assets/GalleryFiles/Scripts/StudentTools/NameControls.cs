@@ -17,16 +17,18 @@ public class NameControls : MonoBehaviour
         if(manager.m_PeerId == manager.GetLowestPeerId() && this.transform.parent.parent.gameObject.name == ("Teacher2(Clone)"))
         {
             GetComponent<TextMesh>().color = new Vector4(0, 0, 0, 0);
-        }
-        else if(manager.m_PeerId == this.transform.parent.parent.gameObject.GetComponent<StudentEnable>().studentID)
+        }    
+        else if(manager.m_PeerId == transform.parent.parent.GetComponent<StudentEnable>().studentID)
         {
             GetComponent<TextMesh>().color = new Vector4(0, 0, 0, 0);
         }
+        Debug.Log(transform.parent.parent.gameObject.name);
     }
 
     // Update is called once per frame
     void Update()
     {
+        
         transform.rotation = Quaternion.LookRotation((transform.position - camera.position).normalized);
     }
 }

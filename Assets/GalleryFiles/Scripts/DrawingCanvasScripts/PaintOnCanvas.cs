@@ -91,6 +91,7 @@ public class PaintOnCanvas : MonoBehaviour
 	Button loadB = null;
 	Button saveB = null;
 	Button deleteB = null;
+	Button controlsB = null;
 
 	Button subGalB = null;
 	Button subStuB = null;
@@ -114,7 +115,7 @@ public class PaintOnCanvas : MonoBehaviour
 	GameObject brushColorUI;
 
 	// UI Elements
-	GameObject LoadMenu, SaveConfirmMenu, PlayerFace;
+	GameObject LoadMenu, SaveConfirmMenu, PlayerFace, Controls;
 
 	LoadMenu popUpMenu;
 
@@ -132,6 +133,7 @@ public class PaintOnCanvas : MonoBehaviour
 		// UI Element Finding
 		LoadMenu = GameObject.Find("Load Menu");
 		SaveConfirmMenu = GameObject.Find("SaveConfirmMenu");
+		Controls = GameObject.Find("ControlScreen");
 
 		// UI field code
 		rSlider = GameObject.Find("RedSlider").GetComponent<Slider>();
@@ -173,6 +175,7 @@ public class PaintOnCanvas : MonoBehaviour
 		loadB = GameObject.Find("LoadButton").GetComponent<Button>();
 		saveB = GameObject.Find("SaveButton").GetComponent<Button>();
 		deleteB = GameObject.Find("DeleteCanvasButton").GetComponent<Button>();
+		controlsB = GameObject.Find("ControlsButton").GetComponent<Button>();
 
 		// Initialize Elements of LoadMenu script in UI for popup menus
 		popUpMenu = GameObject.Find("UI").GetComponent<LoadMenu>();
@@ -184,9 +187,12 @@ public class PaintOnCanvas : MonoBehaviour
 
 		saveB.onClick.AddListener(delegate{popUpMenu.ToggleActive(SaveConfirmMenu);});
 
-		Camera.main.GetComponent<FirstPersonCamera>().SetLoadMenuReference(LoadMenu, SaveConfirmMenu);
+		controlsB.onClick.AddListener(delegate{popUpMenu.ToggleActive(Controls);});
+
+		Camera.main.GetComponent<FirstPersonCamera>().SetLoadMenuReference(LoadMenu, SaveConfirmMenu, Controls);
 
 		// Disable Menus until needed
+		Controls.SetActive(false);
 		SaveConfirmMenu.SetActive(false);
 		LoadMenu.SetActive(false);
 

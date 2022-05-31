@@ -7,20 +7,26 @@ using SimpleFileBrowser;
 public class PlayerFace : MonoBehaviour
 {
     LoadMenu menu;
-    Button faceButton;
-    bool done;
+    [SerializeField] Button faceButton;
+    bool done, buttonSet;
 
     // Start is called before the first frame update
     void Start()
     {
         menu = GameObject.Find("UI").GetComponent<LoadMenu>();
         
-        faceButton = menu.FaceButton.GetComponent<Button>();
-        faceButton.onClick.AddListener(ChangeFace);
-
         done = true;
 
         FileBrowser.SetDefaultFilter(".png");
+    }
+
+    void Update()
+    {
+        if(!buttonSet && faceButton == null)
+        {
+            faceButton = menu.FaceButton.GetComponent<Button>();
+            faceButton.onClick.AddListener(ChangeFace);
+        }
     }
 
     void ChangeFace()
@@ -30,7 +36,7 @@ public class PlayerFace : MonoBehaviour
         {
             done = false;
             StartCoroutine(LoadWindow());
-            Debug.Log("Loading... Done = " + done);
+            Debug.Log("Loading Done = " + done);
         }
 	}
 

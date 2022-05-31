@@ -17,7 +17,7 @@ public class FirstPersonCamera : MonoBehaviour
     
     public GameObject crosshair, settings;
 
-    [SerializeField]GameObject LoadMenu, SaveConfirmMenu;
+    [SerializeField]GameObject LoadMenu, SaveConfirmMenu, Controls;
 
     
     [SerializeField]
@@ -67,15 +67,18 @@ public class FirstPersonCamera : MonoBehaviour
         {
             settings.SetActive(!settings.activeSelf);
         }
-        if(Input.GetKeyDown("q"))
+        if(Input.GetKeyDown(KeyCode.Tab))
         {
-            if(!SaveConfirmMenu.activeSelf)
+            // If SaveConfirmMenu is not active, disable LoadMenu
+            if(!SaveConfirmMenu.activeSelf || !Controls.activeSelf)
             {
                 Debug.Log("Toggling Menu");
 			    LoadMenu.SetActive(!LoadMenu.activeSelf);
             }
+            // Otherwise, disable both.
             else
             {
+                Controls.SetActive(false);
                 SaveConfirmMenu.SetActive(false);
 			    LoadMenu.SetActive(false);
             }
@@ -163,9 +166,10 @@ public class FirstPersonCamera : MonoBehaviour
 		}
     }
 
-    public void SetLoadMenuReference(GameObject load, GameObject saveConfirm)
+    public void SetLoadMenuReference(GameObject load, GameObject saveConfirm, GameObject controls)
     {
         LoadMenu = load;
         SaveConfirmMenu = saveConfirm;
+        Controls = controls;
     }
 }
