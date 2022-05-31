@@ -7,7 +7,7 @@ public class MovingObject : MonoBehaviour
 {
     public float MovementSpeed = 5f;
     public float MaxDistance = 5f;
-    public StressTest_CollisionCounter CollisionCounter;
+    public StressTesting.StressTest_CollisionCounter CollisionCounter;
     public enum TestMode { OnTriggerEnter, OnTriggerExit, OnTriggerStay}
     public TestMode Mode;
 
