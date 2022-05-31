@@ -27,4 +27,9 @@ public class ChangeLocalSize : MonoBehaviour
 	{
 		
 	}
+	
+	public void ScaleStudentCanvas(GameObject canvas, float x, float y, float z)
+	{
+		canvas.transform.localScale = new Vector3(x, y, z);
+	}
 }

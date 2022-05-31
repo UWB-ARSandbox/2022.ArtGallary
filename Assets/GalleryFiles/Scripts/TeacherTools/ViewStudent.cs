@@ -43,6 +43,8 @@ public class ViewStudent : MonoBehaviour
                 m_ASLObject.SendAndSetWorldPosition(target.transform.position);
                 m_ASLObject.SendAndSetWorldRotation(Quaternion.Euler(new Vector3(0, 0, 0)));
             });
+            GameObject canvas = target.transform.GetChild(1).gameObject;
+            GameObject.Find("Teacher2(Clone)").GetComponent<ChangeLocalSize>().ScaleStudentCanvas(canvas, 3, 2, 0.01f);
         }
     }
 
