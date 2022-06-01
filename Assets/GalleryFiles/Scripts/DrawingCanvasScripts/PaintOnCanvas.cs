@@ -72,6 +72,7 @@ public class PaintOnCanvas : MonoBehaviour
 	// Current Canvas has been loaded
 	bool clicked = false;
 	float freeze = 1f;
+	float maskClock = 0.2f;
 
 	Vector2 previousCoord;
 
@@ -296,7 +297,37 @@ public class PaintOnCanvas : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		UpdateMask();
+		if(maskClock <= 0)
+		{
+			RaycastHit raycastHit;
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+			int layerMask = 1 << 30;
+			if (clicked)
+			{
+				layerMask = (1 << LayerMask.NameToLayer("DoNotRenderCanavas")) |
+				(1 << LayerMask.NameToLayer("DoNotRenderTCan"));
+
+				// Set canvas to render to screen
+				layerMask |= (1 << 10);
+				// Set canvas to render to screen
+				layerMask |= (1 << 11);
+			}
+			layerMask = ~layerMask;
+
+			// If mouse is not over the canvas and canvas is rendered, do not draw mask
+			if (Physics.Raycast(ray, out raycastHit, Mathf.Infinity, layerMask) == true
+			&& raycastHit.transform.GetComponent<PaintOnCanvas>() != null)
+			{
+				UpdateMask();
+				maskClock = 0.1f;
+			}
+		}
+		else
+		{
+			maskClock -= Time.deltaTime;
+		}
+		
 		// This checks if the canvas should be rendered in
 		// by the main camera
 		if(clicked == true)
@@ -320,7 +351,6 @@ public class PaintOnCanvas : MonoBehaviour
 
 		if (!EventSystem.current.IsPointerOverGameObject())
 		{
-			
 			if (Input.GetMouseButton(0) == true)
 			{
 				RaycastHit raycastHit;
@@ -408,7 +438,6 @@ public class PaintOnCanvas : MonoBehaviour
 										if (eraseMode == false)
 										{
 											studentCanvas.SetPixel(x, y, brushColor);
-											//maskCanvas.SetPixel(x,y, brushColor);
 										}
 										// Erase by making current pixel white
 										else
@@ -510,7 +539,6 @@ public class PaintOnCanvas : MonoBehaviour
 				//on mouse release write text to image
 				if(lineMode)
 				{
-					
 					float lineInterpolations = 1000 - 9 * brushSize;
 					for (int i = 0; i < lineInterpolations; i++)
 					{
@@ -573,20 +601,9 @@ public class PaintOnCanvas : MonoBehaviour
 		}
 	}
 
+	// Updates mask and shows size of brush, color, and 
 	public void UpdateMask()
 	{
-		for (int x = 0; x < canvasWidth; x++)
-		{
-			for (int y = 0; y < canvasHeight; y++)
-			{
-				maskCanvas.SetPixel(x, y, Color.clear);
-				
-			}
-		}
-		RaycastHit raycastHit;
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-		
 		int layerMask = 1 << 30;
 		if (clicked)
 		{
@@ -600,38 +617,23 @@ public class PaintOnCanvas : MonoBehaviour
 		}
 		layerMask = ~layerMask;
 
+		
+		for (int x = 0; x < canvasWidth; x++)
+		{
+			for (int y = 0; y < canvasHeight; y++)
+			{
+				maskCanvas.SetPixel(x, y, Color.clear);
+			}
+		}
+		RaycastHit raycastHit;
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
 		if (Physics.Raycast(ray, out raycastHit, Mathf.Infinity ,layerMask) == true
 		&& raycastHit.transform.GetComponent<PaintOnCanvas>() != null)
 		{
-			Vector2 uv;
-			if ((int)transform.forward.z == -1)
-			{
-				uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
-				(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
-			}
-			else if ((int)transform.forward.z == 1)
-			{
-				uv = new Vector2(1 - (raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
-				(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
-			}
-			else if ((int)transform.forward.x == -1)
-			{
-				uv = new Vector2(1 - (raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
-				(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
-			}
-			else if ((int)transform.forward.x == 1)
-			{
-				uv = new Vector2((raycastHit.point.z - (transform.position.z - (transform.localScale.x / 2))) / (canvasWidth / 256),
-				(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
-			}
-			else
-			{
-				Debug.Log("Bad canvas angle");
-				uv = new Vector2(0.5f, 0.5f);
-			}
 			//converts raycastHit point into a UV coordinate
-			//Vector2 uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
-			//(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
+			Vector2 uv = new Vector2((raycastHit.point.x - (transform.position.x - (transform.localScale.x / 2))) / (canvasWidth / 256),
+			(raycastHit.point.y - (transform.position.y - (transform.localScale.y / 2))) / (canvasHeight / 256));
 			Vector2 pixelCoord = new Vector2((int)(uv.x * (float)(canvasWidth)), (int)(uv.y * (float)(canvasHeight)));
 			if (brushSize > 1)
 			{
@@ -669,7 +671,6 @@ public class PaintOnCanvas : MonoBehaviour
 				{
 					//save point for text
 					pixelToDraw = pixelCoord;
-
 				}
 			}
 			else
@@ -697,7 +698,6 @@ public class PaintOnCanvas : MonoBehaviour
 					pixelToDraw = pixelCoord;
 				}
 			}
-			studentCanvas.Apply();
 			
 			if (textOnType.Equals("") == false && textMode == true)
 			{
@@ -721,41 +721,6 @@ public class PaintOnCanvas : MonoBehaviour
 				GameObject.Find("TextPlaceholder").GetComponent<Text>().text = "empty response not allowed";
 			}
 			maskCanvas.Apply();
-		}
-	}
-
-	Vector2 lineStart = new Vector2(-1,-1);
-	Vector2 lineEnd = new Vector2(-1,-1);
-	void SetLineOnCanvas(int x, int y, Vector4 brushColor)
-	{
-		if(lineStart.x == -1)
-		{
-			lineStart = new Vector2(x, y);
-		}
-		if(lineStart.x == x && lineStart.y == y)
-		{
-			Debug.Log("" + x + " " + y + " " + lineStart);
-			return;
-		}
-		else if(lineEnd.x == -1)
-		{
-			lineEnd = new Vector2(x, y);
-
-			// Code below is from https://answers.unity.com/questions/244417/create-line-on-a-texture.html
-			float frac = 1 / Mathf.Sqrt(Mathf.Pow(lineEnd.x - lineStart.x, 2) + 
-				Mathf.Pow(lineEnd.y - lineStart.y, 2));
-			float ctr = 0;
-			Vector2 t = lineStart;
-
-			while (t.x != (int)lineEnd.x || (int)t.y != (int)lineEnd.y)
-			{
-				t = Vector2.Lerp(lineStart, lineEnd, ctr);
-				ctr += frac;
-				studentCanvas.SetPixel((int)t.x, (int)t.y, brushColor);
-			}
-
-			lineStart = new Vector2(-1,-1);
-			lineEnd = new Vector2(-1,-1);
 		}
 	}
 
