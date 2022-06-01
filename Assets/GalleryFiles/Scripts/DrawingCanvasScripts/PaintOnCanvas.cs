@@ -939,8 +939,7 @@ public class PaintOnCanvas : MonoBehaviour
 			eraseTog.isOn = false;
 
 			GameObject.Find("TextInput").GetComponent<InputField>().interactable = true;
-			//this used to be on the UI but now its in the menu so maybe keep it around
-			//GameObject.Find("SaveField").GetComponent<InputField>().interactable = false;
+			GameObject.Find("SaveField").GetComponent<InputField>().interactable = false;
 
 			canLoad = false;
 			canSave = false;
