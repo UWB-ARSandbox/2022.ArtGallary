@@ -134,7 +134,7 @@ public class Pavel_Player : MonoBehaviour
         else if(clicked && Input.anyKeyDown && !Input.GetKeyDown(KeyCode.LeftControl) && !Input.GetMouseButtonDown(0))
 		{
             clicked = false;
-            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(false);
+            transform.GetChild(1).GetComponent<FirstPersonCamera>().SetCursorLock(true);
             transform.GetChild(1).GetComponent<FirstPersonCamera>().SetIsLocked(false);
             
             DoRenderPlayer();
@@ -211,5 +211,7 @@ public class Pavel_Player : MonoBehaviour
                 m_ASLObject.SendAndSetWorldPosition(pos);
             });
     }
+
+    public bool GetZoomed() { return clicked; }
 }
 

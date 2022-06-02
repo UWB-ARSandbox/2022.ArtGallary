@@ -40,7 +40,8 @@ public class FirstPersonCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isActive && !isLocked)
+        if(isActive && !isLocked &&
+            transform.parent.GetComponent<Pavel_Player>().GetZoomed() == false)
         {
             // Code for first person camera movement taken from Brackeys. https://www.youtube.com/watch?v=_QajrabyTJc
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
@@ -105,11 +106,14 @@ public class FirstPersonCamera : MonoBehaviour
             if(Cursor.lockState == CursorLockMode.Locked)
             {
                 isLocked = true;
+                transform.parent.GetComponent<Pavel_Player>().DoNotRenderPlayer();
             }
             else
             {
                 isLocked = false;
+                transform.parent.GetComponent<Pavel_Player>().DoRenderPlayer();
             }
+
             crosshair.SetActive(!isLocked);
             SetCursorLock(!isLocked);
         }
