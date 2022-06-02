@@ -114,6 +114,7 @@ public class RequestHandler : MonoBehaviour
         if(host == manager.m_PeerId)
 		{
             gObject.transform.GetChild(1).gameObject.GetComponent<Renderer>().material.mainTexture = tex;
+            GameObject.Find("Teacher2(Clone)").GetComponent<ChangeLocalSize>().ScaleStudentCanvas(gObject, 3, 2, 0.01f);
         }
     }
 
