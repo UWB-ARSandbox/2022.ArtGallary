@@ -49,44 +49,6 @@ public class Pavel_Player : MonoBehaviour
                 //m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
             });
         }
-        /* if (Input.GetKey(KeyCode.W) ^ Input.GetKey(KeyCode.S))
-        {
-            if (Input.GetKey(KeyCode.W))
-            {
-                m_ASLObject.SendAndSetClaim(() =>
-                {
-                    Vector3 m_AdditiveMovementAmount = Vector3.forward * MovementSpeed * Time.deltaTime;
-                    m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
-                });
-            }
-            else
-            {
-                m_ASLObject.SendAndSetClaim(() =>
-                {
-                    Vector3 m_AdditiveMovementAmount = Vector3.back * MovementSpeed * Time.deltaTime;
-                    m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
-                });
-            }
-        }
-        if (Input.GetKey(KeyCode.D) ^ Input.GetKey(KeyCode.A))
-        {
-            if (Input.GetKey(KeyCode.D))
-            {
-                m_ASLObject.SendAndSetClaim(() =>
-                {
-                    Vector3 m_AdditiveMovementAmount = Vector3.right * MovementSpeed * Time.deltaTime;
-                    m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
-                });
-            }
-            else
-            {
-                m_ASLObject.SendAndSetClaim(() =>
-                {
-                    Vector3 m_AdditiveMovementAmount = Vector3.left * MovementSpeed * Time.deltaTime;
-                    m_ASLObject.SendAndIncrementLocalPosition(m_AdditiveMovementAmount);
-                });
-            }
-        } */
 
         // Call for moving/zooming into the canvas
         if (Input.GetMouseButtonDown(0) && clicked == false)
@@ -95,6 +57,8 @@ public class Pavel_Player : MonoBehaviour
             RaycastHit hit;
             int layerMask = LayMaskForRay();
 
+            // If a raycast hits an object that is classified as a student canvas
+            // move the camera over to the object
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask) && hit.transform.gameObject.
                 name.Contains("StuCanvas"))
             {
@@ -122,6 +86,7 @@ public class Pavel_Player : MonoBehaviour
 				{
                     transform.GetChild(1).position += new Vector3(0, 0, 2);
                 }
+                // Left wall
                 else
 				{
                     transform.GetChild(1).position += new Vector3(2, 0, 0);
@@ -144,9 +109,12 @@ public class Pavel_Player : MonoBehaviour
         }
     }
 
+    // This function establishes a rendering mask for
+    // the main camera so the player can raycast through gameobjects. 
     int LayMaskForRay()
 	{
         PaintOnCanvas gone = transform.parent.GetChild(1).GetComponent<PaintOnCanvas>();
+        // This is a layer that is not being used (a value must be assigned).
         int layerMask = 1 << 30;
         if (gone.GetClickStatus())
         {
@@ -162,6 +130,7 @@ public class Pavel_Player : MonoBehaviour
         return layerMask;
     }
 
+    // This will kick the student out of the class and quite the application
     public void LeaveClass()
     {
         // Delete player model in space
@@ -173,6 +142,8 @@ public class Pavel_Player : MonoBehaviour
         });
     }
 
+    // Establishes a lock so that players can not move when zoomed in
+    // on a canvas in gallery mode.
     public void SetLockAtCanvas(bool locked)
     {
         lockAtCanvas = locked;
@@ -188,6 +159,7 @@ public class Pavel_Player : MonoBehaviour
 		}
     }
 
+    // This SPECIFICALLY does not render obects on the player layer
     public void DoNotRenderPlayer()
 	{
         // Get this players camera
@@ -196,6 +168,7 @@ public class Pavel_Player : MonoBehaviour
         cam.cullingMask &= ~(1 << 9);
     }
 
+    // This SPECIFICALLY does render obects on the player layer
     public void DoRenderPlayer()
     {
         // Get this players camera
@@ -204,6 +177,7 @@ public class Pavel_Player : MonoBehaviour
         cam.cullingMask |= (1 << 9);
     }
 
+    // Sets player position in the world space for all users
     public void SetPosition(Vector3 pos)
     {
         m_ASLObject.SendAndSetClaim(() =>
@@ -212,6 +186,8 @@ public class Pavel_Player : MonoBehaviour
             });
     }
 
+    // Gets the status if the player is looking in at a zoomed in
+    // canvas
     public bool GetZoomed() { return clicked; }
 }
 

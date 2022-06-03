@@ -29,22 +29,23 @@ public class PlayerFace : MonoBehaviour
         }
     }
 
+    // Opens a file explorer (coroutine) if one has not been opened yet.
     void ChangeFace()
 	{
-        Debug.Log("Here");
         if (done)
         {
             done = false;
             StartCoroutine(LoadWindow());
-            Debug.Log("Loading Done = " + done);
         }
 	}
 
+    // Changes the player face if the proper image is submitted.
     IEnumerator LoadWindow()
 	{
         yield return FileBrowser.WaitForLoadDialog(FileBrowser.PickMode.FilesAndFolders, true,
             null, null, "Load Files and Folders", "Load");
 
+        // If a file has been submited and it is only one file appply to player face
         if (FileBrowser.Success && FileBrowser.Result.Length == 1)
 		{
             Texture2D text2D = new Texture2D(100,100);
@@ -66,6 +67,7 @@ public class PlayerFace : MonoBehaviour
 		}
     }
 
+    // Globally changes the face of this player.
     public static void changeTexture(GameObject gameObject, Texture2D tex)
     {
         gameObject.GetComponent<Renderer>().materials[1].mainTexture = tex;

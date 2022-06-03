@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+Desc: This handles changing the size of the walls and floor, additionally
+handles spawing in the canvases when gallery mode is turned on by the user.
+*/
 public class CanvasSpawner : MonoBehaviour
 {
     static GameObject[] WallArray = new GameObject[4];
@@ -105,7 +109,8 @@ public class CanvasSpawner : MonoBehaviour
         
     }
     
-
+    // When a teacher clicks start/end gallery this function is called
+    // to do the following.
 	public void GalleryOpitions()
 	{
         if(clicked)
@@ -126,6 +131,7 @@ public class CanvasSpawner : MonoBehaviour
     public void ClearGallery()
     {
         GameObject[] stuCanvases = GameObject.FindGameObjectsWithTag("StuCanvas");
+        // Deletes all student canvases
         for (int i = 0; i < stuCanvases.Length; i++)
         {
             GameObject delCan = stuCanvases[i];
@@ -136,6 +142,7 @@ public class CanvasSpawner : MonoBehaviour
         point3 = 5;
     }
 
+    // Deletes canvases from the gallery
     void DeleteCanvas(GameObject canvas)
     {
         canvas.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
@@ -167,8 +174,6 @@ public class CanvasSpawner : MonoBehaviour
             wallSize =  3;
         }
         
-        
-
         ChangeWallSizePos(wallSize);
 
         for (int i = 0; i < amountStu; i++)
@@ -177,6 +182,8 @@ public class CanvasSpawner : MonoBehaviour
         }
     }
 
+    // Changes all wall and floor size to the value of the
+    // passed in size value.
     public void ChangeWallSizePos(int wallSize)
 	{
         
@@ -194,6 +201,8 @@ public class CanvasSpawner : MonoBehaviour
         }
 	}
 
+    // Changes the wall size and position within the gallery space
+    // to fit with the new size of the scaled floor.
     void SendWallSize(GameObject wall, int wallSize)
     {
         wall.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
@@ -307,6 +316,8 @@ public class CanvasSpawner : MonoBehaviour
         });
     }
 
+    // Changes canvas position after spawn to fit
+    // into row column postion.
     static void ChangeCurCanPos(int index)
 	{
         if (point2 == 3.5)
@@ -327,6 +338,7 @@ public class CanvasSpawner : MonoBehaviour
         }
     }
 
+    // Removes canvas object from the spawn list
     static void Advance(GameObject spawnedObject)
     {
         allCans.Remove(spawnedObject);

@@ -297,6 +297,7 @@ public class PaintOnCanvas : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
+		// Makes sure that the paint brush mask is not applied every frame
 		if (maskClock <= 0)
 		{
 			RaycastHit raycastHit;
@@ -323,6 +324,7 @@ public class PaintOnCanvas : MonoBehaviour
 				maskClock = 0.1f;
 			}
 		}
+		// Counts down until the mask can be applied to canvas
 		else
 		{
 			maskClock -= Time.deltaTime;
@@ -332,15 +334,20 @@ public class PaintOnCanvas : MonoBehaviour
 		// by the main camera
 		if (clicked == true)
 		{
+			// Freeze is established so that resubmission handler has the proper
+			// state of the players submission to gallery.
 			if (freeze > 0)
 			{
 				freeze -= Time.deltaTime;
 			}
+			// Gets the status of submission after waiting
 			else
 			{
 				clicked = handler.SubmissionStatus();
 			}
 
+			// If the gallery mode is turned off, the resubmission handler
+			// changes everyones submission status to true.
 			if (clicked == false && freeze <= 0)
 			{
 				handler.LocallySetClick(true);
@@ -1166,6 +1173,12 @@ public class PaintOnCanvas : MonoBehaviour
 			alphabetUsed = alphabet2;
 		}
 	}
+
+	/*
+	Desc: This checks if the player has submitted their work to the gallery
+	and if not checks for the next gallery canvas without a texture to post
+	the users work onto.
+	*/
 	public void SubmitPainting()
 	{
 		// Make sure multiple submissions are not allowed
@@ -1225,6 +1238,7 @@ public class PaintOnCanvas : MonoBehaviour
 		canLoad = reset;
 	}
 
+	// Renders all objects on the teacher and student canvas layer
 	public void RenderCanvas()
 	{
 		Camera cam = transform.parent.GetChild(0).GetChild(1).GetComponent<Camera>();
@@ -1235,6 +1249,7 @@ public class PaintOnCanvas : MonoBehaviour
 		cam.cullingMask |= (1 << 11);
 	}
 
+	// Does not render all objects on the teacher and student canvas layer
 	public void DoNotRenderCanvas()
 	{
 		Camera cam = transform.parent.GetChild(0).GetChild(1).GetComponent<Camera>();

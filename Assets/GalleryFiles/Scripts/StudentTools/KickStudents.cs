@@ -39,17 +39,18 @@ public class KickStudents : MonoBehaviour
 		}
     }
 
+    // Kicks this user
     public void LeaveClass()
     {
         manager.DisconnectFromServer();
         Application.Quit();
     }
 
+    // Kicks everyone from the class starting with the students and then finishes with the teacher
     void DisbandClass()
 	{
         gameObject.GetComponent<ASL.ASLObject>().SendAndSetClaim(() =>
         {
-            Debug.Log("Called");
             float[] temp = new float[1];
             temp[0] = 1;
             GetComponent<ASLObject>().SendFloatArray(temp);
@@ -59,7 +60,6 @@ public class KickStudents : MonoBehaviour
 
     public void StartKickingStudents(string _id, float[] _f)
 	{
-        Debug.Log("KickStud " + _f[0]);
         isKicking = _f[0];
 	}
 }
