@@ -81,9 +81,9 @@ public class StudentEnable : MonoBehaviour
                 {
                     studentCamera.GetComponent<FirstPersonCamera>().ReinitializeParent(studentBody.gameObject);
                 }
-                this.transform.GetComponentInChildren<Pavel_Player>().enabled = true;
                 this.transform.GetComponentInChildren<PlayerFace>().enabled = true;
                 this.transform.GetComponentInChildren<PaintOnCanvas>().enabled = true;
+                this.transform.GetComponentInChildren<Pavel_Player>().enabled = true;
                 //this.gameObject.GetComponent<Pavel_Player>().enabled = true;
             }
         }

@@ -74,14 +74,10 @@ public class FirstPersonCamera : MonoBehaviour
             if(!SaveConfirmMenu.activeSelf || !Controls.activeSelf)
             {
                 Debug.Log("Toggling Menu");
-			    LoadMenu.SetActive(!LoadMenu.activeSelf);
-            }
-            // Otherwise, disable both.
-            else
-            {
                 Controls.SetActive(false);
                 SaveConfirmMenu.SetActive(false);
-			    LoadMenu.SetActive(false);
+			    LoadMenu.SetActive(!LoadMenu.activeSelf);
+                transform.parent.GetComponent<Pavel_Player>().SetMenuOpen(LoadMenu.activeSelf);
             }
             menuActive = LoadMenu.activeSelf;
 
@@ -89,13 +85,14 @@ public class FirstPersonCamera : MonoBehaviour
             {
                 isLocked = true;
             }
-            else if(Cursor.lockState == CursorLockMode.None && menuActive)
-            {
-                isLocked = true;
-            }
             else
             {
                 isLocked = false;
+            }
+
+            if(menuActive)
+            {
+                isLocked = true;
             }
             crosshair.SetActive(!isLocked);
             SetCursorLock(!isLocked);

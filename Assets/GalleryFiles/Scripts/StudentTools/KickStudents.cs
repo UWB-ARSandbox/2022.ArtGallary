@@ -6,26 +6,36 @@ using ASL;
 
 public class KickStudents : MonoBehaviour
 {
-    Button KickButton;
+    [SerializeField] Button KickButton;
     GameLiftManager manager;
+    MenuManager menu;
     float isKicking = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
-        if (manager.AmLowestPeer() == true)
-        {
-            KickButton = GameObject.Find("DisbandClass").GetComponent<Button>();
-            KickButton.onClick.AddListener(DisbandClass);
-        }
+        menu = GameObject.Find("UI").GetComponent<MenuManager>();
 
         GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(StartKickingStudents);
+        
+        if (manager.AmLowestPeer() == true)
+        {
+            //KickButton = GameObject.Find("DisbandClass").GetComponent<Button>();
+            KickButton = menu.disbandClassButton.GetComponent<Button>();
+            KickButton.onClick.AddListener(DisbandClass);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(KickButton == null && manager.AmLowestPeer())
+        {
+            KickButton = menu.disbandClassButton.GetComponent<Button>();
+            KickButton.onClick.AddListener(DisbandClass);
+        }
+        
         // Student
         if(isKicking != 0 && manager.AmLowestPeer() == false)
 		{
@@ -37,6 +47,8 @@ public class KickStudents : MonoBehaviour
 		{
             LeaveClass();
 		}
+
+        
     }
 
     // Kicks this user

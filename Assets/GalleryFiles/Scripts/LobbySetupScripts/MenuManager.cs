@@ -2,18 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using ASL;
 
-public class LoadMenu : MonoBehaviour
+// Author: Gary Yuen
+// The class MenuManager keeps track of references to UI elements for other scripts to call upon. 
+// This is intended to prevent the timing of scripts from causing unexpected behaviors.
+public class MenuManager : MonoBehaviour
 {
-    GameObject saveButton, SaveConfirmMenu;
+    GameObject saveButton, SaveConfirmMenu, Kicker;
 
-    public GameObject loadMenu, FaceButton;
+    public GameObject loadMenu, FaceButton, leaveClassButton, disbandClassButton;
+
+    GameLiftManager manager;
     
-    Button Save;
     // Start is called before the first frame update
     void Start()
     {
-        
+        manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
     }
 
     // Update is called once per frame
@@ -30,8 +35,21 @@ public class LoadMenu : MonoBehaviour
         FaceButton = GameObject.Find("FaceButton");
         loadMenu = GameObject.Find("Load Menu");
         SaveConfirmMenu = GameObject.Find("SaveConfirmMenu");
-
         saveButton = GameObject.Find("SaveButton");
+
+        leaveClassButton = GameObject.Find("LeaveTheClassButton");
+        disbandClassButton = GameObject.Find("DisbandClass");
+        
+        if (manager.AmLowestPeer() == false)
+		{
+            disbandClassButton.SetActive(false);
+        }
+        else
+        {
+            leaveClassButton.SetActive(false);
+        }
+
+        
     }
 
     // Toggles object based on argument.

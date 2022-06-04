@@ -9,10 +9,13 @@ public class Pavel_Player : MonoBehaviour
     [Tooltip("This determines the speed that the PlayerCube will move.")]
     public float MovementSpeed = 3f;
     bool lockAtCanvas = false;
+    bool menuOpen = false;
 
     ASLObject m_ASLObject;
     GameLiftManager manager;
-    Button LeaveButton;
+    [SerializeField] Button LeaveButton;
+
+    MenuManager menu;
 
     Transform lastTran;
     bool clicked = false;
@@ -21,20 +24,23 @@ public class Pavel_Player : MonoBehaviour
     void Start()
     {
         manager = GameObject.Find("GameLiftManager").GetComponent<GameLiftManager>();
-        if (manager.AmLowestPeer() == false)
-		{
-            LeaveButton = GameObject.Find("LeaveTheClassButton").GetComponent<Button>();
-            LeaveButton.onClick.AddListener(LeaveClass);
-        }
-
+        
         m_ASLObject = gameObject.GetComponent<ASLObject>();
         Debug.Assert(m_ASLObject != null);
+
+        menu = GameObject.Find("UI").GetComponent<MenuManager>();
+        if (manager.AmLowestPeer() == false)
+		{
+            //LeaveButton = GameObject.Find("LeaveTheClassButton").GetComponent<Button>();
+            LeaveButton = menu.leaveClassButton.GetComponent<Button>();
+            LeaveButton.onClick.AddListener(LeaveClass);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (lockAtCanvas == false && !clicked)
+        if (lockAtCanvas == false && !clicked && menuOpen == false)
         {
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
@@ -157,6 +163,12 @@ public class Pavel_Player : MonoBehaviour
 		{
             DoRenderPlayer();
 		}
+    }
+
+    // Establishes a lock so that players can't move when menu open.
+    public void SetMenuOpen(bool open)
+    {
+        menuOpen = open;
     }
 
     // This SPECIFICALLY does not render obects on the player layer

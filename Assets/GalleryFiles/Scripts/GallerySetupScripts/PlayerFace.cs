@@ -6,14 +6,14 @@ using SimpleFileBrowser;
 
 public class PlayerFace : MonoBehaviour
 {
-    LoadMenu menu;
+    MenuManager menu;
     [SerializeField] Button faceButton;
     bool done, buttonSet;
 
     // Start is called before the first frame update
     void Start()
     {
-        menu = GameObject.Find("UI").GetComponent<LoadMenu>();
+        menu = GameObject.Find("UI").GetComponent<MenuManager>();
         
         done = true;
 

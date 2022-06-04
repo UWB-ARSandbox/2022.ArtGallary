@@ -118,7 +118,7 @@ public class PaintOnCanvas : MonoBehaviour
 	// UI Elements
 	GameObject LoadMenu, SaveConfirmMenu, PlayerFace, Controls;
 
-	LoadMenu popUpMenu;
+	MenuManager popUpMenu;
 
 	Button saveCancelB = null;
 
@@ -178,9 +178,10 @@ public class PaintOnCanvas : MonoBehaviour
 		deleteB = GameObject.Find("DeleteCanvasButton").GetComponent<Button>();
 		controlsB = GameObject.Find("ControlsButton").GetComponent<Button>();
 
-		// Initialize Elements of LoadMenu script in UI for popup menus
-		popUpMenu = GameObject.Find("UI").GetComponent<LoadMenu>();
+		// Initialize Elements of MenuManager script in UI for popup menus
+		popUpMenu = GameObject.Find("UI").GetComponent<MenuManager>();
 		popUpMenu.Initialize();
+		Debug.Log("Menu Initialized");
 
 		saveCancelB = GameObject.Find("SaveCancelButton").GetComponent<Button>();
 		saveCancelB.onClick.AddListener(SetCanSave);

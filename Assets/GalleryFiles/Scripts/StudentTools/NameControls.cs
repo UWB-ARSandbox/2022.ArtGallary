@@ -22,7 +22,6 @@ public class NameControls : MonoBehaviour
         {
             GetComponent<TextMesh>().color = new Vector4(0, 0, 0, 0);
         }
-        Debug.Log(transform.parent.parent.gameObject.name);
     }
 
     // Update is called once per frame
