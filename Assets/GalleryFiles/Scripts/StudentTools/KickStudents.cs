@@ -18,13 +18,6 @@ public class KickStudents : MonoBehaviour
         menu = GameObject.Find("UI").GetComponent<MenuManager>();
 
         GetComponent<ASL.ASLObject>()._LocallySetFloatCallback(StartKickingStudents);
-        
-        if (manager.AmLowestPeer() == true)
-        {
-            //KickButton = GameObject.Find("DisbandClass").GetComponent<Button>();
-            KickButton = menu.disbandClassButton.GetComponent<Button>();
-            KickButton.onClick.AddListener(DisbandClass);
-        }
     }
 
     // Update is called once per frame
